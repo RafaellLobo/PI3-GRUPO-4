@@ -1,36 +1,86 @@
-# 🫁 Score de Risco de Malignidade em Nódulos Pulmonares via Radiômica
+# PI3 — Grupo 4: Radiomics e Scoring de Risco
 
-## 📋 Resumo
+## Sobre o projeto
 
-Este trabalho propõe uma **arquitetura de processamento em lote (batch)** para o cálculo de um score de risco de malignidade em nódulos pulmonares a partir de imagens de **Tomografia Computadorizada (TC)**, utilizando técnicas de **radiômica**.
+Projeto acadêmico dedicado ao estudo de radiômica aplicada a imagens de Tomografia Computadorizada (TC) de nódulos pulmonares.
 
-A partir do dataset **LIDC-IDRI** ([ARMATO III et al., 2011](#-referências)), características de **forma**, **intensidade** e **textura** são extraídas por meio da biblioteca **PyRadiomics** ([VAN GRIETHUYSEN et al., 2017](#-referências)) e utilizadas para treinar modelos de Machine Learning, comparados a um **baseline convencional** baseado em atributos geométricos simples (volume, diâmetro e esfericidade) e **Regressão Logística**.
+O repositório está atualmente na etapa de configuração e validação do ambiente. Ainda não há pipeline de processamento ou análise implementado.
 
-## 🏗️ Arquitetura
+## Objetivo
 
-A solução foi estruturada em **três pipelines independentes**, garantindo **modularidade** e **reprodutibilidade** do processo:
+Investigar a extração de características quantitativas de nódulos pulmonares e sua relação com categorias de risco, incluindo o Lung-RADS.
 
-| Pipeline | Responsabilidade |
-|---|---|
-| **1. Preparação dos Dados** | Segmentação, normalização e extração de atributos radiômicos |
-| **2. Treinamento e Avaliação** | Ajuste dos modelos (baseline vs. radiômica completa) e validação estatística |
-| **3. Inferência em Lote** | Aplicação do modelo versionado sobre novos exames em escala |
+## Tecnologias principais
 
-## ⚙️ MLOps e Conformidade Regulatória
+- Python 3.9
+- NumPy, SciPy, Matplotlib e scikit-learn
+- pydicom, pylidc, SimpleITK e PyRadiomics
+- SQLAlchemy
+- Conda e pip para gerenciamento das dependências
 
-Além da modelagem, o trabalho discute a **viabilidade da solução sob a ótica de MLOps** ([SCULLEY et al., 2015](#-referências)), abordando:
+O ambiente utiliza Python 3.9 e foi validado no Windows com Python 3.9.23.
 
-- **Versionamento** de dados, features e modelos
-- **Rastreabilidade** do pipeline ponta a ponta
-- **Monitoramento de drift** em produção
-- **Conformidade regulatória** com a **RDC nº 657/2022 (ANVISA)**
+## Estrutura do repositório
 
-## 📈 Resultados Esperados
+```text
+.
+├── data/                           # Diretório local reservado para dados
+├── scripts/
+│   └── validate_environment.py    # Validação de imports e versões
+├── .gitignore
+├── environment.yml                # Especificação do ambiente Conda
+└── README.md
+```
 
-Os resultados esperados indicam que a **abordagem radiômica completa** pode superar o desempenho do **baseline tradicional**, oferecendo suporte mais robusto à **estratificação de risco** de nódulos pulmonares.
+## Como começar
 
-## 📚 Referências
+### Pré-requisitos
 
-- ARMATO III, S. G. et al. **The Lung Image Database Consortium (LIDC) and Image Database Resource Initiative (IDRI)**: a completed reference database of lung nodules on CT scans. *Medical Physics*, 2011.
-- VAN GRIETHUYSEN, J. J. M. et al. **Computational Radiomics System to Decode the Radiographic Phenotype**. *Cancer Research*, 2017.
-- SCULLEY, D. et al. **Hidden Technical Debt in Machine Learning Systems**. *NeurIPS*, 2015.
+- Git
+- Miniconda ou Anaconda com Conda
+- Windows, ambiente validado atualmente
+
+Não é necessário instalar o Python 3.9 globalmente, pois ele é criado pelo `environment.yml`.
+
+### Clonar o repositório
+
+```bash
+git clone https://github.com/RafaellLobo/PI3-GRUPO-4.git
+cd PI3-GRUPO-4
+```
+
+### Criar o ambiente
+
+Na raiz do repositório clonado, execute:
+
+```bash
+conda --no-plugins env create --solver classic -f environment.yml
+```
+
+No ambiente Windows testado, `--no-plugins` foi necessário para evitar a interferência do plugin de Terms of Service do Conda sobre canais globais não utilizados. As dependências Conda do projeto são obtidas do `conda-forge`, conforme definido em `environment.yml`.
+
+### Ativar o ambiente
+
+```bash
+conda activate pi3-radiomics
+```
+
+### Validar o ambiente
+
+```bash
+python scripts/validate_environment.py
+```
+
+O script importa as principais dependências e exibe as versões instaladas, retornando erro caso algum import falhe.
+
+## Dataset
+
+O dataset LIDC-IDRI não está incluído no repositório. Dados locais, arquivos DICOM e demais imagens médicas não devem ser versionados; o diretório `data/` está reservado para esse conteúdo local.
+
+## Equipe
+
+PI3 — Grupo 4.
+
+## Licença
+
+Este projeto está licenciado sob a [MIT License](LICENSE).

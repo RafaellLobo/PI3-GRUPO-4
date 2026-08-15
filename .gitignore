@@ -1,0 +1,69 @@
+# Ambientes Python e Conda locais
+.venv/
+venv/
+env/
+.conda/
+conda-env/
+
+# Bytecode e artefatos Python
+__pycache__/
+*.py[cod]
+*$py.class
+build/
+dist/
+*.egg-info/
+
+# Caches e relatórios de ferramentas
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Editores e IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Arquivos temporários e do sistema operacional
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.tmp
+*.temp
+*.log
+~$*
+
+# Configurações locais e segredos
+.env
+.env.*
+!.env.example
+*.local
+.pylidcrc
+*.key
+*.pem
+
+# Dataset local: preserve apenas documentação ou placeholder estrutural
+data/*
+!data/README.md
+!data/.gitkeep
+LIDC-IDRI*/
+
+# Imagens médicas e formatos volumétricos locais
+*.dcm
+*.dicom
+*.nii
+*.nii.gz
+*.mha
+*.mhd
+*.nrrd
+*.raw
