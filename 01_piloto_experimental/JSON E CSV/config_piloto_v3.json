@@ -1,0 +1,44 @@
+{
+  "params_grupo": {
+    "versao_config": "piloto_v3",
+    "espacamento": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "interpolador": "sitkBSpline",
+    "modo_discretizacao": "binWidth",
+    "bin_count": 64,
+    "bin_width": 25,
+    "mascara": "consenso50",
+    "min_anotadores": 3,
+    "diametro_min_mm": 3.0,
+    "regra_rotulo": "mediana",
+    "corte": 3,
+    "tratamento_valor_central_3": "marcar",
+    "n_pacientes_piloto": 25,
+    "arquivar_tar_no_drive": true,
+    "max_tentativas_extracao": 2,
+    "margem_contexto_voxels": 4
+  },
+  "config_pyradiomics": {
+    "resampledPixelSpacing": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "interpolator": "sitkBSpline",
+    "label": 1,
+    "binWidth": 25
+  },
+  "classes_habilitadas": [
+    "shape",
+    "firstorder",
+    "glcm",
+    "glrlm",
+    "glszm"
+  ],
+  "pyradiomics_commit_fixado": "8ed579383",
+  "versao_pyradiomics_resolvida": "3.1.1.dev111+g8ed579383",
+  "gerado_em": "2026-08-22 17:26:54"
+}

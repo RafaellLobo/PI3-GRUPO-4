@@ -1,0 +1,142 @@
+{
+  "comparacao": "binCount=64 (v2) vs binWidth=25 HU (v3)",
+  "pacientes": 25,
+  "nodulos_comuns": 44,
+  "mesmos_ids": true,
+  "shape_max_diff_absoluta": 0.0,
+  "shape_invariante": true,
+  "resumo_por_classe": [
+    {
+      "classe": "firstorder",
+      "atributos_comparados": 18,
+      "spearman_medio": 0.962,
+      "spearman_minimo": 0.568,
+      "diferenca_pct_media": 4.3
+    },
+    {
+      "classe": "glcm",
+      "atributos_comparados": 24,
+      "spearman_medio": 0.704,
+      "spearman_minimo": 0.214,
+      "diferenca_pct_media": 44.2
+    },
+    {
+      "classe": "glrlm",
+      "atributos_comparados": 16,
+      "spearman_medio": 0.756,
+      "spearman_minimo": 0.106,
+      "diferenca_pct_media": 44.2
+    },
+    {
+      "classe": "glszm",
+      "atributos_comparados": 16,
+      "spearman_medio": 0.666,
+      "spearman_minimo": -0.049,
+      "diferenca_pct_media": 74.6
+    }
+  ],
+  "atributos_menos_estaveis": [
+    {
+      "atributo": "original_glszm_GrayLevelVariance",
+      "spearman": -0.049,
+      "diferenca_pct_media": 72.0
+    },
+    {
+      "atributo": "original_glszm_SmallAreaHighGrayLevelEmphasis",
+      "spearman": 0.027,
+      "diferenca_pct_media": 76.0
+    },
+    {
+      "atributo": "original_glrlm_GrayLevelVariance",
+      "spearman": 0.106,
+      "diferenca_pct_media": 70.7
+    },
+    {
+      "atributo": "original_glszm_HighGrayLevelZoneEmphasis",
+      "spearman": 0.154,
+      "diferenca_pct_media": 71.7
+    },
+    {
+      "atributo": "original_glcm_SumSquares",
+      "spearman": 0.214,
+      "diferenca_pct_media": 70.7
+    },
+    {
+      "atributo": "original_glrlm_ShortRunHighGrayLevelEmphasis",
+      "spearman": 0.299,
+      "diferenca_pct_media": 70.4
+    },
+    {
+      "atributo": "original_glcm_ClusterProminence",
+      "spearman": 0.327,
+      "diferenca_pct_media": 108.9
+    },
+    {
+      "atributo": "original_glcm_ClusterTendency",
+      "spearman": 0.353,
+      "diferenca_pct_media": 70.7
+    },
+    {
+      "atributo": "original_glcm_DifferenceVariance",
+      "spearman": 0.355,
+      "diferenca_pct_media": 70.5
+    },
+    {
+      "atributo": "original_glcm_JointAverage",
+      "spearman": 0.385,
+      "diferenca_pct_media": 43.2
+    }
+  ],
+  "atributos_mais_estaveis": [
+    {
+      "atributo": "original_firstorder_TotalEnergy",
+      "spearman": 1.0,
+      "diferenca_pct_media": 0.0
+    },
+    {
+      "atributo": "original_firstorder_Skewness",
+      "spearman": 1.0,
+      "diferenca_pct_media": 0.0
+    },
+    {
+      "atributo": "original_firstorder_RootMeanSquared",
+      "spearman": 1.0,
+      "diferenca_pct_media": 0.0
+    },
+    {
+      "atributo": "original_firstorder_RobustMeanAbsoluteDeviation",
+      "spearman": 1.0,
+      "diferenca_pct_media": 0.0
+    },
+    {
+      "atributo": "original_firstorder_Range",
+      "spearman": 1.0,
+      "diferenca_pct_media": 0.0
+    },
+    {
+      "atributo": "original_firstorder_Minimum",
+      "spearman": 1.0,
+      "diferenca_pct_media": 0.0
+    },
+    {
+      "atributo": "original_firstorder_Median",
+      "spearman": 1.0,
+      "diferenca_pct_media": 0.0
+    },
+    {
+      "atributo": "original_firstorder_Mean",
+      "spearman": 1.0,
+      "diferenca_pct_media": 0.0
+    },
+    {
+      "atributo": "original_firstorder_MeanAbsoluteDeviation",
+      "spearman": 1.0,
+      "diferenca_pct_media": 0.0
+    },
+    {
+      "atributo": "original_firstorder_Maximum",
+      "spearman": 1.0,
+      "diferenca_pct_media": 0.0
+    }
+  ]
+}

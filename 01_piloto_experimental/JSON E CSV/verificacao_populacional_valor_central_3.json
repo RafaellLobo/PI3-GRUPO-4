@@ -1,0 +1,70 @@
+{
+  "criterios": {
+    "min_anotadores": 3,
+    "diametro_min_mm": 3.0,
+    "regra_rotulo": "mediana"
+  },
+  "populacao_completa": {
+    "pacientes": 696,
+    "nodulos_elegiveis": 1392,
+    "indeterminados": 513,
+    "percentual_real": 36.9
+  },
+  "amostra_piloto_sequencial": {
+    "pacientes": 25,
+    "nodulos": 54,
+    "indeterminados": 21,
+    "percentual": 38.9,
+    "diferenca_pontos_percentuais_vs_populacao": 2.0
+  },
+  "convergencia_amostras_aleatorias": [
+    {
+      "pacientes_sorteados": 25,
+      "nodulos_na_amostra": 55,
+      "indeterminados": 20,
+      "percentual": 36.4,
+      "ic_95_inferior_%": 24.9,
+      "ic_95_superior_%": 49.6
+    },
+    {
+      "pacientes_sorteados": 50,
+      "nodulos_na_amostra": 109,
+      "indeterminados": 47,
+      "percentual": 43.1,
+      "ic_95_inferior_%": 34.2,
+      "ic_95_superior_%": 52.5
+    },
+    {
+      "pacientes_sorteados": 100,
+      "nodulos_na_amostra": 194,
+      "indeterminados": 77,
+      "percentual": 39.7,
+      "ic_95_inferior_%": 33.1,
+      "ic_95_superior_%": 46.7
+    },
+    {
+      "pacientes_sorteados": 200,
+      "nodulos_na_amostra": 370,
+      "indeterminados": 127,
+      "percentual": 34.3,
+      "ic_95_inferior_%": 29.7,
+      "ic_95_superior_%": 39.3
+    },
+    {
+      "pacientes_sorteados": 500,
+      "nodulos_na_amostra": 972,
+      "indeterminados": 370,
+      "percentual": 38.1,
+      "ic_95_inferior_%": 35.1,
+      "ic_95_superior_%": 41.2
+    },
+    {
+      "pacientes_sorteados": 696,
+      "nodulos_na_amostra": 1392,
+      "indeterminados": 513,
+      "percentual": 36.9,
+      "ic_95_inferior_%": 34.4,
+      "ic_95_superior_%": 39.4
+    }
+  ]
+}
