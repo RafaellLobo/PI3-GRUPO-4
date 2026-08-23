@@ -2,69 +2,92 @@
   "criterios": {
     "min_anotadores": 3,
     "diametro_min_mm": 3.0,
-    "regra_rotulo": "mediana"
+    "regra_rotulo": "mediana",
+    "mediana_max_benigno": 2.0,
+    "mediana_min_maligno": 4.0,
+    "medianas_indeterminadas": [
+      2.5,
+      3.0,
+      3.5
+    ]
   },
   "populacao_completa": {
     "pacientes": 696,
     "nodulos_elegiveis": 1392,
-    "indeterminados": 513,
-    "percentual_real": 36.9
+    "consensus_indeterminate": 513,
+    "fractional_median_even_raters": 263,
+    "indeterminados": 776,
+    "percentual_real": 55.7
   },
   "amostra_piloto_sequencial": {
     "pacientes": 25,
     "nodulos": 54,
-    "indeterminados": 21,
-    "percentual": 38.9,
-    "diferenca_pontos_percentuais_vs_populacao": 2.0
+    "consensus_indeterminate": 21,
+    "fractional_median_even_raters": 15,
+    "indeterminados": 36,
+    "percentual": 66.7,
+    "diferenca_pontos_percentuais_vs_populacao": 10.9
   },
   "convergencia_amostras_aleatorias": [
     {
       "pacientes_sorteados": 25,
       "nodulos_na_amostra": 55,
-      "indeterminados": 20,
-      "percentual": 36.4,
-      "ic_95_inferior_%": 24.9,
-      "ic_95_superior_%": 49.6
+      "consensus_indeterminate": 20,
+      "fractional_median_even_raters": 8,
+      "indeterminados": 28,
+      "percentual": 50.9,
+      "ic_95_inferior_%": 38.1,
+      "ic_95_superior_%": 63.6
     },
     {
       "pacientes_sorteados": 50,
       "nodulos_na_amostra": 109,
-      "indeterminados": 47,
-      "percentual": 43.1,
-      "ic_95_inferior_%": 34.2,
-      "ic_95_superior_%": 52.5
+      "consensus_indeterminate": 47,
+      "fractional_median_even_raters": 21,
+      "indeterminados": 68,
+      "percentual": 62.4,
+      "ic_95_inferior_%": 53.0,
+      "ic_95_superior_%": 70.9
     },
     {
       "pacientes_sorteados": 100,
       "nodulos_na_amostra": 194,
-      "indeterminados": 77,
-      "percentual": 39.7,
-      "ic_95_inferior_%": 33.1,
-      "ic_95_superior_%": 46.7
+      "consensus_indeterminate": 77,
+      "fractional_median_even_raters": 27,
+      "indeterminados": 104,
+      "percentual": 53.6,
+      "ic_95_inferior_%": 46.6,
+      "ic_95_superior_%": 60.5
     },
     {
       "pacientes_sorteados": 200,
       "nodulos_na_amostra": 370,
-      "indeterminados": 127,
-      "percentual": 34.3,
-      "ic_95_inferior_%": 29.7,
-      "ic_95_superior_%": 39.3
+      "consensus_indeterminate": 127,
+      "fractional_median_even_raters": 67,
+      "indeterminados": 194,
+      "percentual": 52.4,
+      "ic_95_inferior_%": 47.3,
+      "ic_95_superior_%": 57.5
     },
     {
       "pacientes_sorteados": 500,
       "nodulos_na_amostra": 972,
-      "indeterminados": 370,
-      "percentual": 38.1,
-      "ic_95_inferior_%": 35.1,
-      "ic_95_superior_%": 41.2
+      "consensus_indeterminate": 370,
+      "fractional_median_even_raters": 187,
+      "indeterminados": 557,
+      "percentual": 57.3,
+      "ic_95_inferior_%": 54.2,
+      "ic_95_superior_%": 60.4
     },
     {
       "pacientes_sorteados": 696,
       "nodulos_na_amostra": 1392,
-      "indeterminados": 513,
-      "percentual": 36.9,
-      "ic_95_inferior_%": 34.4,
-      "ic_95_superior_%": 39.4
+      "consensus_indeterminate": 513,
+      "fractional_median_even_raters": 263,
+      "indeterminados": 776,
+      "percentual": 55.7,
+      "ic_95_inferior_%": 53.1,
+      "ic_95_superior_%": 58.3
     }
   ]
 }

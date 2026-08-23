@@ -3,8 +3,79 @@
   "pacientes": 25,
   "nodulos_comuns": 44,
   "mesmos_ids": true,
-  "shape_max_diff_absoluta": 0.0,
+  "shape_max_diff_absoluta": 4.547473508864641e-13,
   "shape_invariante": true,
+  "tolerancia_shape": 1e-06,
+  "proveniencia": {
+    "baseline_v2": {
+      "tabela": "/content/drive/MyDrive/PI3_Grupo4/features/piloto_piloto_v2_consenso50.csv",
+      "tabela_sha256": "0313c80f5636159423b95343bb7f7c2a3df119b48eb3a8861ff3152a3a8c1d82",
+      "tabela_linhas": 44,
+      "config": "/content/drive/MyDrive/PI3_Grupo4/config/config_piloto_v2.json",
+      "config_sha256": "698dddb3ba0e82b74d9bcc1ce521d86796de5dd26c3925a25fb6808287003212",
+      "versao_config_no_csv": "piloto_v2",
+      "versao_config_no_json": "piloto_v2",
+      "gerado_em": "2026-08-23 19:14:32",
+      "pyradiomics": "3.1.1.dev111+g8ed579383",
+      "ambiente": {
+        "python": "3.13.15",
+        "numpy": "2.1.3",
+        "pyradiomics": "3.1.1.dev111+g8ed579383",
+        "simpleitk": "2.5.6",
+        "pandas": "2.2.3",
+        "pyarrow": "18.1.0",
+        "pylidc": "0.2.3",
+        "runtime_id": "ef406b45-e751-4634-9b06-91198b4f4378"
+      }
+    },
+    "v3": {
+      "tabela": "/content/drive/MyDrive/PI3_Grupo4/features/piloto_piloto_v3_consenso50.csv",
+      "tabela_sha256": "93fb7abb7c3a895f225fe940d6c6b12824950f352c1079c6e17291996c74f391",
+      "tabela_linhas": 44,
+      "config": "/content/drive/MyDrive/PI3_Grupo4/config/config_piloto_v3.json",
+      "config_sha256": "64b983d3d37918115c2a0b350f92803dcb6220dc0452b9586c37f6979c24e79e",
+      "versao_config_no_csv": "piloto_v3",
+      "versao_config_no_json": "piloto_v3",
+      "origem": "extraido nesta sessao (Secao 8 deste notebook)",
+      "gerado_em": "2026-08-23 19:43:21",
+      "pyradiomics": "3.1.1.dev111+g8ed579383",
+      "ambiente": {
+        "python": "3.13.15",
+        "numpy": "2.1.3",
+        "pyradiomics": "3.1.1.dev111+g8ed579383",
+        "simpleitk": "2.5.6",
+        "pandas": "2.2.3",
+        "pyarrow": "18.1.0",
+        "pylidc": "0.2.3",
+        "runtime_id": "ef406b45-e751-4634-9b06-91198b4f4378"
+      }
+    },
+    "mesma_sessao_colab": true,
+    "ambiente_identico": true,
+    "divergencias_de_ambiente": {},
+    "parametros_geometricos_comuns": {
+      "espacamento": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "interpolador": "sitkBSpline",
+      "mascara": "consenso50",
+      "min_anotadores": 3,
+      "diametro_min_mm": 3.0,
+      "margem_contexto_voxels": 4
+    },
+    "parametros_de_discretizacao_diferentes": {
+      "v2": {
+        "modo_discretizacao": "binCount",
+        "bin_count": 64
+      },
+      "v3": {
+        "modo_discretizacao": "binWidth",
+        "bin_width": 25
+      }
+    }
+  },
   "resumo_por_classe": [
     {
       "classe": "firstorder",
@@ -124,12 +195,12 @@
       "diferenca_pct_media": 0.0
     },
     {
-      "atributo": "original_firstorder_Mean",
+      "atributo": "original_firstorder_MeanAbsoluteDeviation",
       "spearman": 1.0,
       "diferenca_pct_media": 0.0
     },
     {
-      "atributo": "original_firstorder_MeanAbsoluteDeviation",
+      "atributo": "original_firstorder_Mean",
       "spearman": 1.0,
       "diferenca_pct_media": 0.0
     },

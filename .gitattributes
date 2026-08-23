@@ -1,0 +1,16 @@
+# Proteção determinística de EOL para artefatos científicos.
+#
+# Os JSONs de proveniência (comparacao_v2_v3_discretizacao.json, config_*.json)
+# gravam o SHA-256 das tabelas que descrevem. Sem estas regras, core.autocrlf
+# reintroduziria CRLF em qualquer checkout futuro e quebraria essa
+# correspondência byte-a-byte. Parquet é binário e nunca deve ser filtrado.
+
+# Artefatos científicos atuais
+"01_piloto_experimental/JSON E CSV/*.csv" text eol=lf
+"01_piloto_experimental/JSON E CSV/*.json" text eol=lf
+"01_piloto_experimental/JSON E CSV/*.parquet" -text
+
+# Estrutura canônica futura
+reports/sprint2/**/*.csv text eol=lf
+reports/sprint2/**/*.json text eol=lf
+reports/sprint2/**/*.parquet -text
