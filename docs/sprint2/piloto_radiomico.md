@@ -155,6 +155,12 @@ Verificação executada sobre a base de anotações embutida no `pylidc`, que co
 
 Identidades verificadas: `315 + 301 + 776 = 1.392`, `513 + 263 = 776`, `315 + 301 = 616`.
 
+**Proveniência dos números desta tabela** — os valores vêm de duas fontes distintas:
+
+- **1.392, 696, 513, 263 e 776** estão registrados em `reports/sprint2/validacao/verificacao_populacional_valor_central_3.json`;
+- **315, 301, 616 e 422** derivam de `scripts/output/cohort_diagnostic_raw.csv`, produzido por `scripts/explore_cohort_criteria.py` (ver também o protocolo, Seção 5.4);
+- esse `cohort_diagnostic_raw.csv` é **deliberadamente não versionado**, por ser dado derivado regenerável: basta executar `python scripts/explore_cohort_criteria.py`, que lê apenas o banco de anotações do `pylidc` e não requer nenhuma imagem DICOM.
+
 Balanceamento da base modelável: **51,1% / 48,9%** — saudável, sem necessidade de técnicas de rebalanceamento nesta fase.
 
 **A indeterminação de alvo é característica estrutural do LIDC-IDRI, não artefato de amostra pequena:** mais da metade dos nódulos elegíveis da população não recebe rótulo binário sob a política oficial.
@@ -299,7 +305,7 @@ A `v3_oficial` versionada foi utilizada **apenas como controle externo de regres
 8. **Divergência CSV × Parquet nas features.** As duas serializações do mesmo resultado não são bit-a-bit idênticas nas colunas de features: o CSV trunca casas decimais frente ao `float64` do Parquet, com erro **relativo** máximo da ordem de 1e-13. É condição **pré-existente** dos artefatos, não introduzida pelas correções de target, e não afeta nenhuma coluna de identificação ou de alvo — essas são idênticas nas duas. Para trabalho numérico, prefira o Parquet.
 9. **Artefatos `v1` não foram atualizados.** A versão v1 do piloto é registro histórico, anterior às correções de estabilidade e à política de alvo oficial; seus CSV/Parquet/JSON permanecem com a regra antiga e **não devem ser usados como referência**.
 10. **Limitação de estratificação por paciente.** Na base modelável da população, apenas 42 dos 422 pacientes possuem nódulos de ambas as classes, o que limita estratificação perfeita por grupo e gera variância entre folds (ver protocolo, Seção 6.2).
-11. **Documentos `.docx` históricos.** Os arquivos em `01_piloto_experimental/DOCUMENTAÇÃO/` precedem a correção da regra de target e contêm números e interpretações desatualizados. São tratados como documentos históricos; **este Markdown é a referência canônica** do piloto.
+11. **Documentos `.docx` históricos.** Os arquivos em `reports/sprint2/historico/docx/` precedem as correções dos Bloqueadores 1 e 2 e contêm números e interpretações desatualizados. São tratados como documentos históricos; **este Markdown é a referência canônica** do piloto.
 
 ## 14. Decisões ainda abertas
 
@@ -320,11 +326,11 @@ Já **fechados** pelo protocolo oficial e, portanto, fora desta lista: a regra d
 
 | Notebook | Produz |
 |---|---|
-| `01_piloto_experimental/NOTBOOKS/PI3_G4_sprint2_v2_extração_piloto.ipynb` | `config_piloto_v2.json`, `piloto_piloto_v2_consenso50.csv/.parquet`, `validacao_piloto_v2_consenso50.json`, `descartes_piloto_v2_consenso50.csv` |
-| `01_piloto_experimental/NOTBOOKS/PI3_G4_piloto_v3_binWidth_validacao.ipynb` | `config_piloto_v3_oficial.json`, `piloto_piloto_v3_oficial_consenso50.csv/.parquet`, `validacao_piloto_v3_oficial_consenso50.json`, `descartes_piloto_v3_oficial_consenso50.csv` — controle externo de regressão (Seção 12.6) |
-| `01_piloto_experimental/NOTBOOKS/PI3_G4_comparacao_binCount_binWidth.ipynb` | `config_piloto_v3.json`, `piloto_piloto_v3_consenso50.csv`, `comparacao_v2_v3_discretizacao.json` — experimento definitivo de discretização (Seção 12) |
-| `01_piloto_experimental/NOTBOOKS/PI3_G4_verificacao_populacional_valor3.ipynb` | `verificacao_populacional_valor_central_3.json` (Seções 9 e 10) |
+| `notebooks/sprint2/PI3_G4_sprint2_v2_extração_piloto.ipynb` | `config/config_piloto_v2.json`, `features/piloto_piloto_v2_consenso50.csv/.parquet`, `validacao/validacao_piloto_v2_consenso50.json`, `validacao/descartes_piloto_v2_consenso50.csv` |
+| `notebooks/sprint2/historico/PI3_G4_piloto_v3_binWidth_validacao.ipynb` | `historico/v3_oficial/` — `config_piloto_v3_oficial.json`, `piloto_piloto_v3_oficial_consenso50.csv/.parquet`, `validacao_piloto_v3_oficial_consenso50.json`, `descartes_piloto_v3_oficial_consenso50.csv` — controle externo de regressão (Seção 12.6) |
+| `notebooks/sprint2/PI3_G4_comparacao_binCount_binWidth.ipynb` | `config/config_piloto_v3.json`, `features/piloto_piloto_v3_consenso50.csv`, `comparacao/comparacao_v2_v3_discretizacao.json` — experimento definitivo de discretização (Seção 12) |
+| `notebooks/sprint2/PI3_G4_verificacao_populacional_valor3.ipynb` | `validacao/verificacao_populacional_valor_central_3.json` (Seções 9 e 10) |
 
-Artefatos em `01_piloto_experimental/JSON E CSV/`. Semente fixa `42` em todas as operações estocásticas. PyRadiomics fixado no commit `8ed579383`.
+Artefatos em `reports/sprint2/`, nos subdiretórios indicados acima; os da rodada `v1` ficam em `reports/sprint2/historico/v1/`. Semente fixa `42` em todas as operações estocásticas. PyRadiomics fixado no commit `8ed579383`.
 
 **Fontes deste documento:** [`docs/protocolo_coorte_target_sprint2.md`](../protocolo_coorte_target_sprint2.md) (política de alvo e coorte); os quatro notebooks corrigidos acima; os JSONs de configuração e validação corrigidos; e a auditoria documental dos `.docx` históricos. Somente informação já validada nos artefatos foi consolidada aqui.
