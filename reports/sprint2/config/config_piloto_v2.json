@@ -1,0 +1,56 @@
+{
+  "params_grupo": {
+    "versao_config": "piloto_v2",
+    "espacamento": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "interpolador": "sitkBSpline",
+    "modo_discretizacao": "binCount",
+    "bin_count": 64,
+    "bin_width": 25,
+    "mascara": "consenso50",
+    "min_anotadores": 3,
+    "diametro_min_mm": 3.0,
+    "regra_rotulo": "mediana",
+    "mediana_max_benigno": 2.0,
+    "mediana_min_maligno": 4.0,
+    "n_pacientes_piloto": 25,
+    "arquivar_tar_no_drive": true,
+    "max_tentativas_extracao": 2,
+    "margem_contexto_voxels": 4
+  },
+  "config_pyradiomics": {
+    "resampledPixelSpacing": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "interpolator": "sitkBSpline",
+    "label": 1,
+    "binCount": 64
+  },
+  "classes_habilitadas": [
+    "shape",
+    "firstorder",
+    "glcm",
+    "glrlm",
+    "glszm"
+  ],
+  "pyradiomics_commit_fixado": "8ed579383",
+  "versao_pyradiomics_resolvida": "3.1.1.dev111+g8ed579383",
+  "versao_numpy": "2.1.3",
+  "versao_python": "3.13.15",
+  "ambiente": {
+    "python": "3.13.15",
+    "numpy": "2.1.3",
+    "pyradiomics": "3.1.1.dev111+g8ed579383",
+    "simpleitk": "2.5.6",
+    "pandas": "2.2.3",
+    "pyarrow": "18.1.0",
+    "pylidc": "0.2.3",
+    "runtime_id": "ef406b45-e751-4634-9b06-91198b4f4378"
+  },
+  "gerado_em": "2026-08-23 19:14:32"
+}

@@ -4,7 +4,7 @@
 
 Projeto acadêmico dedicado ao estudo de radiômica aplicada a imagens de Tomografia Computadorizada (TC) de nódulos pulmonares.
 
-O repositório está atualmente na etapa de configuração e validação do ambiente. Ainda não há pipeline de processamento ou análise implementado.
+A Sprint 2 contém um **pipeline piloto de extração e validação radiômica** sobre o LIDC-IDRI: consolidação de máscaras por consenso, extração de atributos com PyRadiomics e validação da coorte e da variável-alvo. A documentação técnica canônica está em [`docs/sprint2/piloto_radiomico.md`](docs/sprint2/piloto_radiomico.md).
 
 ## Objetivo
 
@@ -24,11 +24,18 @@ O ambiente utiliza Python 3.9 e foi validado no Windows com Python 3.9.23.
 
 ```text
 .
-├── data/                           # Diretório local reservado para dados
-├── scripts/
-│   └── validate_environment.py    # Validação de imports e versões
+├── data/                  # Dados locais (DICOM); não versionado
+├── docs/                  # Documentação técnica
+│   └── sprint2/           # Documento canônico do piloto radiômico
+├── notebooks/
+│   └── sprint2/           # Notebooks de extração, comparação e validação
+├── reports/
+│   └── sprint2/           # Configs, validações, features e artefatos históricos
+├── scripts/               # Scripts de diagnóstico e validação de ambiente
+├── src/                   # Código de biblioteca do projeto
+├── .gitattributes         # EOL determinístico para artefatos científicos
 ├── .gitignore
-├── environment.yml                # Especificação do ambiente Conda
+├── environment.yml        # Especificação do ambiente Conda
 └── README.md
 ```
 
