@@ -33,9 +33,13 @@ o ``enumerate`` reindexa o que sobrou.
 
 Em consequência, ``scripts/output/cohort_diagnostic_raw.csv`` — que indexa por
 ``nodule_index`` original e não registra o scan — **não pode** ser usado como
-fonte de alvo para esta base: produziria rótulo trocado em quase metade dos
-nódulos. O alvo é recuperado aqui diretamente das annotations do scan correto,
-identificado sem ambiguidade pelo ``scan_id`` presente no ``nodulo_id``.
+fonte de alvo para esta base: as linhas em que as duas numerações divergem —
+quase metade delas — seriam associadas ao CLUSTER INCORRETO, podendo gerar
+target incorreto. Nem toda associação equivocada troca o rótulo, já que dois
+clusters diferentes podem coincidir na mesma classe, mas o vínculo estaria
+errado de qualquer modo. O alvo é recuperado aqui diretamente das annotations
+do scan correto, identificado sem ambiguidade pelo ``scan_id`` presente no
+``nodulo_id``.
 
 A regra de annotation válida (``has_characteristics``) e a regra de binarização
 (``binarize_malignancy``) são IMPORTADAS de ``scripts/explore_cohort_criteria.py``,

@@ -10,8 +10,8 @@ identificador de paciente é gravado pelos artefatos deste script.
 ESCOPO
 ------
 Baseline formal, deliberadamente mínimo: três atributos de forma, um
-classificador linear, nenhum tuning. Serve como piso de referência contra o qual
-modelos posteriores devem ser comparados — não é o modelo final.
+classificador linear, nenhum tuning. Serve como referência quantitativa contra
+a qual modelos posteriores devem ser comparados — não é o modelo final.
 
 Não faz tuning, não faz seleção de features, não refaz o split e não altera a
 tabela de modelagem.

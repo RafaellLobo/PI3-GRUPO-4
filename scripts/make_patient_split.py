@@ -23,10 +23,14 @@ protocolo (Seção 6.1) e a simulação já registrada em
 1. treino (70%)  x  holdout (30%)
 2. holdout dividido ao meio  ->  validação (15%)  e  teste (15%)
 
-A divisão é feita sobre as linhas de nódulo com ``groups=patient_id``, de modo
-que as proporções mirem a massa de NÓDULOS, mas a unidade indivisível seja
-sempre o PACIENTE — nenhum paciente pode cair em duas partições (leakage
-anatômico/fisiológico, protocolo Seção 6).
+Em ``GroupShuffleSplit``, ``train_size``/``test_size`` referem-se aos GRUPOS —
+aqui, ``patient_id``. Portanto o 70/15/15 é aplicado aproximadamente à
+quantidade de PACIENTES, não à de nódulos. A distribuição de nódulos por
+partição é consequência: cada paciente entra inteiro, com o número de nódulos
+que tiver, e esse número varia de 1 a 7 na base.
+
+A unidade indivisível é sempre o PACIENTE — nenhum paciente pode cair em duas
+partições (leakage anatômico/fisiológico, protocolo Seção 6).
 
 LIMITAÇÃO CONHECIDA — não é um defeito deste script
 ---------------------------------------------------
