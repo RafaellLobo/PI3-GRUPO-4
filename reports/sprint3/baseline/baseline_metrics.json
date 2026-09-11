@@ -1,0 +1,151 @@
+{
+  "modelo": "LogisticRegression",
+  "pipeline": [
+    "StandardScaler",
+    "LogisticRegression"
+  ],
+  "features": [
+    "original_shape_MeshVolume",
+    "original_shape_Maximum3DDiameter",
+    "original_shape_Sphericity"
+  ],
+  "target": "target_binary",
+  "parametros_logreg": {
+    "C": 1.0,
+    "penalty": "l2",
+    "class_weight": null,
+    "random_state": 42,
+    "max_iter": 1000
+  },
+  "threshold": 0.5,
+  "seed": 42,
+  "versao_sklearn": "1.3.2",
+  "fontes": {
+    "tabela_modelagem": "data/modeling_table_sprint3.csv",
+    "split": "reports/sprint3/baseline/patient_split.csv"
+  },
+  "composicao_particoes": {
+    "train": {
+      "n_nodulos": 417,
+      "n_pacientes": 291,
+      "classe_0": 209,
+      "classe_1": 208
+    },
+    "validation": {
+      "n_nodulos": 92,
+      "n_pacientes": 62,
+      "classe_0": 49,
+      "classe_1": 43
+    },
+    "test": {
+      "n_nodulos": 98,
+      "n_pacientes": 63,
+      "classe_0": 52,
+      "classe_1": 46
+    }
+  },
+  "distribuicao_classes_total": {
+    "classe_0": 310,
+    "classe_1": 297,
+    "total": 607
+  },
+  "prevencao_vazamento": {
+    "scaler_ajustado_somente_no_treino": true,
+    "scaler_n_samples_seen": 417,
+    "n_nodulos_treino": 417,
+    "evidencia": "StandardScaler vive dentro do Pipeline, ajustado apenas com a partição train; validation e test passam somente por transform. n_samples_seen_ == n_nodulos_treino comprova.",
+    "pacientes_compartilhados_entre_particoes": 0
+  },
+  "coeficientes": {
+    "espaco": "padronizado (StandardScaler), não interpretável em unidades originais",
+    "por_feature": {
+      "original_shape_MeshVolume": 0.9796783329891894,
+      "original_shape_Maximum3DDiameter": 2.694711785529296,
+      "original_shape_Sphericity": -0.5562070788104145
+    },
+    "intercepto": 0.9441287807415529,
+    "scaler_mean": {
+      "original_shape_MeshVolume": 1660.4453437250197,
+      "original_shape_Maximum3DDiameter": 20.726562816151045,
+      "original_shape_Sphericity": 0.6895369422895994
+    },
+    "scaler_scale": {
+      "original_shape_MeshVolume": 2885.7146960924038,
+      "original_shape_Maximum3DDiameter": 12.965347712659282,
+      "original_shape_Sphericity": 0.11522782656359476
+    },
+    "n_iteracoes": 15
+  },
+  "metricas": {
+    "validation": {
+      "n_nodulos": 92,
+      "n_pacientes": 62,
+      "classe_0": 49,
+      "classe_1": 43,
+      "auc_roc": 0.9439962031324158,
+      "recall_classe_1": 0.9069767441860465,
+      "especificidade_classe_0": 0.8775510204081632,
+      "f1_classe_1": 0.8863636363636364,
+      "matriz_confusao": {
+        "verdadeiro_negativo": 43,
+        "falso_positivo": 6,
+        "falso_negativo": 4,
+        "verdadeiro_positivo": 39
+      }
+    },
+    "test": {
+      "n_nodulos": 98,
+      "n_pacientes": 63,
+      "classe_0": 52,
+      "classe_1": 46,
+      "auc_roc": 0.9761705685618729,
+      "recall_classe_1": 0.8478260869565217,
+      "especificidade_classe_0": 0.9615384615384616,
+      "f1_classe_1": 0.8965517241379309,
+      "matriz_confusao": {
+        "verdadeiro_negativo": 50,
+        "falso_positivo": 2,
+        "falso_negativo": 7,
+        "verdadeiro_positivo": 39
+      }
+    }
+  },
+  "bootstrap_ci_95_test": {
+    "metodo": "patient_level_percentile_bootstrap",
+    "n_bootstrap_requested": 1000,
+    "n_bootstrap_valid": 1000,
+    "n_bootstrap_descartadas": 0,
+    "seed": 42,
+    "unidade_reamostragem": "patient_id",
+    "percentis": [
+      2.5,
+      97.5
+    ],
+    "n_pacientes_reamostrados_por_replica": 63,
+    "n_nodulos_test": 98,
+    "modelo_retreinado_no_bootstrap": false,
+    "metricas": {
+      "auc_roc": {
+        "estimativa_pontual": 0.9761705685618729,
+        "ic_95_inferior": 0.9476896681749624,
+        "ic_95_superior": 0.994642976615267
+      },
+      "recall_classe_1": {
+        "estimativa_pontual": 0.8478260869565217,
+        "ic_95_inferior": 0.7346598639455783,
+        "ic_95_superior": 0.9523809523809523
+      },
+      "especificidade_classe_0": {
+        "estimativa_pontual": 0.9615384615384616,
+        "ic_95_inferior": 0.8979591836734694,
+        "ic_95_superior": 1.0
+      },
+      "f1_classe_1": {
+        "estimativa_pontual": 0.8965517241379309,
+        "ic_95_inferior": 0.8171967287596548,
+        "ic_95_superior": 0.9574689716312058
+      }
+    }
+  },
+  "warnings_sklearn": []
+}
