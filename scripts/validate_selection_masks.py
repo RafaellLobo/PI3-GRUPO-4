@@ -35,7 +35,7 @@ if str(RAIZ) not in sys.path:
 
 import pylidc as pl  # noqa: E402
 
-from src.radiomics import masks, selection  # noqa: E402
+from src.radiomics import ids, masks, selection  # noqa: E402
 
 PACIENTES: Tuple[str, ...] = (
     "LIDC-IDRI-0001",
@@ -98,7 +98,7 @@ def ler_referencia_descartes(patient_id: str) -> List[Tuple[str, str]]:
         return [
             (linha["nodule_id"], linha["motivo"])
             for linha in csv.DictReader(fh)
-            if linha["nodule_id"].rsplit("_N", 1)[0] == patient_id
+            if ids.decompor_id_piloto(linha["nodule_id"])[0] == patient_id
         ]
 
 
