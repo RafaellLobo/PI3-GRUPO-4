@@ -55,6 +55,8 @@ O alvo **precisou ser reconstruído a partir do scan correto**. A base radiômic
 
 ## 3. Rastreabilidade do target
 
+A convenção de identificação de nódulos — os dois formatos textuais, a diferença semântica entre eles e a identidade canônica `(scan_id, original_nodule_idx)` — está documentada em [`docs/sprint3/convencao_identificacao_nodulos.md`](convencao_identificacao_nodulos.md). Esta seção registra como ela foi aplicada para recuperar o alvo.
+
 ### 3.1 O que `Nxx` significa
 
 O `nodulo_id` da base oficial tem o formato `{patient_id}_N{pos}_scan{id}`. O notebook de extração da Sprint 3 gerou esse `N{pos}` a partir de:

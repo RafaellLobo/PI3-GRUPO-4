@@ -41,6 +41,12 @@ errado de qualquer modo. O alvo é recuperado aqui diretamente das annotations
 do scan correto, identificado sem ambiguidade pelo ``scan_id`` presente no
 ``nodulo_id``.
 
+O formato desse ``nodulo_id`` e seu parser vivem em ``src/radiomics/ids.py``, e
+não neste script: são os mesmos usados para validar os artefatos. A identidade
+canônica do nódulo é ``ids.CHAVE_CANONICA`` — ``(scan_id, original_nodule_idx)``
+—, e é ela, não a string, que identifica cientificamente o nódulo. Convenção
+completa em ``docs/sprint3/convencao_identificacao_nodulos.md``.
+
 A regra de annotation válida (``has_characteristics``) e a regra de binarização
 (``binarize_malignancy``) são IMPORTADAS de ``scripts/explore_cohort_criteria.py``,
 para que exista uma única definição de cada uma no projeto.
@@ -52,7 +58,6 @@ Execução:
 from __future__ import annotations
 
 import json
-import re
 import sys
 import traceback
 from pathlib import Path
@@ -70,7 +75,7 @@ for _path in (str(REPO_ROOT), str(SCRIPTS_DIR)):
 
 import pylidc as pl  # noqa: E402 - depende do sys.path ajustado acima
 
-from src.radiomics import selection  # noqa: E402 - idem
+from src.radiomics import ids, selection  # noqa: E402 - idem
 
 # Única definição de annotation válida e de regra de alvo no projeto.
 from explore_cohort_criteria import (  # noqa: E402 - idem
@@ -87,11 +92,6 @@ from explore_cohort_criteria import (  # noqa: E402 - idem
 
 INPUT_CSV: Path = REPO_ROOT / "data" / "base_radiomica_oficial_422.csv"
 OUTPUT_CSV: Path = REPO_ROOT / "data" / "modeling_table_sprint3.csv"
-
-#: ``{patient_id}_N{posição em selecionados}_scan{pylidc.Scan.id}``
-NODULO_ID_PATTERN: re.Pattern[str] = re.compile(
-    r"^(LIDC-IDRI-\d{4})_N(\d+)_scan(\d+)$"
-)
 
 #: Medianas fracionárias produzidas por contagem par de observadores
 #: (protocolo, Seção 5.3) — causa de indefinição distinta da nota 3.
@@ -140,20 +140,8 @@ SEPARATOR: str = "=" * 78
 
 
 # --------------------------------------------------------------------------- #
-# Decomposição do identificador
+# Consolidação do alvo
 # --------------------------------------------------------------------------- #
-
-
-def decompor_nodulo_id(nodulo_id: str) -> tuple[str, int, int]:
-    """Decompõe ``nodulo_id`` em ``(patient_id, posicao_selecionada, scan_id)``.
-
-    ``posicao_selecionada`` é a posição na lista ``selecionados`` devolvida por
-    ``selection.selecionar_clusters`` — nunca o ``nodule_idx`` do clustering.
-    """
-    match = NODULO_ID_PATTERN.match(nodulo_id)
-    if match is None:
-        raise ValueError(f"nodulo_id fora do padrão esperado: {nodulo_id!r}")
-    return match.group(1), int(match.group(2)), int(match.group(3))
 
 
 def exclusion_reason(malignancy_median: float | None, n_scored: int) -> str:
@@ -243,7 +231,7 @@ def mapear_linhas(frame: pd.DataFrame) -> tuple[list[dict[str, Any]], list[tuple
     for posicao_linha, nodulo_id, patient_id in zip(
         frame.index, frame["nodulo_id"], frame["patient_id"]
     ):
-        pid, pos, scan_id = decompor_nodulo_id(str(nodulo_id))
+        pid, pos, scan_id = ids.decompor_id_extracao(str(nodulo_id))
         if pid != str(patient_id):
             raise ValueError(
                 f"{nodulo_id}: prefixo do nodulo_id ({pid}) diverge da coluna "
@@ -414,15 +402,25 @@ def validar(
     )
     log.append(f"  [OK] {'nodulo_id duplicado':<52} 0")
 
-    chave = ["scan_id", "original_nodule_idx"]
-    dup_chave = modelavel[modelavel.duplicated(subset=chave, keep=False)]
-    _exigir(
-        dup_chave.empty,
-        "INVARIANTE VIOLADA — (scan_id, original_nodule_idx) duplicado: "
-        f"{dup_chave['nodulo_id'].tolist()[:5]}. Duas linhas radiômicas apontam "
-        "para o mesmo cluster. Nenhuma tabela foi gravada.",
-    )
-    log.append(f"  [OK] {'(scan_id, original_nodule_idx) duplicado':<52} 0")
+    # A unicidade da chave canônica é exigida já sobre os 958 registros
+    # MAPEADOS, não apenas sobre o recorte modelável: uma colisão entre uma
+    # linha incluída e uma excluída continuaria sendo duas linhas radiômicas
+    # apontando para o mesmo cluster, e o recorte por target a esconderia.
+    chave = list(ids.CHAVE_CANONICA)
+    rotulo_chave = f"({', '.join(chave)})"
+    for escopo, tabela, esperado in (
+        ("mapeados", completa, EXPECTED_MAPPED),
+        ("modeláveis", modelavel, EXPECTED_MODELABLE_ROWS),
+    ):
+        ok(f"chaves canônicas {rotulo_chave} — {escopo}", len(tabela), esperado)
+        dup_chave = tabela[tabela.duplicated(subset=chave, keep=False)]
+        _exigir(
+            dup_chave.empty,
+            f"INVARIANTE VIOLADA — chave canônica {rotulo_chave} duplicada em "
+            f"{escopo}: {dup_chave['nodulo_id'].tolist()[:5]}. Duas linhas "
+            "radiômicas apontam para o mesmo cluster. Nenhuma tabela foi gravada.",
+        )
+        log.append(f"  [OK] {f'chave canônica duplicada — {escopo}':<52} 0")
 
     pacientes_repetidos = int(
         modelavel["patient_id"].duplicated().sum()
