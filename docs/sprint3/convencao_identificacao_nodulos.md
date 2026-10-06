@@ -173,7 +173,9 @@ python scripts/validate_nodule_ids.py
 
 Sem `pytest` e sem dependência nova. **Não exige `pylidc` nem DICOM**, e não cria nem modifica nenhum arquivo.
 
-Confere: ida e volta dos dois formatos, incluindo a fronteira de largura do `:02d`; rejeição mútua dos *parsers* e recusa de entradas malformadas; conformidade dos sete artefatos versionados da Sprint 2, com `nodule_id == selection.nodule_id(patient_id, nodule_idx)` linha a linha nos que carregam as colunas; conformidade das 958 linhas da base oficial, incluindo `formatar_id_extracao(...) == nodulo_id` para todas elas e unicidade de `(scan_id, posição)` sobre as 958; e unicidade da chave canônica nas **607** linhas modeláveis, que são as únicas em que `original_nodule_idx` está persistido.
+Confere: ida e volta do formato de extração, incluindo a fronteira de largura do `:02d`; rejeição mútua dos *parsers* e recusa de entradas malformadas; conformidade dos sete artefatos versionados da Sprint 2 com o formato do piloto, e, nos que carregam as colunas, do prefixo com `patient_id` e do `Nxx` com `nodule_idx`; conformidade das 958 linhas da base oficial, incluindo `formatar_id_extracao(...) == nodulo_id` para todas elas e unicidade de `(scan_id, posição)` sobre as 958; e unicidade da chave canônica nas **607** linhas modeláveis, que são as únicas em que `original_nodule_idx` está persistido. Tudo isso depende **apenas da stdlib**.
+
+A conferência do produtor congelado — ida e volta do formato do piloto e `nodule_id == selection.nodule_id(patient_id, nodule_idx)` linha a linha nos artefatos que carregam as colunas — exige importar `src/radiomics/selection.py`, que importa `numpy`. Ela é executada quando as dependências científicas do ambiente estão disponíveis; caso contrário, é marcada explicitamente como **SKIP** na saída e no resumo final, e as demais checagens continuam rodando.
 
 ### 9.2 Validação semântica, com recuperação dos índices originais
 

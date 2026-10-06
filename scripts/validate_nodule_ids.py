@@ -12,6 +12,13 @@ Esta é a camada ESTRUTURAL e OFFLINE da validação: ela depende apenas da stdl
 e dos CSVs já presentes, e **não exige ``pylidc`` nem DICOM**. Nenhum arquivo é
 criado ou modificado.
 
+Uma única checagem vai além da stdlib: a conferência de que o produtor congelado
+``selection.nodule_id`` reproduz os IDs do piloto. Ela precisa importar
+``src/radiomics/selection.py``, que importa ``numpy`` no nível do módulo. Por
+isso esse import é opcional: com ``numpy`` disponível a checagem roda; sem ele,
+vira SKIP informativo e todas as demais checagens continuam rodando. O formato
+não é reimplementado aqui, para não criar uma segunda definição dele.
+
 A unicidade direta de ``(scan_id, original_nodule_idx)`` sobre os 958 registros
 mapeados NÃO é provada aqui, e sim em ``scripts/build_modeling_table.py``:
 ``data/base_radiomica_oficial_422.csv`` não carrega ``original_nodule_idx``, que
@@ -35,13 +42,17 @@ import csv
 import sys
 import traceback
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Callable, Dict, List, Optional
 
 RAIZ = Path(__file__).resolve().parent.parent
 if str(RAIZ) not in sys.path:
     sys.path.insert(0, str(RAIZ))
 
-from src.radiomics import ids, selection  # noqa: E402
+# Só stdlib: ``src/radiomics/__init__.py`` não importa ``selection``.
+from src.radiomics import ids  # noqa: E402
+
+#: Assinatura de ``selection.nodule_id``.
+ProdutorPiloto = Callable[[str, int], str]
 
 #: Artefatos versionados do piloto da Sprint 2, no formato
 #: ``{patient_id}_N{nodule_idx:02d}``. ``colunas`` indica se o CSV carrega
@@ -78,6 +89,10 @@ EXPECTED_PACIENTES_MODELAGEM = 416
 SEPARADOR = "=" * 72
 
 
+class FalhaDeValidacao(Exception):
+    """Uma checagem da convenção não vale."""
+
+
 class Contador:
     """Acumula o resultado das checagens para o resumo final."""
 
@@ -86,7 +101,10 @@ class Contador:
         self.skips: List[str] = []
 
     def checar(self, condicao: bool, descricao: str) -> None:
-        assert condicao, descricao
+        # ``if``/``raise`` explícitos, e não ``assert``: com ``python -O`` o
+        # ``assert`` some e toda checagem passaria a contar como sucesso.
+        if not condicao:
+            raise FalhaDeValidacao(descricao)
         self.ok += 1
 
     def skip(self, descricao: str) -> None:
@@ -108,18 +126,38 @@ def _rejeita(funcao, valor: str) -> bool:
     return False
 
 
-def validar_round_trip(contador: Contador) -> None:
+def carregar_produtor_piloto(contador: Contador) -> Optional[ProdutorPiloto]:
+    """``selection.nodule_id``, ou ``None`` (com SKIP) se ``numpy`` faltar.
+
+    ``selection`` importa ``numpy`` no nível do módulo; é a única razão pela qual
+    este import é opcional.
+    """
+    try:
+        from src.radiomics import selection
+    except ImportError as erro:
+        contador.skip(
+            "produtor congelado selection.nodule_id não verificado: import de "
+            f"src.radiomics.selection falhou ({erro})"
+        )
+        return None
+    return selection.nodule_id
+
+
+def validar_round_trip(contador: Contador, produtor: Optional[ProdutorPiloto]) -> None:
     """Ida e volta dos dois formatos, incluindo a fronteira de largura do ``:02d``."""
     print("\n[round-trip dos formatos]")
 
     paciente = "LIDC-IDRI-0042"
-    for indice in (0, 1, 9, 10, 99, 100):
-        texto = selection.nodule_id(paciente, indice)
-        contador.checar(
-            ids.decompor_id_piloto(texto) == (paciente, indice),
-            f"round-trip piloto falhou para idx {indice}: {texto!r}",
-        )
-    print("  OK    piloto: nodule_id -> decompor_id_piloto para idx 0,1,9,10,99,100")
+    if produtor is not None:
+        for indice in (0, 1, 9, 10, 99, 100):
+            texto = produtor(paciente, indice)
+            contador.checar(
+                ids.decompor_id_piloto(texto) == (paciente, indice),
+                f"round-trip piloto falhou para idx {indice}: {texto!r}",
+            )
+        print("  OK    piloto: nodule_id -> decompor_id_piloto para idx 0,1,9,10,99,100")
+    else:
+        print("  SKIP  piloto: depende de selection.nodule_id")
 
     for posicao in (0, 1, 9, 10, 99, 100):
         for scan_id in (1, 12, 1018):
@@ -139,9 +177,14 @@ def validar_rejeicao_mutua(contador: Contador) -> None:
     """
     print("\n[rejeição mútua dos parsers]")
 
+    # IDs de piloto como literais: o que se testa aqui são os parsers, e assim o
+    # bloco não depende do produtor (nem de ``numpy``).
     paciente = "LIDC-IDRI-0042"
-    for indice in (0, 3, 15):
-        piloto = selection.nodule_id(paciente, indice)
+    for indice, piloto in (
+        (0, "LIDC-IDRI-0042_N00"),
+        (3, "LIDC-IDRI-0042_N03"),
+        (15, "LIDC-IDRI-0042_N15"),
+    ):
         extracao = ids.formatar_id_extracao(paciente, indice, 12)
         contador.checar(
             _rejeita(ids.decompor_id_extracao, piloto),
@@ -161,7 +204,7 @@ def validar_rejeicao_mutua(contador: Contador) -> None:
     print("  OK    cada parser rejeita o outro formato e entradas malformadas")
 
 
-def validar_artefatos_piloto(contador: Contador) -> None:
+def validar_artefatos_piloto(contador: Contador, produtor: Optional[ProdutorPiloto]) -> None:
     """Todo ``nodule_id`` versionado da Sprint 2 continua no formato do piloto."""
     print("\n[artefatos versionados da Sprint 2]")
 
@@ -190,12 +233,15 @@ def validar_artefatos_piloto(contador: Contador) -> None:
                     nodule_idx == int(linha["nodule_idx"]),
                     f"{caminho_rel}: {nid!r} != nodule_idx {linha['nodule_idx']}",
                 )
-                contador.checar(
-                    nid == selection.nodule_id(patient_id, int(linha["nodule_idx"])),
-                    f"{caminho_rel}: {nid!r} não é reproduzido por selection.nodule_id",
-                )
+                if produtor is not None:
+                    contador.checar(
+                        nid == produtor(patient_id, int(linha["nodule_idx"])),
+                        f"{caminho_rel}: {nid!r} não é reproduzido por selection.nodule_id",
+                    )
 
         sufixo = " + colunas patient_id/nodule_idx" if tem_colunas else ""
+        if tem_colunas and produtor is not None:
+            sufixo += " + selection.nodule_id"
         print(f"  OK    {caminho_rel} ({len(linhas)} linhas): formato piloto{sufixo}")
 
 
@@ -365,12 +411,13 @@ def main() -> int:
     print(f"chave canônica   : {ids.CHAVE_CANONICA}")
 
     try:
-        validar_round_trip(contador)
+        produtor = carregar_produtor_piloto(contador)
+        validar_round_trip(contador, produtor)
         validar_rejeicao_mutua(contador)
-        validar_artefatos_piloto(contador)
+        validar_artefatos_piloto(contador, produtor)
         validar_base_oficial(contador)
         validar_chave_canonica(contador)
-    except AssertionError as erro:
+    except FalhaDeValidacao as erro:
         print("\n" + SEPARADOR)
         print(f"VALIDAÇÃO FALHOU após {contador.ok} checagem(ns) bem-sucedida(s)")
         print(SEPARADOR)
