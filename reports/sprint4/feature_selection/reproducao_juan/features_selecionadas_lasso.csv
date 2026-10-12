@@ -1,0 +1,9 @@
+feature,criterio
+original_shape_Sphericity,LASSO >= 3/5 folds
+original_shape_SurfaceVolumeRatio,LASSO >= 3/5 folds
+original_glcm_Imc1,LASSO >= 3/5 folds
+original_glcm_Imc2,LASSO >= 3/5 folds
+original_firstorder_RootMeanSquared,LASSO >= 3/5 folds
+original_firstorder_90Percentile,LASSO >= 3/5 folds
+original_shape_Elongation,LASSO >= 3/5 folds
+original_glcm_ClusterShade,LASSO >= 3/5 folds

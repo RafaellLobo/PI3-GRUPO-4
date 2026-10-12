@@ -9,3 +9,12 @@
 reports/sprint2/**/*.csv text eol=lf
 reports/sprint2/**/*.json text eol=lf
 reports/sprint2/**/*.parquet -text
+
+# Sprint 4 — reprodução fiel da seleção de features (Cartão 4, Etapa 0).
+# CSVs e JSON preservados byte a byte, sem conversão de fim de linha: seus
+# SHA-256 (gerados com CRLF) estão registrados na auditoria e no próprio JSON.
+# whitespace=cr-at-eol: o CR desses arquivos é fim de linha, não espaço sobrando.
+reports/sprint4/feature_selection/reproducao_juan/*.csv -text whitespace=cr-at-eol
+reports/sprint4/feature_selection/reproducao_juan/*.json -text whitespace=cr-at-eol
+# Script de reprodução sempre em LF, para que seu SHA-256 registrado no JSON se mantenha.
+scripts/sprint4/reproduce_juan_feature_selection.py text eol=lf

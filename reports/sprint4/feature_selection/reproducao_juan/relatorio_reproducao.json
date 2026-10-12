@@ -1,0 +1,742 @@
+{
+  "etapa": "Sprint 4 — Cartão 4 — Etapa 0: reprodução fiel da seleção de features de Juan",
+  "documentacao": "reports/sprint4/feature_selection/auditoria_reproducao_juan.md",
+  "script": "scripts/sprint4/reproduce_juan_feature_selection.py",
+  "sha256_script": "e90180ac78f8d492cda4c4fec1fd7cd093aa1c687f20edd1be9cc31f0934cdc4",
+  "derivado_do_script_auditado_sha256": "066fee8da95dc6b0f9d41b485c036d6d64ed42c2f4a072bb7cc9dc67c859c66c",
+  "n_jobs": 1,
+  "parametros": {
+    "random_state": 42,
+    "n_folds": 5,
+    "rf_top_k": 15,
+    "limiar_estabilidade": 3,
+    "limiar_correlacao": 0.9,
+    "grade_C": "logspace(-4, 2, 13)",
+    "cv_interna": "StratifiedGroupKFold(4, shuffle=True, random_state=100 + fold)",
+    "lasso": "LogisticRegression(penalty='l1', solver='liblinear', max_iter=5000, random_state=42)",
+    "rf": "RandomForestClassifier(n_estimators=500, random_state=42 + fold, class_weight='balanced_subsample')",
+    "criterio_selecao_no_fold": "|coef| > 1e-12"
+  },
+  "isolamento": {
+    "linhas_em_filtros_lasso_rf_diagnostico": "somente os 417 nódulos do treino oficial",
+    "validacao_teste": "usadas apenas na verificação de disjunção de pacientes e descartadas em seguida",
+    "modelos_M0_M4": "não ajustados",
+    "metricas_validacao_teste": "não calculadas"
+  },
+  "saida": {
+    "diretorio": "<externo ao repositório>"
+  },
+  "git": {
+    "disponivel": true,
+    "commit_head": "a70db2ef91b6291ddb79c7d7e46471197691fa9e",
+    "branch": "feat/s4-incremental-radiomics",
+    "arvore_limpa": false,
+    "status_porcelain": [
+      "?? scripts/sprint4/reproduce_juan_feature_selection.py"
+    ],
+    "script": "scripts/sprint4/reproduce_juan_feature_selection.py",
+    "script_versionado_no_head": false,
+    "script_com_alteracoes_nao_commitadas": null,
+    "observacao": "o resultado só é rastreável a um commit quando o script está versionado e sem alterações; caso contrário, commit_head indica apenas a base da execução, e o script é identificado por sha256_script"
+  },
+  "ambiente": {
+    "python": "3.9.13",
+    "plataforma": "Windows-10-10.0.26200-SP0",
+    "numpy": "1.23.5",
+    "pandas": "1.5.3",
+    "scikit-learn": "1.3.2",
+    "scipy": "1.10.1",
+    "joblib": "1.5.3"
+  },
+  "sha256_entradas": {
+    "data/base_radiomica_oficial_422.csv": {
+      "sha256": "4068f7d661eac3bdfd33342a3759a0dfa80d42e47d4be4be00cd85b4e13563b1",
+      "sha256_lf_normalizado": "4068f7d661eac3bdfd33342a3759a0dfa80d42e47d4be4be00cd85b4e13563b1"
+    },
+    "data/vies_malignidade_mascara_pequena.csv": {
+      "sha256": "67f3fd2c3a55de75a58c40e7380480a5df0f5747ac017ec2b1f6ec091c3c6478",
+      "sha256_lf_normalizado": "67f3fd2c3a55de75a58c40e7380480a5df0f5747ac017ec2b1f6ec091c3c6478"
+    },
+    "reports/sprint3/baseline/patient_split.csv": {
+      "sha256": "ed120c2b5c0f308d41c11cfc32dae0e897a179c71d6ea803588720ba1ba4f65f",
+      "sha256_lf_normalizado": "812fe3ffe51f11257a9aa74529e1bfc19ed58285a11142f0e8b5739c1d1a4363"
+    },
+    "data/modeling_table_sprint3.csv": {
+      "sha256": "5e92e7e860ad8edd327570c929cd263cd780be98902e57017551ad0080da60ab",
+      "sha256_lf_normalizado": "fd01a1daf19503e84ec40df20e66190f99b4a460180879bdb5d279bd0b1506ea"
+    }
+  },
+  "notebook_auditado": {
+    "arquivo": "S4_—_Revisão_e_execução_da_seleção_de_features_radiômicas.ipynb",
+    "sha256": "48faaea60d2e6e3dc5af7955639b516e178adf93266d830e162f7dac570c34d8",
+    "uso": "somente registro de hash"
+  },
+  "checagens_previas": {
+    "ids_base": {
+      "linhas": 958,
+      "duplicados": 0,
+      "formato_S3_ok": true,
+      "patient_id_coerente": 958
+    },
+    "ids_vies": {
+      "linhas": 958,
+      "duplicados": 0,
+      "formato_S3_ok": true
+    },
+    "ids_canonica": {
+      "linhas": 607,
+      "duplicados": 0,
+      "formato_S3_ok": true,
+      "patient_id_coerente": 607
+    },
+    "target_identico_ao_canonico": 417,
+    "classes_selecao": {
+      "0": 209,
+      "1": 208
+    },
+    "n_features_candidatas": 107,
+    "original_nodule_idx_em_FEATURES": false,
+    "ordem_107_igual_canonica_sem_nodule_idx": true,
+    "valores_identicos_treino": true,
+    "valores_nao_finitos_treino": 0,
+    "declaradas_presentes": true,
+    "posicao_das_declaradas_no_pool": {
+      "original_glcm_Imc2": 46,
+      "original_shape_Sphericity": 10,
+      "original_shape_SurfaceVolumeRatio": 12,
+      "original_firstorder_90Percentile": 15,
+      "original_firstorder_RootMeanSquared": 27,
+      "original_shape_Elongation": 0,
+      "original_firstorder_Skewness": 28,
+      "original_ngtdm_Coarseness": 103
+    }
+  },
+  "tempo_s": 109.3,
+  "warnings": {
+    "escopo": "seleção (blocos 1–5); o diagnóstico registra os seus à parte",
+    "total": 2,
+    "por_categoria": {
+      "ConvergenceWarning": 2
+    },
+    "exemplos_unicos": [
+      {
+        "categoria": "ConvergenceWarning",
+        "mensagem": "Liblinear failed to converge, increase the number of iterations.",
+        "arquivo": "_base.py",
+        "linha": 1250
+      }
+    ],
+    "observacao": "com n_jobs != 1, warnings emitidos dentro dos workers do joblib não chegam ao processo principal; a execução com n_jobs=1 capta todos"
+  },
+  "resumo_folds": [
+    {
+      "fold": 1,
+      "n_treino_nodulos": 331,
+      "n_treino_pacientes": 232,
+      "n_features_entrada": 107,
+      "n_pos_variancia": 107,
+      "n_pos_correlacao": 37,
+      "melhor_C_lasso": 0.31622776601683794,
+      "n_lasso_selecionadas": 7,
+      "n_rf_top15": 15
+    },
+    {
+      "fold": 2,
+      "n_treino_nodulos": 339,
+      "n_treino_pacientes": 231,
+      "n_features_entrada": 107,
+      "n_pos_variancia": 107,
+      "n_pos_correlacao": 36,
+      "melhor_C_lasso": 0.31622776601683794,
+      "n_lasso_selecionadas": 10,
+      "n_rf_top15": 15
+    },
+    {
+      "fold": 3,
+      "n_treino_nodulos": 328,
+      "n_treino_pacientes": 237,
+      "n_features_entrada": 107,
+      "n_pos_variancia": 107,
+      "n_pos_correlacao": 36,
+      "melhor_C_lasso": 0.31622776601683794,
+      "n_lasso_selecionadas": 10,
+      "n_rf_top15": 15
+    },
+    {
+      "fold": 4,
+      "n_treino_nodulos": 337,
+      "n_treino_pacientes": 231,
+      "n_features_entrada": 107,
+      "n_pos_variancia": 107,
+      "n_pos_correlacao": 35,
+      "melhor_C_lasso": 0.31622776601683794,
+      "n_lasso_selecionadas": 8,
+      "n_rf_top15": 15
+    },
+    {
+      "fold": 5,
+      "n_treino_nodulos": 333,
+      "n_treino_pacientes": 233,
+      "n_features_entrada": 107,
+      "n_pos_variancia": 107,
+      "n_pos_correlacao": 36,
+      "melhor_C_lasso": 0.1,
+      "n_lasso_selecionadas": 7,
+      "n_rf_top15": 15
+    }
+  ],
+  "detalhes_folds": [
+    {
+      "fold": 1,
+      "pacientes_treino_subconjunto_do_treino_oficial": true,
+      "classes_treino": {
+        "0": 172,
+        "1": 159
+      },
+      "removidas_variancia": [],
+      "n_redundantes": 70,
+      "melhor_C_no_limite_da_grade": false,
+      "best_score_cv_interna_treino": 0.9739308970934076,
+      "declaradas_sobreviventes_aos_filtros": [
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_firstorder_Skewness",
+        "original_glcm_Imc2",
+        "original_ngtdm_Coarseness",
+        "original_shape_Elongation",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio"
+      ],
+      "declaradas_eliminadas_pelos_filtros": [],
+      "lasso_selecionadas": [
+        "original_firstorder_90Percentile",
+        "original_firstorder_Skewness",
+        "original_glcm_Imc2",
+        "original_ngtdm_Coarseness",
+        "original_shape_Elongation",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio"
+      ],
+      "coeficientes_lasso": {
+        "original_shape_Elongation": 0.15514763681762506,
+        "original_shape_Sphericity": -1.1722462266262006,
+        "original_shape_SurfaceVolumeRatio": -2.0103769916210226,
+        "original_firstorder_90Percentile": -1.3022023099794189,
+        "original_firstorder_Skewness": -0.28339801937466647,
+        "original_glcm_Imc2": -0.6224216530554227,
+        "original_ngtdm_Coarseness": -0.008549434262591353
+      },
+      "rf_top15": [
+        "original_glcm_Imc1",
+        "original_glrlm_GrayLevelNonUniformity",
+        "original_glcm_Imc2",
+        "original_shape_MajorAxisLength",
+        "original_shape_MeshVolume",
+        "original_glszm_LargeAreaEmphasis",
+        "original_ngtdm_Busyness",
+        "original_glszm_ZonePercentage",
+        "original_ngtdm_Coarseness",
+        "original_shape_SurfaceVolumeRatio",
+        "original_glrlm_LongRunEmphasis",
+        "original_glcm_Contrast",
+        "original_firstorder_90Percentile",
+        "original_ngtdm_Contrast",
+        "original_firstorder_RootMeanSquared"
+      ]
+    },
+    {
+      "fold": 2,
+      "pacientes_treino_subconjunto_do_treino_oficial": true,
+      "classes_treino": {
+        "0": 164,
+        "1": 175
+      },
+      "removidas_variancia": [],
+      "n_redundantes": 71,
+      "melhor_C_no_limite_da_grade": false,
+      "best_score_cv_interna_treino": 0.9716944982190889,
+      "declaradas_sobreviventes_aos_filtros": [
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_firstorder_Skewness",
+        "original_glcm_Imc2",
+        "original_ngtdm_Coarseness",
+        "original_shape_Elongation",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio"
+      ],
+      "declaradas_eliminadas_pelos_filtros": [],
+      "lasso_selecionadas": [
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_glcm_Id",
+        "original_glcm_Idmn",
+        "original_glcm_Imc1",
+        "original_glcm_Imc2",
+        "original_gldm_LargeDependenceLowGrayLevelEmphasis",
+        "original_shape_Elongation",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio"
+      ],
+      "coeficientes_lasso": {
+        "original_shape_Elongation": 0.1711875452011628,
+        "original_shape_Sphericity": -1.292265079387525,
+        "original_shape_SurfaceVolumeRatio": -1.5490575105569049,
+        "original_firstorder_90Percentile": -1.191959416220803,
+        "original_firstorder_RootMeanSquared": -0.18642194829903483,
+        "original_glcm_Id": 0.1301359439394808,
+        "original_glcm_Idmn": 0.0764931544446414,
+        "original_glcm_Imc1": 0.32728373446919334,
+        "original_glcm_Imc2": -0.6038230678260835,
+        "original_gldm_LargeDependenceLowGrayLevelEmphasis": -0.028066019094726793
+      },
+      "rf_top15": [
+        "original_glrlm_GrayLevelNonUniformity",
+        "original_glcm_Imc2",
+        "original_glcm_Imc1",
+        "original_shape_MajorAxisLength",
+        "original_shape_MeshVolume",
+        "original_ngtdm_Busyness",
+        "original_glszm_LargeAreaEmphasis",
+        "original_glszm_ZonePercentage",
+        "original_ngtdm_Coarseness",
+        "original_ngtdm_Contrast",
+        "original_glcm_Id",
+        "original_glrlm_LongRunEmphasis",
+        "original_firstorder_Uniformity",
+        "original_glcm_Contrast",
+        "original_firstorder_Skewness"
+      ]
+    },
+    {
+      "fold": 3,
+      "pacientes_treino_subconjunto_do_treino_oficial": true,
+      "classes_treino": {
+        "0": 157,
+        "1": 171
+      },
+      "removidas_variancia": [],
+      "n_redundantes": 71,
+      "melhor_C_no_limite_da_grade": false,
+      "best_score_cv_interna_treino": 0.9714943698652904,
+      "declaradas_sobreviventes_aos_filtros": [
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_firstorder_Skewness",
+        "original_glcm_Imc2",
+        "original_ngtdm_Coarseness",
+        "original_shape_Elongation",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio"
+      ],
+      "declaradas_eliminadas_pelos_filtros": [],
+      "lasso_selecionadas": [
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_glcm_ClusterShade",
+        "original_glcm_Id",
+        "original_glcm_Imc1",
+        "original_ngtdm_Busyness",
+        "original_shape_Elongation",
+        "original_shape_Flatness",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio"
+      ],
+      "coeficientes_lasso": {
+        "original_shape_Elongation": 0.18201927432880363,
+        "original_shape_Flatness": -0.18849870294915935,
+        "original_shape_Sphericity": -1.4107799265826506,
+        "original_shape_SurfaceVolumeRatio": -1.8923046715881138,
+        "original_firstorder_90Percentile": -0.6493878004454143,
+        "original_firstorder_RootMeanSquared": -0.8291993803823996,
+        "original_glcm_ClusterShade": -0.18151631012495115,
+        "original_glcm_Id": 0.06710608889979376,
+        "original_glcm_Imc1": 0.2658548656880749,
+        "original_ngtdm_Busyness": 0.18930739767950175
+      },
+      "rf_top15": [
+        "original_glrlm_GrayLevelNonUniformity",
+        "original_shape_MajorAxisLength",
+        "original_glcm_Imc1",
+        "original_glcm_Imc2",
+        "original_shape_MeshVolume",
+        "original_glszm_LargeAreaEmphasis",
+        "original_glrlm_LongRunEmphasis",
+        "original_ngtdm_Coarseness",
+        "original_shape_SurfaceVolumeRatio",
+        "original_ngtdm_Busyness",
+        "original_firstorder_RootMeanSquared",
+        "original_firstorder_Skewness",
+        "original_shape_Sphericity",
+        "original_glszm_ZoneEntropy",
+        "original_glszm_SizeZoneNonUniformityNormalized"
+      ]
+    },
+    {
+      "fold": 4,
+      "pacientes_treino_subconjunto_do_treino_oficial": true,
+      "classes_treino": {
+        "0": 168,
+        "1": 169
+      },
+      "removidas_variancia": [],
+      "n_redundantes": 72,
+      "melhor_C_no_limite_da_grade": false,
+      "best_score_cv_interna_treino": 0.9667586468725277,
+      "declaradas_sobreviventes_aos_filtros": [
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_firstorder_Skewness",
+        "original_glcm_Imc2",
+        "original_ngtdm_Coarseness",
+        "original_shape_Elongation",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio"
+      ],
+      "declaradas_eliminadas_pelos_filtros": [],
+      "lasso_selecionadas": [
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_glcm_ClusterShade",
+        "original_glcm_Imc1",
+        "original_glcm_Imc2",
+        "original_shape_Elongation",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio"
+      ],
+      "coeficientes_lasso": {
+        "original_shape_Elongation": 0.14668825646046982,
+        "original_shape_Sphericity": -1.5284475513084788,
+        "original_shape_SurfaceVolumeRatio": -1.7962754655294115,
+        "original_firstorder_90Percentile": -1.0790424148354003,
+        "original_firstorder_RootMeanSquared": -0.4841436639152293,
+        "original_glcm_ClusterShade": -0.015066045292434405,
+        "original_glcm_Imc1": 0.18601073940033702,
+        "original_glcm_Imc2": -0.5435595794061578
+      },
+      "rf_top15": [
+        "original_glcm_Imc1",
+        "original_shape_MajorAxisLength",
+        "original_glcm_Imc2",
+        "original_shape_MeshVolume",
+        "original_ngtdm_Busyness",
+        "original_glszm_LargeAreaEmphasis",
+        "original_glrlm_LongRunEmphasis",
+        "original_ngtdm_Coarseness",
+        "original_firstorder_Skewness",
+        "original_glcm_Contrast",
+        "original_firstorder_RootMeanSquared",
+        "original_shape_SurfaceVolumeRatio",
+        "original_glszm_SizeZoneNonUniformityNormalized",
+        "original_shape_Sphericity",
+        "original_glcm_Id"
+      ]
+    },
+    {
+      "fold": 5,
+      "pacientes_treino_subconjunto_do_treino_oficial": true,
+      "classes_treino": {
+        "0": 175,
+        "1": 158
+      },
+      "removidas_variancia": [],
+      "n_redundantes": 71,
+      "melhor_C_no_limite_da_grade": false,
+      "best_score_cv_interna_treino": 0.9765266397737953,
+      "declaradas_sobreviventes_aos_filtros": [
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_firstorder_Skewness",
+        "original_glcm_Imc2",
+        "original_ngtdm_Coarseness",
+        "original_shape_Elongation",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio"
+      ],
+      "declaradas_eliminadas_pelos_filtros": [],
+      "lasso_selecionadas": [
+        "original_firstorder_RootMeanSquared",
+        "original_glcm_ClusterShade",
+        "original_glcm_Imc1",
+        "original_glcm_Imc2",
+        "original_shape_MajorAxisLength",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio"
+      ],
+      "coeficientes_lasso": {
+        "original_shape_MajorAxisLength": 0.12431014979396461,
+        "original_shape_Sphericity": -0.6652359166307319,
+        "original_shape_SurfaceVolumeRatio": -0.3688747747476717,
+        "original_firstorder_RootMeanSquared": -0.29278527996538417,
+        "original_glcm_ClusterShade": -0.013887921207327044,
+        "original_glcm_Imc1": 1.0915758845068397,
+        "original_glcm_Imc2": -0.9022124160150193
+      },
+      "rf_top15": [
+        "original_glrlm_GrayLevelNonUniformity",
+        "original_glcm_Imc1",
+        "original_glcm_Imc2",
+        "original_shape_MajorAxisLength",
+        "original_ngtdm_Busyness",
+        "original_glszm_LargeAreaEmphasis",
+        "original_shape_MeshVolume",
+        "original_ngtdm_Coarseness",
+        "original_glrlm_LongRunEmphasis",
+        "original_firstorder_Skewness",
+        "original_glcm_Id",
+        "original_glcm_Contrast",
+        "original_shape_Sphericity",
+        "original_ngtdm_Contrast",
+        "original_firstorder_Energy"
+      ]
+    }
+  ],
+  "observacao_best_score": "best_score_cv_interna_treino é a AUC média da CV interna usada para escolher C, calculada somente com linhas do treino oficial; não é métrica de validação nem de teste",
+  "resultado": {
+    "features_finais_lasso": [
+      "original_shape_Sphericity",
+      "original_shape_SurfaceVolumeRatio",
+      "original_glcm_Imc1",
+      "original_glcm_Imc2",
+      "original_firstorder_RootMeanSquared",
+      "original_firstorder_90Percentile",
+      "original_shape_Elongation",
+      "original_glcm_ClusterShade"
+    ],
+    "n_features_finais_lasso": 8,
+    "features_finais_rf": [
+      "original_shape_Sphericity",
+      "original_shape_SurfaceVolumeRatio",
+      "original_glcm_Imc1",
+      "original_glcm_Imc2",
+      "original_firstorder_RootMeanSquared",
+      "original_glcm_Id",
+      "original_shape_MajorAxisLength",
+      "original_ngtdm_Busyness",
+      "original_ngtdm_Coarseness",
+      "original_firstorder_Skewness",
+      "original_shape_MeshVolume",
+      "original_glrlm_LongRunEmphasis",
+      "original_glszm_LargeAreaEmphasis",
+      "original_glcm_Contrast",
+      "original_glrlm_GrayLevelNonUniformity",
+      "original_ngtdm_Contrast"
+    ],
+    "n_features_finais_rf": 16,
+    "intersecao_lasso_rf": [
+      "original_firstorder_RootMeanSquared",
+      "original_glcm_Imc1",
+      "original_glcm_Imc2",
+      "original_shape_Sphericity",
+      "original_shape_SurfaceVolumeRatio"
+    ],
+    "jaccard_lasso_rf": 0.2631578947368421,
+    "frequencia_lasso_nao_nula": {
+      "original_shape_Sphericity": 5,
+      "original_shape_SurfaceVolumeRatio": 5,
+      "original_shape_Elongation": 4,
+      "original_firstorder_90Percentile": 4,
+      "original_firstorder_RootMeanSquared": 4,
+      "original_glcm_Imc1": 4,
+      "original_glcm_Imc2": 4,
+      "original_glcm_ClusterShade": 3,
+      "original_glcm_Id": 2,
+      "original_shape_Flatness": 1,
+      "original_shape_MajorAxisLength": 1,
+      "original_firstorder_Skewness": 1,
+      "original_glcm_Idmn": 1,
+      "original_gldm_LargeDependenceLowGrayLevelEmphasis": 1,
+      "original_ngtdm_Busyness": 1,
+      "original_ngtdm_Coarseness": 1
+    }
+  },
+  "comparacao_declaradas": {
+    "conjunto_identico": false,
+    "so_reproduzidas": [
+      "original_glcm_ClusterShade",
+      "original_glcm_Imc1"
+    ],
+    "so_declaradas": [
+      "original_firstorder_Skewness",
+      "original_ngtdm_Coarseness"
+    ],
+    "ordem_identica": false,
+    "frequencia_lasso_das_declaradas": {
+      "original_glcm_Imc2": 4,
+      "original_shape_Sphericity": 5,
+      "original_shape_SurfaceVolumeRatio": 5,
+      "original_firstorder_90Percentile": 4,
+      "original_firstorder_RootMeanSquared": 4,
+      "original_shape_Elongation": 4,
+      "original_firstorder_Skewness": 1,
+      "original_ngtdm_Coarseness": 1
+    },
+    "frequencia_pos_filtros_das_declaradas": {
+      "original_glcm_Imc2": 5,
+      "original_shape_Sphericity": 5,
+      "original_shape_SurfaceVolumeRatio": 5,
+      "original_firstorder_90Percentile": 5,
+      "original_firstorder_RootMeanSquared": 5,
+      "original_shape_Elongation": 5,
+      "original_firstorder_Skewness": 5,
+      "original_ngtdm_Coarseness": 5
+    }
+  },
+  "afirmacoes_do_notebook": {
+    "n_pos_correlacao_por_fold (declarado 35–39)": [
+      37,
+      36,
+      36,
+      35,
+      36
+    ],
+    "n_lasso_por_fold (declarado 7–13)": [
+      7,
+      10,
+      10,
+      8,
+      7
+    ],
+    "n_rf_estaveis (declarado 16)": 16,
+    "intersecao_lasso_rf (declarado 5)": 5,
+    "jaccard (declarado 0,263)": 0.263
+  },
+  "diagnostico_convergencia": {
+    "escopo": "somente treino; mesma partição e mesmos filtros da seleção; executado após a seleção",
+    "derivado_de_sha256": "fa83f5b56a154aeabb9e2d1e32b05288973960b239eb06f4747fc5318b258b4d",
+    "ajustes_na_grade": 260,
+    "ajustes_nao_convergidos": [
+      {
+        "fold_externo": 4,
+        "fold_interno": 1,
+        "C": 100.0
+      },
+      {
+        "fold_externo": 5,
+        "fold_interno": 2,
+        "C": 100.0
+      }
+    ],
+    "refit_com_melhor_C": [
+      {
+        "fold": 1,
+        "C": 0.31622776601683794,
+        "n_iter": 10,
+        "warning": false
+      },
+      {
+        "fold": 2,
+        "C": 0.31622776601683794,
+        "n_iter": 10,
+        "warning": false
+      },
+      {
+        "fold": 3,
+        "C": 0.31622776601683794,
+        "n_iter": 11,
+        "warning": false
+      },
+      {
+        "fold": 4,
+        "C": 0.31622776601683794,
+        "n_iter": 10,
+        "warning": false
+      },
+      {
+        "fold": 5,
+        "C": 0.1,
+        "n_iter": 13,
+        "warning": false
+      }
+    ],
+    "consistencia_com_a_selecao": [
+      {
+        "fold": 1,
+        "n_treino_nodulos_igual": true,
+        "features_pos_filtros_iguais": true,
+        "coeficientes_refit_iguais_aos_da_selecao": true
+      },
+      {
+        "fold": 2,
+        "n_treino_nodulos_igual": true,
+        "features_pos_filtros_iguais": true,
+        "coeficientes_refit_iguais_aos_da_selecao": true
+      },
+      {
+        "fold": 3,
+        "n_treino_nodulos_igual": true,
+        "features_pos_filtros_iguais": true,
+        "coeficientes_refit_iguais_aos_da_selecao": true
+      },
+      {
+        "fold": 4,
+        "n_treino_nodulos_igual": true,
+        "features_pos_filtros_iguais": true,
+        "coeficientes_refit_iguais_aos_da_selecao": true
+      },
+      {
+        "fold": 5,
+        "n_treino_nodulos_igual": true,
+        "features_pos_filtros_iguais": true,
+        "coeficientes_refit_iguais_aos_da_selecao": true
+      }
+    ],
+    "coeficientes_l1_features_divergentes": {
+      "observacao": "espaço padronizado; null = não selecionada no fold",
+      "por_fold": {
+        "1": {
+          "original_firstorder_Skewness": -0.28339801937466647,
+          "original_ngtdm_Coarseness": -0.008549434262591353,
+          "original_glcm_Imc1": null,
+          "original_glcm_ClusterShade": null
+        },
+        "2": {
+          "original_firstorder_Skewness": null,
+          "original_ngtdm_Coarseness": null,
+          "original_glcm_Imc1": 0.32728373446919334,
+          "original_glcm_ClusterShade": null
+        },
+        "3": {
+          "original_firstorder_Skewness": null,
+          "original_ngtdm_Coarseness": null,
+          "original_glcm_Imc1": 0.2658548656880749,
+          "original_glcm_ClusterShade": -0.18151631012495115
+        },
+        "4": {
+          "original_firstorder_Skewness": null,
+          "original_ngtdm_Coarseness": null,
+          "original_glcm_Imc1": 0.18601073940033702,
+          "original_glcm_ClusterShade": -0.015066045292434405
+        },
+        "5": {
+          "original_firstorder_Skewness": null,
+          "original_ngtdm_Coarseness": null,
+          "original_glcm_Imc1": 1.0915758845068397,
+          "original_glcm_ClusterShade": -0.013887921207327044
+        }
+      }
+    },
+    "abs_coef_todas_as_selecoes": {
+      "min": 0.008549434262591353,
+      "mediana": 0.34807925460843253,
+      "max": 2.0103769916210226
+    },
+    "tempo_s": 103.6,
+    "warnings_total": 0
+  },
+  "sha256_saidas": {
+    "frequencia_selecao_features.csv": {
+      "sha256": "8e85ee1770f9a53b896941b22b5ebd660c2d623100a3df096d552dbd4ff38ed2",
+      "sha256_lf_normalizado": "5a2f6af164de29862972f0dc7cfc67f394183ce29092f3c826c7b6c9b3609ab5"
+    },
+    "resumo_folds_selecao.csv": {
+      "sha256": "96c866b19319737ad3221f4011b7ec6f695cd729b2ed4128574313a7a15e27bf",
+      "sha256_lf_normalizado": "6f3ba35091dddd1877a6ce4860e47149469527534760c84f72b018a3485b22ca"
+    },
+    "features_selecionadas_lasso.csv": {
+      "sha256": "d45c68824548443be72443c8e2acdf4605cd3952e60906b861bacf82f073db34",
+      "sha256_lf_normalizado": "8f81208d07e2f894067bba3ab50c8fc4bb2679dfe8f77b291b905f2a8c792e33"
+    }
+  },
+  "entradas_intactas_apos_execucao": true
+}
