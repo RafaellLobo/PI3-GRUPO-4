@@ -4,9 +4,10 @@
 **Card relacionado:** S4 — Cartão 4: valor incremental da radiômica além do tamanho do nódulo
 **Protocolo:** [`protocolo_valor_incremental.md`](protocolo_valor_incremental.md) — **proposta aguardando revisão do grupo e do professor; não é protocolo congelado**
 **Branch:** `feat/s4-incremental-radiomics`
-**Registro:** 11/10/2026 · **HEAD antes do commit deste documento:** `7f1a0f6`
+**Registro:** 11/10/2026 · **HEAD na revisão mais recente:** `0ef4039`
 **Revisão:** 11/10/2026 — comparação com o pacote de Juan registrada e esclarecimentos de Juan incorporados (Seção 2)
 **Revisão:** 12/10/2026 — notebook da regeneração recente recebido (Seção 2.3); limitação metodológica dos filtros registrada (Seções 2.6 e 4)
+**Revisão:** 12/10/2026 — reprodução preservada e versionada no commit `0ef4039` (Seções 1 e 2.1)
 
 ---
 
@@ -29,7 +30,8 @@ Neste documento:
 |---|---|---|---|
 | Proposta de protocolo | `9e9b3bd` | `docs/sprint4/protocolo_valor_incremental.md` | versionado; continua como **proposta** |
 | Reprodução e verificação de M0 e M1 (Etapa 0, invariante do M1) | `7f1a0f6` | `scripts/sprint4/validate_reference_models.py`; `reports/sprint4/reference_models/validacao_modelos_referencia.json` | versionado |
-| Auditoria da seleção de Juan, comparação com o pacote e este checkpoint | commit `docs(s4): consolida auditoria e proveniencia da selecao` | `reports/sprint4/feature_selection/auditoria_reproducao_juan.md`; `reports/sprint4/feature_selection/comparacao_pacote_juan.md`; `docs/sprint4/estado_cartao4.md` | versionado; os artefatos brutos continuam fora do repositório (Seção 3) |
+| Auditoria da seleção de Juan, comparação com o pacote e este checkpoint | `a70db2e` | `reports/sprint4/feature_selection/auditoria_reproducao_juan.md`; `reports/sprint4/feature_selection/comparacao_pacote_juan.md`; `docs/sprint4/estado_cartao4.md` | versionado; revisado depois |
+| Preservação da reprodução da seleção (script, três CSVs, JSON de execução) e regras de fim de linha | `0ef4039` | `scripts/sprint4/reproduce_juan_feature_selection.py`; `reports/sprint4/feature_selection/reproducao_juan/`; `.gitattributes` | versionado; CSVs byte a byte iguais aos históricos (Seção 2.1) |
 
 Resultado da verificação de M0 e M1 — **verificado**:
 
@@ -49,8 +51,21 @@ Resultado da verificação de M0 e M1 — **verificado**:
   - a lista declarada inclui `firstorder_Skewness` e `ngtdm_Coarseness`.
 - Resultado determinístico no ambiente testado.
 - As **contagens** 16 / 5 / 0,263 do Random Forest e do índice de Jaccard coincidem com as do notebook. Os conjuntos de features por trás delas diferem dos do pacote de Juan (Seção 2.2).
-- Relatório: `reports/sprint4/feature_selection/auditoria_reproducao_juan.md` — revisado e versionado (Seção 1).
-- Os scripts e as saídas brutas dessa reprodução estão **fora do repositório**, em diretório temporário da sessão. O relatório registra os hashes deles na Seção 15.
+- Relatório: [`auditoria_reproducao_juan.md`](../../reports/sprint4/feature_selection/auditoria_reproducao_juan.md) — revisado e versionado (Seção 1).
+- **Artefatos históricos (não versionados).** Os scripts originais, a saída do diagnóstico, os JSONs e os CSVs das execuções A e B, de 10/10/2026, continuam só no diretório temporário da sessão. Seus hashes estão na Seção 15 da auditoria.
+- **Artefatos versionados no commit `0ef4039`** (auditoria, Seção 17):
+
+| Caminho | SHA-256 |
+|---|---|
+| [`scripts/sprint4/reproduce_juan_feature_selection.py`](../../scripts/sprint4/reproduce_juan_feature_selection.py) | `e90180ac78f8d492cda4c4fec1fd7cd093aa1c687f20edd1be9cc31f0934cdc4` |
+| [`reports/sprint4/feature_selection/reproducao_juan/`](../../reports/sprint4/feature_selection/reproducao_juan/) `frequencia_selecao_features.csv` | `8e85ee1770f9a53b896941b22b5ebd660c2d623100a3df096d552dbd4ff38ed2` (= histórico) |
+| `.../reproducao_juan/resumo_folds_selecao.csv` | `96c866b19319737ad3221f4011b7ec6f695cd729b2ed4128574313a7a15e27bf` (= histórico) |
+| `.../reproducao_juan/features_selecionadas_lasso.csv` | `d45c68824548443be72443c8e2acdf4605cd3952e60906b861bacf82f073db34` (= histórico) |
+| `.../reproducao_juan/relatorio_reproducao.json` | `c141fd6fa5dbaf5c8572866ce9515506a6021e251bfdec97dddbdc5ff714b5ea` |
+
+- Os artefatos versionados vieram de **uma única execução**, com `n_jobs=1`, gravada em diretório temporário e copiada sem alteração de bytes depois da validação.
+- O JSON foi gerado **antes** do commit. Ele registra como base `a70db2e`, com o script ainda não rastreado. O vínculo com o código se faz pelo `sha256_script` (`e90180ac…`), igual ao script versionado.
+- O `.gitattributes` preserva os bytes: CSVs e JSON com `-text`; script com `eol=lf`.
 
 ### 2.2 Pacote enviado por Juan — comparação verificada
 
@@ -102,9 +117,9 @@ Pelo que se verificou, nenhuma das duas é incorreta. Nada disso permite afirmar
 A recomendação de usar a lista reproduzida no nosso ambiente como lista fixa está registrada como **proposta científica para discussão do grupo, e não como decisão aprovada**. Ela conflita com a regra atual do protocolo (Seção 7.1, item 1: a lista declarada permanece fixa em caso de divergência). Adotá-la exige:
 - decisão do grupo (P3);
 - revisão formal do protocolo;
-- preservação dos artefatos da reprodução no repositório.
+- preservação dos artefatos da reprodução no repositório — **concluída no commit `0ef4039`** (Seção 2.1). Essa preservação é técnica e não decide a lista.
 
-Tudo isso precisa acontecer antes de qualquer avaliação de M2, M3 e M4. Discussão completa: `comparacao_pacote_juan.md`, Seção 14.1.
+As duas primeiras precisam acontecer antes de qualquer avaliação de M2, M3 e M4. Discussão completa: `comparacao_pacote_juan.md`, Seção 14.1.
 
 ### 2.6 Limitação metodológica do procedimento original — verificado no código
 
@@ -127,7 +142,6 @@ Nenhuma das decisões abaixo foi tomada. **Nada aqui presume aprovação.**
 | P3 | Confirmação, pelo grupo, da regra para divergência na reprodução fiel e, com ela, da **lista fixa de features** de M2, M3 e M4. Inclui avaliar a recomendação de Juan (Seção 2.5) e, se aceita, a revisão formal do protocolo. | protocolo, Seção 7.1, item 1, e Seção 13 | antes da Etapa 3 |
 | — | **Proveniência exata dos CSVs regenerados.** O notebook foi recebido em 12/10/2026, mas não tem saídas; a ligação entre código e saídas não está comprovada, e o script do CSV de quatro colunas não foi recebido. | Seção 2.3 | a considerar na decisão sobre P3; não há meio previsto de comprovação |
 | — | Registro da composição dos folds da regeneração recente (por exemplo, hash por fold), só para comparação interna — ainda não solicitado formalmente | comparação, Seção 12 | opcional; apoiaria a análise de H1 |
-| — | **Preservação definitiva** dos scripts e resultados da auditoria, que hoje estão fora do repositório. É condição para que a nossa reprodução sirva como evidência reproduzível (Seção 2.5). | relatório da auditoria, Seções 14 e 15 | antes da decisão sobre P3, se a lista reproduzida for adotada |
 | P1 | Número de permutações K e esquema de permutação | protocolo, Seção 13 | antes da Etapa 1 |
 | P2 | Parâmetros do spline | protocolo, Seção 13 | antes da Etapa 1 |
 | P4 | Divergência entre M1 = 0,9778 (Experimento 13) e M1 = 0,9762 (baseline canônico) | protocolo, Seção 13 | antes da Etapa 5 |
@@ -135,6 +149,8 @@ Nenhuma das decisões abaixo foi tomada. **Nada aqui presume aprovação.**
 | — | Revisão do protocolo pelo grupo e pelo professor. Na revisão formal, as Seções 5.2 e 11.3 (item 8) do protocolo, que ainda dizem que a reprodução independente não está documentada, devem passar a remeter à auditoria e à comparação. | protocolo, cabeçalho | antes do congelamento (Etapa 4) |
 
 A lista de features **não pode** ser decidida com base em desempenho em validação ou teste. A decisão deve se apoiar em evidência de procedimento e em critérios definidos antes de qualquer resultado.
+
+A divergência entre a lista declarada e a lista reproduzida continua sendo **pendência científica**. A preservação técnica da reprodução (commit `0ef4039`) não a resolve.
 
 ## 4. Próxima implementação independente
 
@@ -148,6 +164,7 @@ Ela não depende da lista fixa de features, porque a CV aninhada refaz a seleç�
 - **folds externos:** `StratifiedGroupKFold(5)`, grupos = `patient_id`, `random_state = 42 + r`, com r = 0 para o piloto e r = 0…9 para a CV completa;
 - **folds internos:** dentro de cada treino externo, a CV de estabilidade de 5 folds e a CV interna de 4 folds, ambas agrupadas por paciente, com as seeds da Seção 12 do protocolo;
 - **requisito para as etapas seguintes:** a estrutura de folds deve permitir que os filtros de variância e de correlação sejam ajustados **em cada treino interno**, dentro do pipeline avaliado pela CV interna (protocolo, Seção 5.4). O ajuste dos filtros antes e fora da `GridSearchCV`, como no procedimento original, **não deve ser reutilizado** (Seção 2.6).
+- **separação de código:** `scripts/sprint4/reproduce_juan_feature_selection.py` preserva o procedimento **histórico** e não é base para o pipeline corrigido. A CV aninhada deve ser implementada à parte, sem reaproveitar o laço de seleção desse script.
 
 **Verificações estruturais, sem ajuste de modelo:**
 
@@ -180,10 +197,12 @@ A implementação começa só com autorização explícita.
 |---|---|
 | Versionado em `9e9b3bd` | `docs/sprint4/protocolo_valor_incremental.md` |
 | Versionado em `7f1a0f6` | `scripts/sprint4/validate_reference_models.py`; `reports/sprint4/reference_models/validacao_modelos_referencia.json` |
-| Versionado no commit `docs(s4): consolida auditoria e proveniencia da selecao` | `reports/sprint4/feature_selection/auditoria_reproducao_juan.md`; `reports/sprint4/feature_selection/comparacao_pacote_juan.md`; `docs/sprint4/estado_cartao4.md` |
-| Fora do repositório | scripts e saídas da reprodução da seleção e da comparação (diretório temporário); `pacote_auditoria_selecao_features.zip`; notebooks de Juan (cópia auditada e notebook da regeneração recente) |
+| Versionado em `a70db2e` | `reports/sprint4/feature_selection/auditoria_reproducao_juan.md`; `reports/sprint4/feature_selection/comparacao_pacote_juan.md`; `docs/sprint4/estado_cartao4.md` |
+| Versionado em `0ef4039` | `scripts/sprint4/reproduce_juan_feature_selection.py`; os quatro arquivos de `reports/sprint4/feature_selection/reproducao_juan/`; `.gitattributes` (regras de fim de linha) |
+| Revisado, ainda não versionado | os três documentos de `a70db2e`, nesta revisão |
+| Fora do repositório | artefatos históricos das execuções A e B e scripts auxiliares da comparação (diretório temporário); `pacote_auditoria_selecao_features.zip`; notebooks de Juan (cópia auditada e notebook da regeneração recente) |
 
-Depois desse commit, a árvore de trabalho fica limpa. Nada foi enviado ao remoto nesta branch.
+Nada foi enviado ao remoto nesta branch.
 
 ---
 

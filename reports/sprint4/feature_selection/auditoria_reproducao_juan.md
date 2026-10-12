@@ -9,6 +9,7 @@
 **Execução:** 10/10/2026 · **Registro:** 11/10/2026
 **Revisão:** 11/10/2026 — incorpora a comparação com o pacote enviado por Juan ([`comparacao_pacote_juan.md`](comparacao_pacote_juan.md)) e os esclarecimentos de Juan (Seção 16). Os resultados verificados das Seções 3 a 10 e os hashes da Seção 15 não mudaram.
 **Revisão:** 12/10/2026 — registra o recebimento do notebook da regeneração recente (Seção 16) e a limitação metodológica dos filtros (Seção 2.4)
+**Revisão:** 12/10/2026 — registra a preservação versionada da reprodução no commit `0ef4039` (Seção 17). Os hashes históricos da Seção 15 não mudaram.
 
 ---
 
@@ -66,7 +67,7 @@ Nenhuma altera o cálculo:
 | Caminhos apontam para os arquivos do projeto | o notebook lia os arquivos da pasta do Colab |
 | Warnings **registrados** em vez de suprimidos | o notebook usa `warnings.filterwarnings("ignore")` |
 | `n_jobs` recebido por argumento | permitir uma segunda execução em processo único (Seção 9) |
-| Saídas gravadas fora do repositório | não criar artefatos de dados no repositório |
+| Saídas gravadas fora do repositório | não criar artefatos de dados no repositório. Vale para as execuções A e B; as saídas agregadas da versão preservada estão versionadas (Seção 17). |
 
 Não foi aplicada nenhuma das correções previstas para a CV aninhada (protocolo, Seção 5.4). Nenhum parâmetro foi alterado para tentar reproduzir a lista declarada.
 
@@ -355,7 +356,7 @@ A Seção 7.1, item 1, do protocolo define a regra para reprodução divergente:
 - **Recomendação de Juan — proposta, não decisão.** Juan recomenda usar esta reprodução controlada como principal evidência reproduzível para fundamentar a seleção do Cartão 4, ou seja, propor como lista fixa a lista reproduzida (Seção 7). Ela fica registrada como **proposta científica para discussão do grupo**, e **não como decisão aprovada**:
   - **Conflito com a regra atual do protocolo.** A Seção 7.1, item 1, do protocolo diz que a lista declarada **permanece** fixa em caso de divergência. Adotar a lista reproduzida exige decisão do grupo (P3) e **revisão formal do protocolo**, antes de qualquer avaliação de M2, M3 e M4.
   - **O que a sustenta.** Esta é a única das três execuções com entradas, versões, código, saídas e hashes registrados, e com determinismo verificado.
-  - **O que a limita.** O determinismo vale só neste ambiente: com as mesmas entradas, a regeneração recente devolveu a lista declarada. `ClusterShade` atinge exatamente o limiar de 3/5. E os artefatos desta reprodução ainda não estão preservados no repositório (Seção 14, item 1).
+  - **O que a limita.** O determinismo vale só neste ambiente: com as mesmas entradas, a regeneração recente devolveu a lista declarada. `ClusterShade` atinge exatamente o limiar de 3/5. A preservação técnica da reprodução foi feita no commit `0ef4039` (Seção 17); ela atende à condição de reprodutibilidade, mas **não decide** a lista.
   - Discussão completa em `comparacao_pacote_juan.md`, Seção 14.1.
 - **Composição dos modelos.** Com qualquer das duas listas, M3 tem 9 features e M4 tem 10, porque nenhuma das listas contém o diâmetro ou o volume e ambas contêm `Sphericity`, que já está em M1.
 - **CV aninhada (Etapas 1 e 2).** Não depende da lista fixa, porque refaz a seleção em cada treino externo (protocolo, Seção 7.2). A reprodução fiel, porém, mostra que a seleção é sensível à partição, o que é esperado também na CV aninhada.
@@ -372,7 +373,7 @@ A Seção 7.1, item 1, do protocolo define a regra para reprodução divergente:
 
 ## 14. Limitações e lacunas de evidência
 
-1. **Os artefatos brutos desta auditoria não estão versionados.** O script de reprodução, o script de diagnóstico, os relatórios JSON e os CSVs das execuções A e B ficaram em diretório temporário da sessão, fora do repositório. Este documento registra seus resultados e hashes (Seção 15), mas os arquivos em si podem não estar disponíveis para reexame.
+1. **Os artefatos históricos das execuções A e B não estão versionados.** O script de reprodução original, o script de diagnóstico, a saída do diagnóstico, os dois relatórios JSON e os CSVs das execuções A e B ficaram em diretório temporário da sessão, fora do repositório. Este documento registra seus resultados e hashes (Seção 15), mas os arquivos em si podem não estar disponíveis para reexame. *Revisão:* a reprodução foi **preservada em novos artefatos versionados** (Seção 17). Os três CSVs versionados são byte a byte iguais aos históricos; o script e o JSON são novos, derivados dos originais.
 2. **O notebook de Juan não está versionado** e a cópia auditada não contém saídas de execução. Não há como comparar fold a fold com a execução original. *Revisão:* Juan declarou que não existem saídas nem logs históricos, então a execução histórica **não pode ser verificada** com o material disponível.
 3. **Uma única configuração de ambiente foi testada.** A sensibilidade a versões de bibliotecas (H1) não foi avaliada.
 4. **O RF da execução de Juan é desconhecido**, o que limita o alcance da comparação de Jaccard (H3). *Revisão:* o RF da **regeneração recente** é conhecido pelo pacote (Seção 8); o da execução histórica continua desconhecido.
@@ -380,9 +381,9 @@ A Seção 7.1, item 1, do protocolo define a regra para reprodução divergente:
 6. **Estabilidade entre anotadores** das features, de qualquer das listas, continua não avaliada (protocolo, Seção 11.3).
 7. **Filtros ajustados fora da CV interna** (Seção 2.4). Limitação metodológica do procedimento original, replicada aqui de propósito. Não deve ser reutilizada na CV aninhada corrigida.
 
-## 15. Rastreabilidade das execuções
+## 15. Rastreabilidade das execuções históricas
 
-Artefatos gerados fora do repositório, com SHA-256:
+Artefatos **históricos** das execuções A e B, gerados em 10/10/2026 no diretório temporário da sessão, fora do repositório. Eles **não são versionados**. A versão preservada e versionada da reprodução está na Seção 17.
 
 | Artefato | SHA-256 |
 |---|---|
@@ -417,6 +418,80 @@ Recebidos em 11/10/2026, depois do registro inicial. São **declarações** do r
 - Em relação à cópia auditada (Seção 3.3), a lógica de código é a mesma; muda só um comentário.
 
 O recebimento resolve a pendência do envio, mas **não comprova** que esse código gerou os CSVs regenerados. A proveniência exata das saídas continua em aberto. Detalhes em `comparacao_pacote_juan.md`, Seção 15.1.
+
+## 17. Preservação versionada da reprodução
+
+Commit `0ef403998836c3d891441b9626bdbefae5fcbff3` (`0ef4039`), de 12/10/2026, na branch `feat/s4-incremental-radiomics`.
+
+### 17.1 Artefatos versionados
+
+| Caminho | SHA-256 | Relação com os artefatos históricos (Seção 15) |
+|---|---|---|
+| [`scripts/sprint4/reproduce_juan_feature_selection.py`](../../../scripts/sprint4/reproduce_juan_feature_selection.py) | `e90180ac78f8d492cda4c4fec1fd7cd093aa1c687f20edd1be9cc31f0934cdc4` | **novo**; derivado do script de reprodução (`066fee8d…`) e do script de diagnóstico (`fa83f5b5…`) |
+| [`reproducao_juan/frequencia_selecao_features.csv`](reproducao_juan/frequencia_selecao_features.csv) | `8e85ee1770f9a53b896941b22b5ebd660c2d623100a3df096d552dbd4ff38ed2` | **byte a byte igual** ao CSV das execuções A e B |
+| [`reproducao_juan/resumo_folds_selecao.csv`](reproducao_juan/resumo_folds_selecao.csv) | `96c866b19319737ad3221f4011b7ec6f695cd729b2ed4128574313a7a15e27bf` | **byte a byte igual** ao CSV das execuções A e B |
+| [`reproducao_juan/features_selecionadas_lasso.csv`](reproducao_juan/features_selecionadas_lasso.csv) | `d45c68824548443be72443c8e2acdf4605cd3952e60906b861bacf82f073db34` | **byte a byte igual** ao CSV das execuções A e B |
+| [`reproducao_juan/relatorio_reproducao.json`](reproducao_juan/relatorio_reproducao.json) | `c141fd6fa5dbaf5c8572866ce9515506a6021e251bfdec97dddbdc5ff714b5ea` | **novo**; substitui os dois JSONs históricos e a saída do diagnóstico, sem caminhos absolutos |
+
+Os caminhos `reproducao_juan/...` são relativos a este diretório: `reports/sprint4/feature_selection/reproducao_juan/`.
+
+### 17.2 O que mudou no script em relação ao original
+
+- **Núcleo da seleção (blocos 1–5) e chamadas `to_csv`:** idênticos aos do script original. Conferido por diff textual; as únicas linhas novas apenas registram as features pós-filtro de cada fold, sem alterar nenhum cálculo.
+- **Portabilidade e rastreabilidade:**
+  - `argparse`, com a raiz do repositório derivada do próprio arquivo;
+  - notebook opcional, usado só para registrar o hash;
+  - chaves de arquivo relativas, sem caminhos absolutos;
+  - registro do estado do Git e do SHA-256 do próprio script;
+  - travas contra gravar em `reports/sprint3/` e `data/` e contra sobrescrever saídas.
+- **Diagnóstico de convergência:** foi incorporado e roda **depois** da seleção, com captura de warnings própria. Ele exige que a partição e os filtros sejam idênticos aos da seleção.
+
+### 17.3 Execução que gerou os artefatos versionados
+
+- **Uma única execução**, com `n_jobs=1`, sobre os 417 nódulos do treino oficial, no ambiente da Seção 3.1. A seleção levou 109,3 s e o diagnóstico 103,6 s.
+- As saídas foram gravadas primeiro em diretório temporário. Depois da validação, foram copiadas sem alteração de bytes para `reproducao_juan/`. Por isso o campo `saida.diretorio` do JSON registra `<externo ao repositório>`.
+- **Validação:**
+  - os três CSVs coincidem com os hashes históricos;
+  - os blocos de checagens, resumo e detalhes por fold, resultado, comparação com as declaradas e afirmações do notebook são idênticos aos do JSON histórico da execução B;
+  - houve 2 `ConvergenceWarning` na seleção, como em B;
+  - o diagnóstico reproduz a Seção 10: 260 ajustes, 2 não convergidos com `C = 100` e refits convergidos;
+  - os coeficientes do refit são idênticos aos da seleção nos 5 folds;
+  - as entradas ficaram intactas.
+
+### 17.4 Estado do Git registrado no JSON
+
+O JSON foi gerado **antes** do commit `0ef4039` e registra o estado daquele momento:
+
+| Campo | Valor registrado |
+|---|---|
+| `commit_head` | `a70db2ef91b6291ddb79c7d7e46471197691fa9e` (base da execução) |
+| `branch` | `feat/s4-incremental-radiomics` |
+| `arvore_limpa` | `false` |
+| `status_porcelain` | só o script, ainda não rastreado |
+| `script_versionado_no_head` | `false` |
+| `sha256_script` | `e90180ac…`, igual ao script versionado em `0ef4039` |
+
+Portanto, o vínculo entre o JSON e o código se faz pelo `sha256_script`, e não pelo `commit_head`. O commit `0ef4039` contém exatamente o script com esse hash.
+
+### 17.5 Fim de linha
+
+Os CSVs e o JSON foram gerados com CRLF, padrão do pandas e do Python no Windows. Os hashes acima referem-se a esses bytes.
+
+Duas regras no `.gitattributes`, versionadas no mesmo commit, preservam os bytes:
+- `-text` para os CSVs e o JSON de `reproducao_juan/`, sem conversão de fim de linha;
+- `text eol=lf` para o script.
+
+Os bytes no commit são iguais aos registrados.
+
+Uma reexecução em outro sistema pode gravar os CSVs com LF. Para comparar, o JSON registra também o SHA-256 após normalizar somente CRLF → LF:
+- frequências: `5a2f6af164de29862972f0dc7cfc67f394183ce29092f3c826c7b6c9b3609ab5`;
+- resumo dos folds: `6f3ba35091dddd1877a6ce4860e47149469527534760c84f72b018a3485b22ca`;
+- lista final: `8f81208d07e2f894067bba3ab50c8fc4bb2679dfe8f77b291b905f2a8c792e33`.
+
+### 17.6 O que a preservação não muda
+
+- **Reprodução histórica ≠ pipeline corrigido.** O script versionado preserva o procedimento **original**, inclusive os filtros ajustados fora da CV interna (Seção 2.4). Ele **não** é o pipeline da CV aninhada corrigida (protocolo, Seção 5.4), não deve ser reutilizado como tal, e seus resultados não substituem os das Etapas 1 e 2.
+- **Pendências científicas mantidas.** A divergência entre a lista declarada e a lista reproduzida continua sem decisão. A pendência P3 — regra para divergência e lista fixa de M2, M3 e M4 — segue com o grupo, assim como a revisão formal do protocolo (Seção 13). A preservação técnica não escolhe lista.
 
 ---
 

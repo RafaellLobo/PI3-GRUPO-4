@@ -12,6 +12,7 @@
 **Registro:** 11/10/2026
 **Revisão:** 11/10/2026 — incorpora os esclarecimentos de Juan (Seção 15). Os resultados verificados das Seções 3 a 9 não mudaram.
 **Revisão:** 12/10/2026 — registra o recebimento do notebook da regeneração recente (Seção 15.1) e a limitação metodológica dos filtros (Seção 7.1)
+**Revisão:** 12/10/2026 — a nossa reprodução passa a estar versionada no commit `0ef4039` (Seções 13.2 e 14.1; auditoria, Seção 17)
 
 ---
 
@@ -294,7 +295,7 @@ Como Juan confirmou que os CSVs são de uma regeneração recente e que não há
 |---|---|
 | **Histórica** (Colab, conclusão do notebook) | só o texto da conclusão; entradas, versões, partição e saídas desconhecidas e, segundo Juan, sem registro disponível |
 | **Regeneração recente** (CSVs do pacote) | entradas idênticas às do projeto; versões declaradas por Juan; notebook declarado como o da regeneração recebido e idêntico ao do pacote; ligação entre esse código e os CSVs não comprovada |
-| **Nossa reprodução controlada** | entradas, versões, código, saídas e hashes registrados (auditoria, Seções 3 e 15) |
+| **Nossa reprodução controlada** | entradas, versões, código, saídas e hashes registrados (auditoria, Seções 3 e 15); script e saídas versionados no commit `0ef4039` (auditoria, Seção 17) |
 
 As conclusões abaixo **não se estendem à execução histórica**.
 
@@ -376,7 +377,7 @@ Todos estão fora do repositório, em diretório temporário da sessão:
 | Saída da consistência | `3be815a430a5adf694657153b75e33f3ac0bc3d8550a19f21bbc995e98dc4f34` |
 | Saída da comparação dos notebooks | `6e0de33deaad214270dcbed68f8ce51a68bc8b1d2ad1573ddfb5ad408bc639eb` |
 
-Os CSVs da nossa execução B usados na comparação mantêm os hashes da Seção 15 da auditoria. Nenhum desses artefatos contém identificadores de paciente ou de nódulo.
+Os CSVs da nossa execução B usados na comparação são os artefatos **históricos** do diretório temporário e mantêm os hashes da Seção 15 da auditoria. Eles são byte a byte iguais aos CSVs **versionados** em [`reproducao_juan/`](reproducao_juan/), no commit `0ef4039` (auditoria, Seção 17). Nenhum desses artefatos contém identificadores de paciente ou de nódulo.
 
 ## 14. Situação da decisão
 
@@ -397,7 +398,11 @@ Ela fica registrada como **proposta científica para discussão do grupo**, e **
    - a lista reproduzida também depende do ambiente: com as mesmas entradas, a regeneração recente devolveu a lista declarada;
    - `ClusterShade` atinge exatamente o limiar de 3/5 (auditoria, Seção 7.1);
    - nenhuma das duas listas é robusta a mudanças de partição ou de ambiente, pelo que se observou.
-4. **Condição para a reprodutibilidade invocada.** Hoje, os scripts e saídas da nossa reprodução estão fora do repositório (auditoria, Seção 14, item 1). Para servir como evidência reproduzível, eles precisam ser preservados de forma definitiva.
+4. **Condição para a reprodutibilidade invocada — atendida em 12/10/2026.** O script e as saídas da nossa reprodução foram versionados no commit `0ef4039`:
+   - `scripts/sprint4/reproduce_juan_feature_selection.py`;
+   - `reports/sprint4/feature_selection/reproducao_juan/`.
+
+   Os três CSVs são byte a byte iguais aos históricos (auditoria, Seção 17). A preservação atende à condição técnica, mas **não decide** a lista: a proposta continua dependendo de P3 e da revisão formal do protocolo. O script preservado reproduz o procedimento **original**, com os filtros fora da CV interna, e não é o pipeline da CV aninhada corrigida (Seção 7.1).
 5. **Critério admissível.** A escolha só pode usar evidência de procedimento — rastreabilidade, reprodutibilidade, estabilidade no treino — e critérios fixados antes de qualquer resultado. **Nunca** desempenho em validação ou teste.
 
 ## 15. Esclarecimentos de Juan
