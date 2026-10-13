@@ -6,7 +6,8 @@ primeiros passos:
 
 1. a atividade é validada por ``guardas.normalizar_atividade``. Só atividades
    ligadas a uma etapa com partições em ``config.PARTICOES_POR_ETAPA`` leem
-   alvo e features; verificações estruturais e a Etapa 4 não leem;
+   alvo e features; verificações estruturais e a Etapa 4 não leem; o
+   piloto exploratório lê só ``train``;
 2. as partições pedidas, sempre explícitas, têm de estar entre as permitidas
    para a etapa. Validação só na Etapa 3 e teste só na Etapa 5;
 3. ``guardas.exigir_autorizacao`` é chamada AQUI, com a própria atividade,
@@ -67,10 +68,12 @@ NAO_FEATURES: FrozenSet[str] = frozenset(
 
 #: Atividade → etapa cujas partições ela pode ler. Verificações estruturais
 #: ficam de fora: não leem alvo nem features. A CV com lista fixa é uma
-#: atividade da Etapa 2.
+#: atividade da Etapa 2. O piloto exploratório reutiliza SÓ a política de
+#: leitura da Etapa 1 (``train``); suas decisões vêm da própria atividade.
 ETAPA_DE_LEITURA: Mapping[str, cfg.Etapa] = MappingProxyType({
     **{e.value: e for e in cfg.Etapa},
     cfg.ATIVIDADE_CV_LISTA_FIXA: cfg.Etapa.E2,
+    cfg.ATIVIDADE_PILOTO_EXPLORATORIO: cfg.Etapa.E1,
 })
 
 #: Conversor de float do ``read_csv``: o PADRÃO do pandas, o mesmo do baseline

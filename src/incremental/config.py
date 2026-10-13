@@ -378,6 +378,15 @@ ATIVIDADE_CV_LISTA_FIXA: str = "etapa2_cv_lista_fixa"
 #: Verificações puramente estruturais (invariantes de dados, composição e
 #: validação de folds, sem ajuste de modelo nem métrica): não exigem decisão.
 ATIVIDADE_VERIFICACOES_ESTRUTURAIS: str = "verificacoes_estruturais"
+#: Piloto exploratório: atividade PRÓPRIA, fora das Etapas 1–5 e distinta do
+#: piloto oficial da Etapa 1. Não exige decisões próprias (P1–P5 seguem
+#: pendentes); M2, M3 e M4 continuam exigindo P3, que as guardas somam por
+#: modelo. Lê só ``train`` (política de leitura da Etapa 1, em
+#: ``dados.ETAPA_DE_LEITURA``) e nunca produz resultado definitivo.
+ATIVIDADE_PILOTO_EXPLORATORIO: str = "piloto_exploratorio"
+#: Atividades cujos resultados são sempre exploratórios: a rastreabilidade
+#: recusa execução e manifesto com finalidade definitiva.
+ATIVIDADES_SOMENTE_EXPLORATORIAS: Tuple[str, ...] = (ATIVIDADE_PILOTO_EXPLORATORIO,)
 
 
 def _exigidas_ate(etapa: Etapa) -> Tuple[str, ...]:
@@ -391,6 +400,7 @@ DECISOES_POR_ETAPA: Mapping[str, Tuple[str, ...]] = MappingProxyType({
     ATIVIDADE_VERIFICACOES_ESTRUTURAIS: (),
     **{e.value: _exigidas_ate(e) for e in Etapa},
     ATIVIDADE_CV_LISTA_FIXA: tuple(c for c in DECISOES if c in {*_exigidas_ate(Etapa.E2), "P3"}),
+    ATIVIDADE_PILOTO_EXPLORATORIO: (),
 })
 
 
@@ -636,6 +646,7 @@ def snapshot(decisoes: Mapping[str, Decisao] = DECISOES) -> dict:
         "particoes_por_etapa": PARTICOES_POR_ETAPA,
         "decisoes": decisoes,
         "decisoes_por_etapa": DECISOES_POR_ETAPA,
+        "atividades_somente_exploratorias": ATIVIDADES_SOMENTE_EXPLORATORIAS,
     })
 
 

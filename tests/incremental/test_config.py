@@ -349,10 +349,23 @@ class TestMapaDecisoes(unittest.TestCase):
         "etapa3_validacao": ("P1", "P2", "P3"),
         "etapa4_congelamento": ("P1", "P2", "P3", "P5", "REVISAO_PROTOCOLO"),
         "etapa5_teste": ("P1", "P2", "P3", "P4", "P5", "REVISAO_PROTOCOLO"),
+        "piloto_exploratorio": (),
     }
 
     def test_mapa_explicito(self):
         self.assertEqual(dict(cfg.DECISOES_POR_ETAPA), self.ESPERADO)
+
+    def test_piloto_exploratorio_e_atividade_propria_e_somente_exploratoria(self):
+        piloto = cfg.ATIVIDADE_PILOTO_EXPLORATORIO
+        self.assertEqual(piloto, "piloto_exploratorio")
+        self.assertNotIn(piloto, {e.value for e in cfg.Etapa} | {e.name for e in cfg.Etapa})
+        self.assertNotEqual(piloto, cfg.Etapa.E1.value)
+        self.assertEqual(cfg.DECISOES_POR_ETAPA[piloto], ())
+        self.assertEqual(cfg.ATIVIDADES_SOMENTE_EXPLORATORIAS, (piloto,))
+        self.assertEqual(cfg.snapshot()["atividades_somente_exploratorias"], [piloto])
+        # Sem partições nem etapa próprias; nenhuma decisão aprovada.
+        self.assertEqual(set(cfg.PARTICOES_POR_ETAPA), set(cfg.Etapa))
+        self.assertTrue(all(not d.aprovada for d in cfg.DECISOES.values()))
 
     def test_cumulativo_ao_longo_das_etapas(self):
         etapas = list(cfg.Etapa)

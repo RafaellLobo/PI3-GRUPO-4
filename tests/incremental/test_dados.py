@@ -43,6 +43,7 @@ from test_guardas import (  # noqa: E402
 )
 
 E0, E1, E2, E3, E4, E5 = (e.value for e in cfg.Etapa)
+PILOTO = cfg.ATIVIDADE_PILOTO_EXPLORATORIO
 SENTINELA = "987654.321"
 SENTINELA_ALVO_DERIVADO = "[9, 9, 9, 9]"
 
@@ -326,13 +327,32 @@ class TestAcessoSemAprovacoes(ComSintetico):
         casos = [(E0, ["validation"]), (E0, ["train", "test"]), (E1, ["validation"]),
                  (E2, ["test"]), (cfg.ATIVIDADE_CV_LISTA_FIXA, ["validation"]),
                  (E3, ["test"]), (E3, ["train", "validation", "test"]), (E5, ["validation"]),
-                 (E4, ["train"]), (cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS, ["train"])]
+                 (E4, ["train"]), (cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS, ["train"]),
+                 (PILOTO, ["validation"]), (PILOTO, ["test"]), (PILOTO, ["train", "validation"]),
+                 (PILOTO, ["train", "test"]), (PILOTO, ["train", "validation", "test"])]
         for atividade, particoes in casos:
             with self.subTest(atividade=atividade, particoes=particoes), \
                     mock.patch.object(dados, "_ler_bytes", leituras_proibidas), \
                     mock.patch.object(g, "_git", leituras_proibidas):
                 with self.assertRaises(dados.AcessoNegado):
                     dados.carregar(atividade, particoes, POOL, fonte=fonte)
+
+    def test_piloto_exploratorio_le_somente_treino_sem_decisoes(self):
+        # Atividade própria: sem decisões (nem git), só a política de leitura da Etapa 1.
+        fonte = self.sint.escrever()
+        with mock.patch.object(g, "_git", leituras_proibidas):
+            carga = dados.carregar(PILOTO, ["train"], POOL, fonte=fonte)
+        self.assertEqual((carga.atividade, carga.particoes), (PILOTO, ("train",)))
+        self.assertEqual((carga.autorizacao.atividade, carga.autorizacao.decisoes_exigidas), (PILOTO, ()))
+        self.assertIsNone(carga.autorizacao.head)
+        self.assertEqual(set(carga.frame("train")["nodulo_id"]), self.ids_da_particao("train"))
+        for particao in ("validation", "test"):
+            with self.assertRaises(dados.AcessoNegado):
+                carga.frame(particao)
+        # A Etapa 1 oficial continua exigindo P1 e P2 para a mesma leitura.
+        with mock.patch.object(dados, "_ler_bytes", leituras_proibidas):
+            with self.assertRaisesRegex(cfg.BloqueioDecisao, "P1"):
+                dados.carregar(E1, ["train"], POOL, fonte=fonte)
 
     def test_etapas_com_decisoes_bloqueadas_sem_ler_arquivos(self):
         # Estado real: P1–P5 e REVISAO_PROTOCOLO pendentes. Nomear a etapa não basta.
@@ -447,7 +467,8 @@ class TestAcessoComAprovacoesFicticias(ComSintetico):
         for fonte in (None, oficial):
             for atividade, particoes, decisoes in ((E5, ["train", "test"], self.dec_e5),
                                                    (E3, ["validation"], self.dec_e3),
-                                                   (E0, ["train"], cfg.DECISOES)):
+                                                   (E0, ["train"], cfg.DECISOES),
+                                                   (PILOTO, ["train"], cfg.DECISOES)):
                 with self.subTest(fonte=fonte is None, atividade=atividade), \
                         mock.patch.object(dados, "_ler_bytes", leituras_proibidas), \
                         mock.patch.object(g, "_git", leituras_proibidas):
@@ -508,6 +529,18 @@ class TestIsolamento(ComSintetico):
         dados_lidos = captura.frames[-1]
         self.assertEqual(set(dados_lidos["nodulo_id"]), self.ids_da_particao("train"))
         self.assertTrue(set(carga.frame("train")["nodulo_id"]).isdisjoint(proibidos))
+
+    def test_piloto_nunca_materializa_validacao_ou_teste(self):
+        fonte = self.sint.escrever(proibidas="sentinela")
+        proibidos = self.ids_da_particao("validation", "test")
+        with CapturaReadCsv() as captura:
+            dados.carregar(PILOTO, ["train"], POOL, fonte=fonte)
+        for frame in captura.frames:
+            texto = frame.astype(str).to_numpy()
+            self.assertFalse((texto == SENTINELA).any() | (texto == str(float(SENTINELA))).any())
+            if not set(frame.columns) <= {"nodulo_id", "patient_id", "split"}:
+                self.assertTrue(set(frame["nodulo_id"]).isdisjoint(proibidos))
+        self.assertEqual(set(captura.frames[-1]["nodulo_id"]), self.ids_da_particao("train"))
 
     def test_leitura_inicial_restrita_a_identificadores(self):
         with CapturaReadCsv() as captura:
@@ -858,6 +891,11 @@ class TestModulo(unittest.TestCase):
                          set(cfg.DECISOES_POR_ETAPA))
         self.assertNotIn(cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS, dados.ETAPA_DE_LEITURA)
         self.assertIs(dados.ETAPA_DE_LEITURA[cfg.ATIVIDADE_CV_LISTA_FIXA], cfg.Etapa.E2)
+        # O piloto reutiliza só a política de leitura da Etapa 1: treino.
+        self.assertIs(dados.ETAPA_DE_LEITURA[PILOTO], cfg.Etapa.E1)
+        self.assertEqual(cfg.PARTICOES_POR_ETAPA[dados.ETAPA_DE_LEITURA[PILOTO]], ("train",))
+        for etapa in cfg.Etapa:
+            self.assertIs(dados.ETAPA_DE_LEITURA[etapa.value], etapa)  # etapas oficiais inalteradas
         for etapa in (cfg.Etapa.E0, cfg.Etapa.E1, cfg.Etapa.E2):
             self.assertEqual(cfg.PARTICOES_POR_ETAPA[etapa], ("train",))
 

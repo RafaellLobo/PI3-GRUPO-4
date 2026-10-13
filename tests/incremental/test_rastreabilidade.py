@@ -42,6 +42,7 @@ from test_guardas import (  # noqa: E402
 )
 
 E0, E1 = cfg.Etapa.E0.value, cfg.Etapa.E1.value
+PILOTO = cfg.ATIVIDADE_PILOTO_EXPLORATORIO
 DEF, EXP = r.Finalidade.DEFINITIVA, r.Finalidade.EXPLORATORIA
 UTC = dt.timezone.utc
 AMBIENTE_OK = {
@@ -557,6 +558,75 @@ class TestElegibilidade(ComRepo):
     def test_predicado_valida_o_manifesto_inteiro(self):
         with self.assertRaises(r.ManifestoInvalido):
             r.resultado_definitivo_utilizavel({"formato": r.FORMATO})
+
+
+class TestPilotoExploratorio(ComRepo):
+    """O piloto exploratório nunca é definitivo: nem na execução, nem no manifesto."""
+
+    @staticmethod
+    def corpo_de(m):
+        return {k: json.loads(json.dumps(m[k])) for k in ("formato", "versao_formato", "execucao",
+                                                          "resultado", "tempo")}
+
+    def test_execucao_definitiva_recusada_na_construcao(self):
+        autorizacao = g.exigir_autorizacao(PILOTO, cfg.DECISOES, self.raiz)
+        for finalidade in (DEF, "definitiva"):
+            with self.subTest(finalidade=finalidade), \
+                    mock.patch.object(g, "exigir_autorizacao", side_effect=AssertionError("não deveria chegar aqui")), \
+                    mock.patch.object(r, "estado_git", side_effect=AssertionError("não deveria chegar aqui")):
+                with self.assertRaisesRegex(r.ExecucaoNaoDefinitiva, "somente exploratória"):
+                    r.Execucao(PILOTO, finalidade, autorizacao, {"tabela": self.entrada}, {"cv_externa": 42},
+                               repo=self.raiz)
+        # Mesmo com árvore limpa e ambiente esperado (todo o resto de uma definitiva atendido).
+        with self.assertRaisesRegex(r.ExecucaoNaoDefinitiva, "somente exploratória"):
+            self.rodar(DEF, atividade=PILOTO)
+
+    def test_execucao_exploratoria_do_piloto_nunca_utilizavel(self):
+        m = self.rodar(atividade=PILOTO)
+        ex = m["execucao"]
+        self.assertEqual((ex["atividade"], ex["finalidade"], ex["elegivel_definitiva"]),
+                         (PILOTO, "exploratoria", False))
+        self.assertEqual((ex["autorizacao"]["atividade"], ex["autorizacao"]["decisoes_exigidas"]), (PILOTO, []))
+        self.assertEqual(ex["hash_configuracao"], HASH_CONFIG_INCREMENTO_1)
+        self.assertFalse(r.resultado_definitivo_utilizavel(m))
+        destino = self.raiz / "ignorado" / "piloto.json"
+        destino.parent.mkdir(exist_ok=True)
+        r.escrever_manifesto(m, destino, self.raiz)
+        with self.assertRaisesRegex(r.ResultadoNaoUtilizavel, "exploratoria"):
+            r.exigir_resultado_definitivo(destino, self.raiz)
+
+    def test_manifesto_do_piloto_promovido_a_definitivo_e_recusado(self):
+        piloto = self.rodar(atividade=PILOTO)  # árvore limpa, ambiente esperado, HEAD estável
+        casos = {
+            "finalidade e elegibilidade": dict(finalidade="definitiva", elegivel_definitiva=True),
+            "só elegibilidade": dict(elegivel_definitiva=True),
+            "só finalidade": dict(finalidade="definitiva"),
+        }
+        pasta = self.raiz / "ignorado"
+        pasta.mkdir(exist_ok=True)
+        for nome, campos in casos.items():
+            with self.subTest(caso=nome):
+                corpo = self.corpo_de(piloto)
+                corpo["execucao"].update(campos)
+                forjado = r._com_hashes(corpo)  # hashes recalculados de propósito
+                for operacao in (r.validar_manifesto, r.resultado_definitivo_utilizavel):
+                    with self.assertRaisesRegex(r.ManifestoInvalido, "somente exploratória"):
+                        operacao(forjado)
+                with self.assertRaisesRegex(r.ManifestoInvalido, "somente exploratória"):
+                    r.escrever_manifesto(forjado, pasta / f"forjado-{len(nome)}.json", self.raiz)
+                bruto = pasta / f"bruto-{len(nome)}.json"
+                bruto.write_bytes(r.serializar(forjado))
+                with self.assertRaisesRegex(r.ManifestoInvalido, "somente exploratória"):
+                    r.exigir_resultado_definitivo(bruto, self.raiz)
+        # Reetiquetar só a execução como Etapa 0 (a autorização continua do piloto) não passa.
+        reetiquetado = self.corpo_de(piloto)
+        reetiquetado["execucao"].update(atividade=E0, finalidade="definitiva", elegivel_definitiva=True)
+        with self.assertRaisesRegex(r.ManifestoInvalido, "atividade diferente"):
+            r.resultado_definitivo_utilizavel(r._com_hashes(reetiquetado))
+        # Controle: a mesma promoção num manifesto da Etapa 0 é coerente — a recusa vem da atividade.
+        e0 = self.corpo_de(self.rodar(atividade=E0))
+        e0["execucao"].update(finalidade="definitiva", elegivel_definitiva=True)
+        self.assertTrue(r.resultado_definitivo_utilizavel(r._com_hashes(e0)))
 
 
 # --------------------------------------------------------------------------- #

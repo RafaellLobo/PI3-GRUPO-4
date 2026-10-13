@@ -19,7 +19,10 @@ Regras:
   ``DEFINITIVA`` exige árvore limpa no início, nenhuma alteração além das
   saídas registradas no fim, o mesmo HEAD, o ambiente de
   ``config.AMBIENTE_ESPERADO`` e autorização do mesmo HEAD. Uma execução
-  ``EXPLORATORIA`` registra tudo e fica marcada como não elegível;
+  ``EXPLORATORIA`` registra tudo e fica marcada como não elegível.
+  Atividades de ``config.ATIVIDADES_SOMENTE_EXPLORATORIAS`` (o piloto
+  exploratório) nunca são definitivas: ``Execucao`` recusa a finalidade e
+  ``validar_manifesto`` recusa o manifesto, mesmo com hashes recalculados;
 * REGISTRO AUDITÁVEL ≠ RESULTADO UTILIZÁVEL. Todo manifesto íntegro é um
   registro auditável, inclusive de execuções que falharam ou foram
   interrompidas. ``execucao.elegivel_definitiva`` diz apenas que os
@@ -448,6 +451,16 @@ def validar_manifesto(manifesto: Any) -> dict:
     if not _SHA256.fullmatch(str(execucao["hash_configuracao"])):
         raise ManifestoInvalido("execucao.hash_configuracao inválido")
     definitiva = execucao["finalidade"] == Finalidade.DEFINITIVA.value
+    # A autorização registrada é da mesma atividade: reetiquetar só a execução
+    # (por exemplo, o piloto como Etapa 0) não passa.
+    if not isinstance(execucao["autorizacao"], dict) or \
+            execucao["autorizacao"].get("atividade") != execucao["atividade"]:
+        raise ManifestoInvalido("execucao.autorizacao: atividade diferente da execução")
+    # Antes dos hashes: um manifesto coerente, com hashes recalculados, também é recusado.
+    if execucao["atividade"] in cfg.ATIVIDADES_SOMENTE_EXPLORATORIAS and \
+            (definitiva or execucao["elegivel_definitiva"] is not False):
+        raise ManifestoInvalido(f"execucao: {execucao['atividade']} é somente exploratória; "
+                                "não pode ser definitiva nem elegível")
     if execucao["elegivel_definitiva"] is not definitiva:
         raise ManifestoInvalido("execucao.elegivel_definitiva incoerente com a finalidade")
     try:
@@ -685,6 +698,9 @@ class Execucao:
                  relogio_monotonico: Callable[[], float] = time.monotonic) -> None:
         self.atividade = guardas.normalizar_atividade(atividade)
         self.finalidade = Finalidade(finalidade)
+        if self.finalidade is Finalidade.DEFINITIVA and self.atividade in cfg.ATIVIDADES_SOMENTE_EXPLORATORIAS:
+            raise ExecucaoNaoDefinitiva(f"{self.atividade}: atividade somente exploratória; "
+                                        "execução definitiva não é permitida")
         if not isinstance(autorizacao, guardas.Autorizacao):
             raise TypeError("autorizacao deve ser guardas.Autorizacao")
         if autorizacao.atividade != self.atividade:
