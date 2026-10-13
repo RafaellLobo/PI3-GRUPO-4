@@ -1,0 +1,2595 @@
+{
+  "amostra": {
+    "classe_0": 209,
+    "classe_1": 208,
+    "n_nodulos": 417,
+    "n_pacientes": 291
+  },
+  "atividade": "cv_repetida_exploratoria",
+  "aviso": "Resultado preliminar exploratório da atividade cv_repetida_exploratoria: CV aninhada repetida fora das Etapas 1-5 do protocolo, sem aprovação do grupo ou do professor (P1-P5 pendentes), sem validação nem teste. A unidade de resumo é a repetição; média e mínimo-máximo entre repetições descrevem sensibilidade à partição, não incerteza amostral, porque os folds e as repetições reutilizam os mesmos nódulos. Sem p-valor, intervalo de confiança, erro-padrão ou teste de significância; AUC, contrastes e Jaccard são apenas descritivos e nenhum modelo de lista fixa é ajustado.",
+  "contrastes": [
+    "M3v-M0",
+    "M4v-M1"
+  ],
+  "convergencia": {
+    "ajustes_avaliacao_logistica": 250,
+    "ajustes_avaliacao_sem_convergencia": 0,
+    "refits_selecao": 250,
+    "refits_selecao_sem_convergencia": 0
+  },
+  "decisoes_pendentes": [
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "REVISAO_PROTOCOLO"
+  ],
+  "entre_repeticoes": {
+    "auc_oof": {
+      "M0": {
+        "maximo": 0.9468393448656606,
+        "media": 0.945114096429886,
+        "minimo": 0.9414795730585204,
+        "valores_por_repeticao": [
+          0.9457351858667649,
+          0.9460917372101584,
+          0.9468393448656606,
+          0.9461722488038278,
+          0.9451946080235554,
+          0.9461952521163047,
+          0.9414795730585204,
+          0.9445505152741995,
+          0.9438029076186971,
+          0.9450795914611705
+        ]
+      },
+      "M1": {
+        "maximo": 0.945091093117409,
+        "media": 0.943513065881487,
+        "minimo": 0.9369939271255061,
+        "valores_por_repeticao": [
+          0.9437338976812661,
+          0.9450450864924549,
+          0.945091093117409,
+          0.944516010305484,
+          0.9442169672432831,
+          0.9450910931174089,
+          0.9369939271255061,
+          0.9438259109311741,
+          0.9419396393080605,
+          0.9446770334928231
+        ]
+      },
+      "M2v": {
+        "maximo": 0.9729711078395289,
+        "media": 0.9706477732793524,
+        "minimo": 0.9683244387191756,
+        "valores_por_repeticao": [
+          0.9687845049687155,
+          0.9722119985277882,
+          0.9701647037173353,
+          0.9729711078395289,
+          0.9683244387191756,
+          0.9725110415899889,
+          0.9715218991534782,
+          0.9716369157158631,
+          0.9697966507177034,
+          0.9685544718439455
+        ]
+      },
+      "M3v": {
+        "maximo": 0.9729020979020979,
+        "media": 0.9704062384983437,
+        "minimo": 0.9679333824070667,
+        "valores_por_repeticao": [
+          0.9686004784688995,
+          0.9719129554655872,
+          0.9701186970923813,
+          0.9729020979020979,
+          0.9679333824070667,
+          0.972396025027604,
+          0.9712918660287082,
+          0.9712918660287081,
+          0.9693365844681634,
+          0.9682784320942215
+        ]
+      },
+      "M4v": {
+        "maximo": 0.972925101214575,
+        "media": 0.9704062384983437,
+        "minimo": 0.9677723592197276,
+        "valores_por_repeticao": [
+          0.9687384983437615,
+          0.9718899521531101,
+          0.9701417004048584,
+          0.972925101214575,
+          0.9677723592197276,
+          0.972419028340081,
+          0.9713378726536621,
+          0.9712688627162311,
+          0.9694746043430253,
+          0.9680944055944056
+        ]
+      }
+    },
+    "contrastes_descritivos": {
+      "M3v-M0": {
+        "maximo": 0.029812292970187837,
+        "media": 0.025292142068457868,
+        "minimo": 0.02273877438351135,
+        "valores_por_repeticao": [
+          0.022865292602134657,
+          0.025821218255428824,
+          0.02327935222672073,
+          0.026729849098270142,
+          0.02273877438351135,
+          0.026200772911299297,
+          0.029812292970187837,
+          0.026741350754508564,
+          0.02553367684946628,
+          0.023198840633051
+        ]
+      },
+      "M4v-M1": {
+        "maximo": 0.034343945528156006,
+        "media": 0.026893172616856798,
+        "minimo": 0.023417372101582568,
+        "valores_por_repeticao": [
+          0.025004600662495324,
+          0.026844865660655248,
+          0.025050607287449345,
+          0.02840909090909094,
+          0.023555391976444517,
+          0.027327935222672073,
+          0.034343945528156006,
+          0.027442951785057068,
+          0.027534965034964887,
+          0.023417372101582568
+        ]
+      }
+    },
+    "leitura": "sensibilidade à partição; não é incerteza amostral nem estimativa independente",
+    "n_repeticoes": 10,
+    "unidade_de_resumo": "repeticao"
+  },
+  "finalidade": "exploratoria",
+  "fora_desta_modalidade": {
+    "cv_com_lista_fixa": false,
+    "modelos_com_painel": [
+      "M2",
+      "M3",
+      "M4"
+    ],
+    "particoes_nao_lidas": [
+      "validation",
+      "test"
+    ],
+    "permutacoes": false,
+    "spline": false
+  },
+  "formato": "relatorio-cv-repetida-exploratoria-cartao4",
+  "hash_configuracao": "c36335c1696b99f5d2344e80f14884721007da5810f6be6c8b892de60f4c5885",
+  "modelos": [
+    "M0",
+    "M1",
+    "M2v",
+    "M3v",
+    "M4v"
+  ],
+  "n_folds_externos": 5,
+  "particoes_lidas": [
+    "train"
+  ],
+  "por_repeticao": [
+    {
+      "auc_oof": {
+        "M0": 0.9457351858667649,
+        "M1": 0.9437338976812661,
+        "M2v": 0.9687845049687155,
+        "M3v": 0.9686004784688995,
+        "M4v": 0.9687384983437615
+      },
+      "contrastes_descritivos": {
+        "M3v-M0": 0.022865292602134657,
+        "M4v-M1": 0.025004600662495324
+      },
+      "folds": [
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.968284611141754,
+            "M1": 0.9718698290126861,
+            "M2v": 0.9817981246552674,
+            "M3v": 0.9806949806949806,
+            "M4v": 0.9806949806949806
+          },
+          "fingerprint_folds": "e7d554c508a19fe5c225f532a7407d22b61edbf315ce2ad3d3e3cf52da347a37",
+          "fold": 0,
+          "jaccard_painel_declarado": 1.0,
+          "n_avaliacao": 86,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 331,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc2",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "01bc9cfe2c8406b815c4e6836b17f3aec017baf26fee57436590634b6e33e984"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9595959595959596,
+            "M1": 0.9636363636363636,
+            "M2v": 0.9872053872053872,
+            "M3v": 0.9872053872053872,
+            "M4v": 0.9872053872053872
+          },
+          "fingerprint_folds": "fd51c74e9b352642a4df01d487f42612ee47ee8478b3dfc97d319904170897bd",
+          "fold": 1,
+          "jaccard_painel_declarado": 0.5454545454545454,
+          "n_avaliacao": 78,
+          "n_pacientes_avaliacao": 60,
+          "n_treino": 339,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_Id",
+            "original_glcm_Idmn",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 9,
+          "s_k_vazio": false,
+          "sha256_selecao": "0c6d675fc242b8bbba91d7537e80de51017bb90cc25426a2e76efec353e93c49"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            1.0
+          ],
+          "auc": {
+            "M0": 0.9376299376299377,
+            "M1": 0.9365904365904366,
+            "M2v": 0.9714137214137214,
+            "M3v": 0.9708939708939709,
+            "M4v": 0.9708939708939709
+          },
+          "fingerprint_folds": "7bd250a99fb34fcab6cf482d18ef4c543d2ce273de3088634b10a1986079a26b",
+          "fold": 2,
+          "jaccard_painel_declarado": 0.4166666666666667,
+          "n_avaliacao": 89,
+          "n_pacientes_avaliacao": 54,
+          "n_treino": 328,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Flatness",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc1",
+            "original_ngtdm_Busyness"
+          ],
+          "s_k_tamanho": 9,
+          "s_k_vazio": false,
+          "sha256_selecao": "5ce11465851ff8d7ec9d1f6ac4215f9c82027659533622f0877d459ff3179e7e"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            10.0,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.958411507191995,
+            "M1": 0.9524702939337086,
+            "M2v": 0.9856160100062539,
+            "M3v": 0.9843652282676673,
+            "M4v": 0.9843652282676673
+          },
+          "fingerprint_folds": "71fd35d218ac5ecda117679ba5cafd01d616f80d5f7b4ea4b4365e72352eebc5",
+          "fold": 3,
+          "jaccard_painel_declarado": 0.5454545454545454,
+          "n_avaliacao": 80,
+          "n_pacientes_avaliacao": 60,
+          "n_treino": 337,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2",
+            "original_ngtdm_Busyness"
+          ],
+          "s_k_tamanho": 9,
+          "s_k_vazio": false,
+          "sha256_selecao": "da66c7f06e1f8b30064e12626c6d4e31c88fa3575d776073bfee2832fe8735bf"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.03162277660168379,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.1,
+            0.1
+          ],
+          "auc": {
+            "M0": 0.9299999999999999,
+            "M1": 0.9217647058823529,
+            "M2v": 0.9323529411764706,
+            "M3v": 0.9317647058823529,
+            "M4v": 0.9317647058823529
+          },
+          "fingerprint_folds": "171457d035344b90c711061295999552bdee71ff01f6e753de8736d2a4f21002",
+          "fold": 4,
+          "jaccard_painel_declarado": 0.3,
+          "n_avaliacao": 84,
+          "n_pacientes_avaliacao": 58,
+          "n_treino": 333,
+          "s_k": [
+            "original_shape_MajorAxisLength",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 5,
+          "s_k_vazio": false,
+          "sha256_selecao": "dfb68b2a2f01781fcd190999d4a7c18596dfd2926a16a022df8c404c58faac9c"
+        }
+      ],
+      "folds_com_s_k_vazio": 0,
+      "frequencia_entre_folds_externos": {
+        "original_firstorder_90Percentile": 4,
+        "original_firstorder_RootMeanSquared": 4,
+        "original_firstorder_Skewness": 1,
+        "original_glcm_ClusterShade": 2,
+        "original_glcm_Id": 1,
+        "original_glcm_Idmn": 1,
+        "original_glcm_Imc1": 4,
+        "original_glcm_Imc2": 4,
+        "original_ngtdm_Busyness": 2,
+        "original_ngtdm_Coarseness": 1,
+        "original_shape_Elongation": 4,
+        "original_shape_Flatness": 1,
+        "original_shape_MajorAxisLength": 1,
+        "original_shape_Sphericity": 5,
+        "original_shape_SurfaceVolumeRatio": 5
+      },
+      "repeticao": 0,
+      "seed_cv_externa": 42,
+      "warnings": {
+        "modelos": [],
+        "selecao": [
+          {
+            "categoria": "ConvergenceWarning",
+            "contagem": 7,
+            "mensagem": "Liblinear failed to converge, increase the number of iterations."
+          }
+        ]
+      }
+    },
+    {
+      "auc_oof": {
+        "M0": 0.9460917372101584,
+        "M1": 0.9450450864924549,
+        "M2v": 0.9722119985277882,
+        "M3v": 0.9719129554655872,
+        "M4v": 0.9718899521531101
+      },
+      "contrastes_descritivos": {
+        "M3v-M0": 0.025821218255428824,
+        "M4v-M1": 0.026844865660655248
+      },
+      "folds": [
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9481522338665196,
+            "M1": 0.9553226696083839,
+            "M2v": 0.9812465526751241,
+            "M3v": 0.9812465526751241,
+            "M4v": 0.9812465526751241
+          },
+          "fingerprint_folds": "4aebf1f652299a4bce3c003c3baf8c68839bcaa7529a93a3ba883b86d0e86364",
+          "fold": 0,
+          "jaccard_painel_declarado": 0.6,
+          "n_avaliacao": 86,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 331,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "e1e6f2b0028aee6da81629d8a6774194211fb30fb8a12089281ac039617d2636"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9718820861678005,
+            "M1": 0.9727891156462585,
+            "M2v": 0.9800453514739229,
+            "M3v": 0.9800453514739229,
+            "M4v": 0.9804988662131519
+          },
+          "fingerprint_folds": "06c9e03e66c287a52c97ff99778f964fe4cf55509805184425200f4065e59e80",
+          "fold": 1,
+          "jaccard_painel_declarado": 0.6363636363636364,
+          "n_avaliacao": 94,
+          "n_pacientes_avaliacao": 60,
+          "n_treino": 323,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_Entropy",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Id",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 10,
+          "s_k_vazio": false,
+          "sha256_selecao": "2f252493036883a87b914f0a1e5aecb4f70f919f9c741601a4f273fe49cb0631"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.951923076923077,
+            "M1": 0.9503205128205129,
+            "M2v": 0.9815705128205128,
+            "M3v": 0.9807692307692307,
+            "M4v": 0.9807692307692307
+          },
+          "fingerprint_folds": "cd593f81c2adef45091d5b5e578bd88b198e8af56058d9a6573c2e692ec2893e",
+          "fold": 2,
+          "jaccard_painel_declarado": 0.5454545454545454,
+          "n_avaliacao": 71,
+          "n_pacientes_avaliacao": 54,
+          "n_treino": 346,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Id",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 9,
+          "s_k_vazio": false,
+          "sha256_selecao": "24145090b7ffa38749dc574c99733f03f1d4b3153a673bd5afe1e38492640d24"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            3.1622776601683795,
+            1.0,
+            1.0,
+            3.1622776601683795
+          ],
+          "auc": {
+            "M0": 0.9222222222222223,
+            "M1": 0.9257309941520468,
+            "M2v": 0.9385964912280702,
+            "M3v": 0.9385964912280702,
+            "M4v": 0.9385964912280702
+          },
+          "fingerprint_folds": "11b06d7363ee003392b930a424bb288a9ebfee69e18fd7ce5d998aee37cb7da1",
+          "fold": 3,
+          "jaccard_painel_declarado": 0.6363636363636364,
+          "n_avaliacao": 83,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 334,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Flatness",
+            "original_shape_MajorAxisLength",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_Kurtosis",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc2",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 10,
+          "s_k_vazio": false,
+          "sha256_selecao": "4f950603cd6e14a66fb8249935797d7524df846e6ed70033b6416633dd55f62b"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9388888888888889,
+            "M1": 0.932748538011696,
+            "M2v": 0.97953216374269,
+            "M3v": 0.9783625730994152,
+            "M4v": 0.9783625730994152
+          },
+          "fingerprint_folds": "f52306dd2de166e2f1cbb9fd32fca3b80695c59852a784d446160536435f9f6b",
+          "fold": 4,
+          "jaccard_painel_declarado": 0.6,
+          "n_avaliacao": 83,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 334,
+          "s_k": [
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "3de69ebefb145bee12c64aff0d15edd0274a6a60547a04aa3eb5fcb343ac013f"
+        }
+      ],
+      "folds_com_s_k_vazio": 0,
+      "frequencia_entre_folds_externos": {
+        "original_firstorder_90Percentile": 5,
+        "original_firstorder_Entropy": 1,
+        "original_firstorder_Kurtosis": 1,
+        "original_firstorder_RootMeanSquared": 4,
+        "original_firstorder_Skewness": 3,
+        "original_glcm_ClusterShade": 3,
+        "original_glcm_Id": 2,
+        "original_glcm_Imc1": 4,
+        "original_glcm_Imc2": 5,
+        "original_ngtdm_Coarseness": 1,
+        "original_shape_Elongation": 4,
+        "original_shape_Flatness": 1,
+        "original_shape_MajorAxisLength": 1,
+        "original_shape_Sphericity": 5,
+        "original_shape_SurfaceVolumeRatio": 5
+      },
+      "repeticao": 1,
+      "seed_cv_externa": 43,
+      "warnings": {
+        "modelos": [],
+        "selecao": [
+          {
+            "categoria": "ConvergenceWarning",
+            "contagem": 11,
+            "mensagem": "Liblinear failed to converge, increase the number of iterations."
+          }
+        ]
+      }
+    },
+    {
+      "auc_oof": {
+        "M0": 0.9468393448656606,
+        "M1": 0.945091093117409,
+        "M2v": 0.9701647037173353,
+        "M3v": 0.9701186970923813,
+        "M4v": 0.9701417004048584
+      },
+      "contrastes_descritivos": {
+        "M3v-M0": 0.02327935222672073,
+        "M4v-M1": 0.025050607287449345
+      },
+      "folds": [
+        {
+          "C_por_fold_estabilidade": [
+            1.0,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794,
+            1.0
+          ],
+          "auc": {
+            "M0": 0.9516700404858299,
+            "M1": 0.9529352226720648,
+            "M2v": 0.9752024291497976,
+            "M3v": 0.9757085020242915,
+            "M4v": 0.9757085020242915
+          },
+          "fingerprint_folds": "32db18df612987002dac6e3409b38f82f9ee92c3fd00daa6979a9231e21cca33",
+          "fold": 0,
+          "jaccard_painel_declarado": 0.8,
+          "n_avaliacao": 90,
+          "n_pacientes_avaliacao": 58,
+          "n_treino": 327,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_Kurtosis",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Correlation",
+            "original_glcm_Imc2",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 10,
+          "s_k_vazio": false,
+          "sha256_selecao": "410bf57e86478c0b693f94a4f17458a124a047d874d96e3f7a11b02543751332"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9676470588235293,
+            "M1": 0.9691176470588235,
+            "M2v": 0.9816176470588235,
+            "M3v": 0.9816176470588235,
+            "M4v": 0.9816176470588235
+          },
+          "fingerprint_folds": "11fad0074fe068740fcd23bd4a36098800bf664fdd1d30fdfdc50089ef103610",
+          "fold": 1,
+          "jaccard_painel_declarado": 0.6363636363636364,
+          "n_avaliacao": 74,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 343,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Flatness",
+            "original_shape_MajorAxisLength",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_Kurtosis",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_Imc2",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 10,
+          "s_k_vazio": false,
+          "sha256_selecao": "61fd41974d4a4bf0a388ad3badb423e541e571128d53bf7be7aca253390467e9"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9367015098722415,
+            "M1": 0.9279907084785134,
+            "M2v": 0.9639953542392566,
+            "M3v": 0.9651567944250871,
+            "M4v": 0.9657375145180023
+          },
+          "fingerprint_folds": "3b9517a81095b178eba3af3994015bef3081734e4b4691b0844f4dabefd50dc0",
+          "fold": 2,
+          "jaccard_painel_declarado": 0.5555555555555556,
+          "n_avaliacao": 83,
+          "n_pacientes_avaliacao": 56,
+          "n_treino": 334,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 6,
+          "s_k_vazio": false,
+          "sha256_selecao": "5827c109a906a79c83c11b6b4ccee9503fdc7b1ed59370654fe8e1e7d47416a8"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            1.0
+          ],
+          "auc": {
+            "M0": 0.9283008658008658,
+            "M1": 0.9231601731601732,
+            "M2v": 0.9691558441558441,
+            "M3v": 0.9696969696969697,
+            "M4v": 0.9696969696969697
+          },
+          "fingerprint_folds": "68611984f94075c8fc8335816aab8dd53433f2123652a3b478448c0842d55233",
+          "fold": 3,
+          "jaccard_painel_declarado": 0.5454545454545454,
+          "n_avaliacao": 86,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 331,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2",
+            "original_glcm_JointEnergy"
+          ],
+          "s_k_tamanho": 9,
+          "s_k_vazio": false,
+          "sha256_selecao": "9c186c883eb5c77f0ee996a1eacbf0244df51cdbd494eab6b078b978746978c4"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            10.0
+          ],
+          "auc": {
+            "M0": 0.9602272727272727,
+            "M1": 0.9613636363636364,
+            "M2v": 0.9664772727272727,
+            "M3v": 0.9670454545454545,
+            "M4v": 0.9670454545454545
+          },
+          "fingerprint_folds": "9d8a88697ce9f6c16264263ad8ec8888f1a986a99889fdf5eede14c78da458b7",
+          "fold": 4,
+          "jaccard_painel_declarado": 0.6363636363636364,
+          "n_avaliacao": 84,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 333,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_Skewness",
+            "original_glcm_ClusterShade",
+            "original_glcm_Idmn",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 10,
+          "s_k_vazio": false,
+          "sha256_selecao": "60ce268803cbd123a42b3af42fe93091cea58ddc4ae7f172d061a7122707e552"
+        }
+      ],
+      "folds_com_s_k_vazio": 0,
+      "frequencia_entre_folds_externos": {
+        "original_firstorder_90Percentile": 5,
+        "original_firstorder_Kurtosis": 2,
+        "original_firstorder_RootMeanSquared": 3,
+        "original_firstorder_Skewness": 2,
+        "original_glcm_ClusterShade": 2,
+        "original_glcm_Correlation": 1,
+        "original_glcm_Idmn": 1,
+        "original_glcm_Imc1": 3,
+        "original_glcm_Imc2": 5,
+        "original_glcm_JointEnergy": 1,
+        "original_ngtdm_Coarseness": 3,
+        "original_shape_Elongation": 5,
+        "original_shape_Flatness": 1,
+        "original_shape_MajorAxisLength": 1,
+        "original_shape_Sphericity": 5,
+        "original_shape_SurfaceVolumeRatio": 5
+      },
+      "repeticao": 2,
+      "seed_cv_externa": 44,
+      "warnings": {
+        "modelos": [],
+        "selecao": [
+          {
+            "categoria": "ConvergenceWarning",
+            "contagem": 5,
+            "mensagem": "Liblinear failed to converge, increase the number of iterations."
+          }
+        ]
+      }
+    },
+    {
+      "auc_oof": {
+        "M0": 0.9461722488038278,
+        "M1": 0.944516010305484,
+        "M2v": 0.9729711078395289,
+        "M3v": 0.9729020979020979,
+        "M4v": 0.972925101214575
+      },
+      "contrastes_descritivos": {
+        "M3v-M0": 0.026729849098270142,
+        "M4v-M1": 0.02840909090909094
+      },
+      "folds": [
+        {
+          "C_por_fold_estabilidade": [
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794,
+            1.0,
+            1.0
+          ],
+          "auc": {
+            "M0": 0.9176136363636364,
+            "M1": 0.9079545454545455,
+            "M2v": 0.9363636363636364,
+            "M3v": 0.9357954545454547,
+            "M4v": 0.9363636363636364
+          },
+          "fingerprint_folds": "d47be2ada7e6a251bb82df4f1de3a7f7ec1787a992f7eb653b164987d0f91d9c",
+          "fold": 0,
+          "jaccard_painel_declarado": 0.7272727272727273,
+          "n_avaliacao": 84,
+          "n_pacientes_avaliacao": 58,
+          "n_treino": 333,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Flatness",
+            "original_shape_MajorAxisLength",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_Kurtosis",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc2",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 11,
+          "s_k_vazio": false,
+          "sha256_selecao": "5a671d3b0611beba5063e9e1c695bd980129197213be96de77d92c53df1fa7a9"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.944233507356431,
+            "M1": 0.9406739439962032,
+            "M2v": 0.981015662078785,
+            "M3v": 0.981015662078785,
+            "M4v": 0.981015662078785
+          },
+          "fingerprint_folds": "5fcc0658883558e65198025dc4908826f1bb0dc937c36d6a5aa3e962f3d08862",
+          "fold": 1,
+          "jaccard_painel_declarado": 0.6666666666666666,
+          "n_avaliacao": 92,
+          "n_pacientes_avaliacao": 58,
+          "n_treino": 325,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 7,
+          "s_k_vazio": false,
+          "sha256_selecao": "c7b2f93dabf0cd893ad7565fc53399f6666c6dbf85470a135f327249883bae50"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.1,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.943117536140792,
+            "M1": 0.9428032683846637,
+            "M2v": 0.9754871150219987,
+            "M3v": 0.9754871150219987,
+            "M4v": 0.9754871150219987
+          },
+          "fingerprint_folds": "ef87d477bb0dbd8c9c69c58a3caaab7199aa350e0e032bf1146269662d6831a6",
+          "fold": 2,
+          "jaccard_painel_declarado": 0.5,
+          "n_avaliacao": 80,
+          "n_pacientes_avaliacao": 58,
+          "n_treino": 337,
+          "s_k": [
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 7,
+          "s_k_vazio": false,
+          "sha256_selecao": "6492dd4d4cfcaaf74c9b363c869b8c95d43aaf4dc07e7aebf995a8320d2da799"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.981074481074481,
+            "M1": 0.9804639804639803,
+            "M2v": 0.9938949938949939,
+            "M3v": 0.9945054945054945,
+            "M4v": 0.9945054945054945
+          },
+          "fingerprint_folds": "d8477e8ecf51dade8767ac37877fc141159c97b947893012b5a1271c1ebccaaa",
+          "fold": 3,
+          "jaccard_painel_declarado": 0.6363636363636364,
+          "n_avaliacao": 81,
+          "n_pacientes_avaliacao": 58,
+          "n_treino": 336,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_ClusterShade",
+            "original_glcm_Id",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 10,
+          "s_k_vazio": false,
+          "sha256_selecao": "d4967ddf35f8ce73c8028eb3e9a1e07d63b8a1e6fd0a0b26ecf2a405f90999b4"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9600257898130239,
+            "M1": 0.9613152804642167,
+            "M2v": 0.988394584139265,
+            "M3v": 0.9890393294648614,
+            "M4v": 0.9890393294648614
+          },
+          "fingerprint_folds": "5aaffc40a9108c7b4415503869e34a4fd43593f74dcd80266e501f0a107be67f",
+          "fold": 4,
+          "jaccard_painel_declarado": 0.7777777777777778,
+          "n_avaliacao": 80,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 337,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "096af497dec50a3f0ccc340b91bfd7e0492c9b964e9fefdc59f2c65facc32189"
+        }
+      ],
+      "folds_com_s_k_vazio": 0,
+      "frequencia_entre_folds_externos": {
+        "original_firstorder_90Percentile": 5,
+        "original_firstorder_Kurtosis": 1,
+        "original_firstorder_RootMeanSquared": 5,
+        "original_firstorder_Skewness": 3,
+        "original_glcm_ClusterShade": 3,
+        "original_glcm_Id": 1,
+        "original_glcm_Imc1": 3,
+        "original_glcm_Imc2": 5,
+        "original_ngtdm_Coarseness": 1,
+        "original_shape_Elongation": 4,
+        "original_shape_Flatness": 1,
+        "original_shape_MajorAxisLength": 1,
+        "original_shape_Sphericity": 5,
+        "original_shape_SurfaceVolumeRatio": 5
+      },
+      "repeticao": 3,
+      "seed_cv_externa": 45,
+      "warnings": {
+        "modelos": [],
+        "selecao": [
+          {
+            "categoria": "ConvergenceWarning",
+            "contagem": 9,
+            "mensagem": "Liblinear failed to converge, increase the number of iterations."
+          }
+        ]
+      }
+    },
+    {
+      "auc_oof": {
+        "M0": 0.9451946080235554,
+        "M1": 0.9442169672432831,
+        "M2v": 0.9683244387191756,
+        "M3v": 0.9679333824070667,
+        "M4v": 0.9677723592197276
+      },
+      "contrastes_descritivos": {
+        "M3v-M0": 0.02273877438351135,
+        "M4v-M1": 0.023555391976444517
+      },
+      "folds": [
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            3.1622776601683795,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9262632197414806,
+            "M1": 0.9259694477085781,
+            "M2v": 0.9700352526439484,
+            "M3v": 0.9676850763807285,
+            "M4v": 0.9670975323149237
+          },
+          "fingerprint_folds": "7404e0e5bf495fec618a922a0aaec423b4be901d66a25f2d9d45c652e98b21a2",
+          "fold": 0,
+          "jaccard_painel_declarado": 0.45454545454545453,
+          "n_avaliacao": 83,
+          "n_pacientes_avaliacao": 57,
+          "n_treino": 334,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_Kurtosis",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "1b862b770d46d72f7aa77c7f4110d080cee7b8a862656acd7b2d0e2be42aa1e8"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794,
+            3.1622776601683795
+          ],
+          "auc": {
+            "M0": 0.950845665961945,
+            "M1": 0.9513742071881607,
+            "M2v": 0.9947145877378435,
+            "M3v": 0.9941860465116279,
+            "M4v": 0.9941860465116279
+          },
+          "fingerprint_folds": "37adceb4c90e7e78e3e587a50e82f7fbc1d8fc4f8dd5f6e1b5c2f3b0221c1404",
+          "fold": 1,
+          "jaccard_painel_declarado": 0.6,
+          "n_avaliacao": 87,
+          "n_pacientes_avaliacao": 60,
+          "n_treino": 330,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc2",
+            "original_ngtdm_Busyness"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "9cf9a8b32a9b331d5ee47c3df08e7896a4a930b6aa1da75265987e393687d7f3"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            1.0
+          ],
+          "auc": {
+            "M0": 0.98046875,
+            "M1": 0.97734375,
+            "M2v": 0.9828125,
+            "M3v": 0.9828125,
+            "M4v": 0.9828125
+          },
+          "fingerprint_folds": "a836a65bbd1fb6019df1afebb292e9752e23377a435ad049a16cfa90713e8382",
+          "fold": 2,
+          "jaccard_painel_declarado": 0.7777777777777778,
+          "n_avaliacao": 72,
+          "n_pacientes_avaliacao": 57,
+          "n_treino": 345,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "345f6aec336e1f2859351d961e1147f12870dfcf860116385bfee8c0a2bd1c3b"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            3.1622776601683795,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9108455882352942,
+            "M1": 0.9080882352941176,
+            "M2v": 0.9301470588235294,
+            "M3v": 0.9307598039215687,
+            "M4v": 0.9307598039215687
+          },
+          "fingerprint_folds": "ea04184c72d825238be2d7678c257070ae8407e5c63a2a42413e63c4e682dc1b",
+          "fold": 3,
+          "jaccard_painel_declarado": 0.7777777777777778,
+          "n_avaliacao": 82,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 335,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_Kurtosis",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "b63ea0cfb97dbd0588b269131cdc641d1acb15376f39638e990714a185fd887e"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            3.1622776601683795,
+            0.31622776601683794,
+            3.1622776601683795,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9693732193732194,
+            "M1": 0.9705603038936372,
+            "M2v": 0.9715099715099715,
+            "M3v": 0.9715099715099715,
+            "M4v": 0.9715099715099715
+          },
+          "fingerprint_folds": "2c0c7425fac74ae165fb6c708bf4b2cc41515d3bd280405e0537a5ce531f8e9f",
+          "fold": 4,
+          "jaccard_painel_declarado": 0.8888888888888888,
+          "n_avaliacao": 93,
+          "n_pacientes_avaliacao": 58,
+          "n_treino": 324,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 9,
+          "s_k_vazio": false,
+          "sha256_selecao": "331913246c7e7737148d21ff6b16b06d0530240f69e5c361670776c812b1745b"
+        }
+      ],
+      "folds_com_s_k_vazio": 0,
+      "frequencia_entre_folds_externos": {
+        "original_firstorder_90Percentile": 5,
+        "original_firstorder_Kurtosis": 2,
+        "original_firstorder_RootMeanSquared": 4,
+        "original_firstorder_Skewness": 3,
+        "original_glcm_ClusterShade": 2,
+        "original_glcm_Imc1": 3,
+        "original_glcm_Imc2": 5,
+        "original_ngtdm_Busyness": 1,
+        "original_ngtdm_Coarseness": 1,
+        "original_shape_Elongation": 5,
+        "original_shape_Sphericity": 5,
+        "original_shape_SurfaceVolumeRatio": 5
+      },
+      "repeticao": 4,
+      "seed_cv_externa": 46,
+      "warnings": {
+        "modelos": [],
+        "selecao": [
+          {
+            "categoria": "ConvergenceWarning",
+            "contagem": 11,
+            "mensagem": "Liblinear failed to converge, increase the number of iterations."
+          }
+        ]
+      }
+    },
+    {
+      "auc_oof": {
+        "M0": 0.9461952521163047,
+        "M1": 0.9450910931174089,
+        "M2v": 0.9725110415899889,
+        "M3v": 0.972396025027604,
+        "M4v": 0.972419028340081
+      },
+      "contrastes_descritivos": {
+        "M3v-M0": 0.026200772911299297,
+        "M4v-M1": 0.027327935222672073
+      },
+      "folds": [
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9373626373626374,
+            "M1": 0.9333333333333333,
+            "M2v": 0.9626373626373627,
+            "M3v": 0.9633699633699634,
+            "M4v": 0.9633699633699634
+          },
+          "fingerprint_folds": "c075aefc6b5d694c928fc8a7bad16af46a0b5a60b43578263c162de75baf87a6",
+          "fold": 0,
+          "jaccard_painel_declarado": 0.7,
+          "n_avaliacao": 74,
+          "n_pacientes_avaliacao": 55,
+          "n_treino": 343,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_MajorAxisLength",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 9,
+          "s_k_vazio": false,
+          "sha256_selecao": "429dfd48a202fa2ba016db3f8d33d81e475d93eea640e1bb127ca57f73260991"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            3.1622776601683795,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9584795321637427,
+            "M1": 0.9596491228070176,
+            "M2v": 0.9847953216374269,
+            "M3v": 0.9847953216374269,
+            "M4v": 0.9847953216374269
+          },
+          "fingerprint_folds": "bfb79bb1fb0f2de18a66a89af6c45222507799c44a9d4c85085fe6511db0c3b6",
+          "fold": 1,
+          "jaccard_painel_declarado": 0.7,
+          "n_avaliacao": 83,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 334,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_ClusterShade",
+            "original_glcm_Id",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 9,
+          "s_k_vazio": false,
+          "sha256_selecao": "e11c8c4abfe8dcb6f0450524231407dc1fbad84b369b9e8ebaf119479b3891f4"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            3.1622776601683795,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9166666666666666,
+            "M1": 0.9132352941176471,
+            "M2v": 0.9627450980392157,
+            "M3v": 0.9612745098039216,
+            "M4v": 0.9612745098039216
+          },
+          "fingerprint_folds": "e79036761c61177285dccaba3a9d8bd95c944eddafd664ba21ee68c54d7712f3",
+          "fold": 2,
+          "jaccard_painel_declarado": 0.5833333333333334,
+          "n_avaliacao": 91,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 326,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_MajorAxisLength",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2",
+            "original_ngtdm_Busyness",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 11,
+          "s_k_vazio": false,
+          "sha256_selecao": "5b2e46ea57b6ce153d686c2786a3919826eb5c05e069d8fd1d3799635ab68e54"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9397727272727271,
+            "M1": 0.9409090909090909,
+            "M2v": 0.9846590909090909,
+            "M3v": 0.984090909090909,
+            "M4v": 0.984090909090909
+          },
+          "fingerprint_folds": "c47732a064181b8ae26e55ed9ef155a42d059ec05d791e472e6158dcd5d3dba2",
+          "fold": 3,
+          "jaccard_painel_declarado": 0.7777777777777778,
+          "n_avaliacao": 84,
+          "n_pacientes_avaliacao": 58,
+          "n_treino": 333,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "404439a2860deabb9a277897646f07ab8a4577789a244144a5a4a54c55622bd0"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9758333333333333,
+            "M1": 0.9711111111111111,
+            "M2v": 0.9844444444444445,
+            "M3v": 0.9844444444444445,
+            "M4v": 0.9844444444444445
+          },
+          "fingerprint_folds": "5dedde454a37e88f112dc66f20b6ac84e2239aeefcb3689cdedc11d51ebb0359",
+          "fold": 4,
+          "jaccard_painel_declarado": 0.6,
+          "n_avaliacao": 85,
+          "n_pacientes_avaliacao": 60,
+          "n_treino": 332,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_Id",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "e648ab8acc4f4e6f2e4eaf8b9231a826451693fc77259b183dd861e9e82c60fa"
+        }
+      ],
+      "folds_com_s_k_vazio": 0,
+      "frequencia_entre_folds_externos": {
+        "original_firstorder_90Percentile": 5,
+        "original_firstorder_RootMeanSquared": 5,
+        "original_firstorder_Skewness": 3,
+        "original_glcm_ClusterShade": 3,
+        "original_glcm_Id": 2,
+        "original_glcm_Imc1": 3,
+        "original_glcm_Imc2": 5,
+        "original_ngtdm_Busyness": 1,
+        "original_ngtdm_Coarseness": 1,
+        "original_shape_Elongation": 5,
+        "original_shape_MajorAxisLength": 2,
+        "original_shape_Sphericity": 5,
+        "original_shape_SurfaceVolumeRatio": 5
+      },
+      "repeticao": 5,
+      "seed_cv_externa": 47,
+      "warnings": {
+        "modelos": [],
+        "selecao": [
+          {
+            "categoria": "ConvergenceWarning",
+            "contagem": 10,
+            "mensagem": "Liblinear failed to converge, increase the number of iterations."
+          }
+        ]
+      }
+    },
+    {
+      "auc_oof": {
+        "M0": 0.9414795730585204,
+        "M1": 0.9369939271255061,
+        "M2v": 0.9715218991534782,
+        "M3v": 0.9712918660287082,
+        "M4v": 0.9713378726536621
+      },
+      "contrastes_descritivos": {
+        "M3v-M0": 0.029812292970187837,
+        "M4v-M1": 0.034343945528156006
+      },
+      "folds": [
+        {
+          "C_por_fold_estabilidade": [
+            1.0,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9017647058823529,
+            "M1": 0.9023529411764706,
+            "M2v": 0.9605882352941177,
+            "M3v": 0.9582352941176471,
+            "M4v": 0.9588235294117646
+          },
+          "fingerprint_folds": "1c19b3f0a477ab49c7aadf0ddd2d2f439b7e853dea1970db89f4cadc47a49be2",
+          "fold": 0,
+          "jaccard_painel_declarado": 0.6,
+          "n_avaliacao": 84,
+          "n_pacientes_avaliacao": 57,
+          "n_treino": 333,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_MajorAxisLength",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "a0dac01c9ef60c81b94fd3f2b9607ccfe56463010ae1c78f9e3fb9a97b5f637a"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.928921568627451,
+            "M1": 0.9332107843137255,
+            "M2v": 0.9705882352941176,
+            "M3v": 0.9712009803921569,
+            "M4v": 0.9712009803921569
+          },
+          "fingerprint_folds": "b8aecb331724c27b1eea82999b29d56cc49e187b8d39c35c926d2f2fa3384d55",
+          "fold": 1,
+          "jaccard_painel_declarado": 1.0,
+          "n_avaliacao": 82,
+          "n_pacientes_avaliacao": 57,
+          "n_treino": 335,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc2",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "d18bb7f5899ad04e8e08810e928e3f5fb828f02b9eac60b17b17f5bd493920d7"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9754150702426565,
+            "M1": 0.946360153256705,
+            "M2v": 0.9872286079182631,
+            "M3v": 0.9872286079182631,
+            "M4v": 0.9872286079182631
+          },
+          "fingerprint_folds": "42b5f1968ae65e511451c6410728ca9007b5a887062a2f40fc486c6bac463414",
+          "fold": 2,
+          "jaccard_painel_declarado": 0.5454545454545454,
+          "n_avaliacao": 85,
+          "n_pacientes_avaliacao": 57,
+          "n_treino": 332,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_10Percentile",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 9,
+          "s_k_vazio": false,
+          "sha256_selecao": "9204a830ec889a40cb94bc040a1e0568c00d4f30f2270490f4f5607ac1d4e5ee"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9560723514211886,
+            "M1": 0.9631782945736435,
+            "M2v": 0.9806201550387597,
+            "M3v": 0.9806201550387597,
+            "M4v": 0.9806201550387597
+          },
+          "fingerprint_folds": "e608bd81b262535773e7d7f85948f4dd4c629b3d100819b09ec63f70d28054a0",
+          "fold": 3,
+          "jaccard_painel_declarado": 0.7,
+          "n_avaliacao": 79,
+          "n_pacientes_avaliacao": 61,
+          "n_treino": 338,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Id",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 9,
+          "s_k_vazio": false,
+          "sha256_selecao": "b5270ebcab7843b211bd3d3166ca650ce978b99245d4d124bfd1b12e04fce817"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9720744680851063,
+            "M1": 0.9712765957446808,
+            "M2v": 0.9936170212765958,
+            "M3v": 0.9936170212765958,
+            "M4v": 0.9936170212765958
+          },
+          "fingerprint_folds": "ff3f8f0a2611396aa93a1093e7fb8c3e18aa991193bd6abcb55f8cac49f4b424",
+          "fold": 4,
+          "jaccard_painel_declarado": 0.6,
+          "n_avaliacao": 87,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 330,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Flatness",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "d13c8f2bbc120764af60bd506bc7adf84e8232d537adab3c643ae69dace280af"
+        }
+      ],
+      "folds_com_s_k_vazio": 0,
+      "frequencia_entre_folds_externos": {
+        "original_firstorder_10Percentile": 1,
+        "original_firstorder_90Percentile": 5,
+        "original_firstorder_RootMeanSquared": 4,
+        "original_firstorder_Skewness": 3,
+        "original_glcm_ClusterShade": 1,
+        "original_glcm_Id": 1,
+        "original_glcm_Imc1": 4,
+        "original_glcm_Imc2": 5,
+        "original_ngtdm_Coarseness": 1,
+        "original_shape_Elongation": 5,
+        "original_shape_Flatness": 1,
+        "original_shape_MajorAxisLength": 1,
+        "original_shape_Sphericity": 5,
+        "original_shape_SurfaceVolumeRatio": 5
+      },
+      "repeticao": 6,
+      "seed_cv_externa": 48,
+      "warnings": {
+        "modelos": [],
+        "selecao": [
+          {
+            "categoria": "ConvergenceWarning",
+            "contagem": 9,
+            "mensagem": "Liblinear failed to converge, increase the number of iterations."
+          }
+        ]
+      }
+    },
+    {
+      "auc_oof": {
+        "M0": 0.9445505152741995,
+        "M1": 0.9438259109311741,
+        "M2v": 0.9716369157158631,
+        "M3v": 0.9712918660287081,
+        "M4v": 0.9712688627162311
+      },
+      "contrastes_descritivos": {
+        "M3v-M0": 0.026741350754508564,
+        "M4v-M1": 0.027442951785057068
+      },
+      "folds": [
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.1,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9580128205128204,
+            "M1": 0.9576923076923076,
+            "M2v": 0.9820512820512821,
+            "M3v": 0.9820512820512821,
+            "M4v": 0.9814102564102565
+          },
+          "fingerprint_folds": "5585db418a59a1ae5d220603894819ff1b7bcf3f774785aa783c1ca05dc142a8",
+          "fold": 0,
+          "jaccard_painel_declarado": 0.6,
+          "n_avaliacao": 79,
+          "n_pacientes_avaliacao": 58,
+          "n_treino": 338,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "1470f6fa4bc8111490a423894c36e3bf8789238295b884224f068237ddf81c51"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9283446712018141,
+            "M1": 0.9301587301587302,
+            "M2v": 0.9569160997732427,
+            "M3v": 0.9573696145124716,
+            "M4v": 0.9573696145124716
+          },
+          "fingerprint_folds": "c967068a685615dbfd7a090c05484062b34e3dcb7114b8257a4adf91905687e1",
+          "fold": 1,
+          "jaccard_painel_declarado": 0.7777777777777778,
+          "n_avaliacao": 94,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 323,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "d0d9db889a68d75699f5e02dc54f09333a4ec9c47941385539f89561c801fdeb"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9539965497412306,
+            "M1": 0.9476710753306498,
+            "M2v": 0.9890741805635422,
+            "M3v": 0.9890741805635423,
+            "M4v": 0.9890741805635423
+          },
+          "fingerprint_folds": "2e5e14601d2c5517626b83fd36602b8207569cbe7610274293fd46c7585198aa",
+          "fold": 2,
+          "jaccard_painel_declarado": 0.6666666666666666,
+          "n_avaliacao": 84,
+          "n_pacientes_avaliacao": 57,
+          "n_treino": 333,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 7,
+          "s_k_vazio": false,
+          "sha256_selecao": "6be7f8121bd17e260fba577504a64109807848deded9d8080eae0f6848557221"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.95,
+            "M1": 0.954375,
+            "M2v": 0.9662499999999999,
+            "M3v": 0.9649999999999999,
+            "M4v": 0.9649999999999999
+          },
+          "fingerprint_folds": "eeaed8dd54aaae20c42f939e281486afeda6bb11663bf97be3e95e4c0f025517",
+          "fold": 3,
+          "jaccard_painel_declarado": 0.7777777777777778,
+          "n_avaliacao": 80,
+          "n_pacientes_avaliacao": 57,
+          "n_treino": 337,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Id",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "67a021898ae04bdb12c8d2a2d6c23aeb9d92a70a932a53538462ff32497579e0"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            1.0,
+            3.1622776601683795
+          ],
+          "auc": {
+            "M0": 0.9667919799498746,
+            "M1": 0.9636591478696742,
+            "M2v": 0.9711779448621554,
+            "M3v": 0.9711779448621554,
+            "M4v": 0.9711779448621554
+          },
+          "fingerprint_folds": "0cd0d0d0faf02d47f7d6dd906cc88b27f1c3c60527da4a240f5d9ccc354b6779",
+          "fold": 4,
+          "jaccard_painel_declarado": 0.8888888888888888,
+          "n_avaliacao": 80,
+          "n_pacientes_avaliacao": 60,
+          "n_treino": 337,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_MajorAxisLength",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc2",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 9,
+          "s_k_vazio": false,
+          "sha256_selecao": "0d453b4658cbb93ea430e721eaa35b2baa217a258c24ce9cb9c29a8d1f92b361"
+        }
+      ],
+      "folds_com_s_k_vazio": 0,
+      "frequencia_entre_folds_externos": {
+        "original_firstorder_90Percentile": 5,
+        "original_firstorder_RootMeanSquared": 4,
+        "original_firstorder_Skewness": 3,
+        "original_glcm_ClusterShade": 2,
+        "original_glcm_Id": 1,
+        "original_glcm_Imc1": 2,
+        "original_glcm_Imc2": 5,
+        "original_ngtdm_Coarseness": 2,
+        "original_shape_Elongation": 5,
+        "original_shape_MajorAxisLength": 1,
+        "original_shape_Sphericity": 5,
+        "original_shape_SurfaceVolumeRatio": 5
+      },
+      "repeticao": 7,
+      "seed_cv_externa": 49,
+      "warnings": {
+        "modelos": [],
+        "selecao": [
+          {
+            "categoria": "ConvergenceWarning",
+            "contagem": 4,
+            "mensagem": "Liblinear failed to converge, increase the number of iterations."
+          }
+        ]
+      }
+    },
+    {
+      "auc_oof": {
+        "M0": 0.9438029076186971,
+        "M1": 0.9419396393080605,
+        "M2v": 0.9697966507177034,
+        "M3v": 0.9693365844681634,
+        "M4v": 0.9694746043430253
+      },
+      "contrastes_descritivos": {
+        "M3v-M0": 0.02553367684946628,
+        "M4v-M1": 0.027534965034964887
+      },
+      "folds": [
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9716545814106791,
+            "M1": 0.976928147659855,
+            "M2v": 0.995385629531971,
+            "M3v": 0.99340804218853,
+            "M4v": 0.99340804218853
+          },
+          "fingerprint_folds": "08f88606eff8afa100600be359f36c61aab8f804f7bcf5f7fa7a368d67cac12f",
+          "fold": 0,
+          "jaccard_painel_declarado": 0.5454545454545454,
+          "n_avaliacao": 78,
+          "n_pacientes_avaliacao": 58,
+          "n_treino": 339,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Idmn",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 9,
+          "s_k_vazio": false,
+          "sha256_selecao": "81f2560cc5c314f5c757fa9000147622fa8ab9120ed56d7ccfe0264b8bb5fac9"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9527310924369748,
+            "M1": 0.9383753501400559,
+            "M2v": 0.9775910364145658,
+            "M3v": 0.9775910364145658,
+            "M4v": 0.9775910364145658
+          },
+          "fingerprint_folds": "b00d9c5ee9cc8c9c7cc9df613ed319e16b42de6def376270ba7f1b922a1a257b",
+          "fold": 1,
+          "jaccard_painel_declarado": 0.6666666666666666,
+          "n_avaliacao": 76,
+          "n_pacientes_avaliacao": 58,
+          "n_treino": 341,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 7,
+          "s_k_vazio": false,
+          "sha256_selecao": "dd05c8d2f3d0ca01df4917a52052f2275bf6609691835c0f9ad772d075808a49"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.1,
+            0.31622776601683794,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.8871780515117581,
+            "M1": 0.8801791713325868,
+            "M2v": 0.9479283314669653,
+            "M3v": 0.948488241881299,
+            "M4v": 0.9490481522956327
+          },
+          "fingerprint_folds": "b45f16f69c91e6cbef26832dd5423bf1ec51bd066139926e054ddee4e8abba4e",
+          "fold": 2,
+          "jaccard_painel_declarado": 0.5,
+          "n_avaliacao": 85,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 332,
+          "s_k": [
+            "original_shape_MajorAxisLength",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_Id",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 7,
+          "s_k_vazio": false,
+          "sha256_selecao": "cac326de74f697c2688d24ac62b53d839eba0d4cc68fd80a9d61f34ed34d3049"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            1.0,
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.957172342621259,
+            "M1": 0.9545923632610939,
+            "M2v": 0.9757481940144479,
+            "M3v": 0.9752321981424149,
+            "M4v": 0.9757481940144479
+          },
+          "fingerprint_folds": "8eabe1b9920418e8f1e3be16c145aec2ec0320b56a5eca992c6213e98bece95c",
+          "fold": 3,
+          "jaccard_painel_declarado": 0.6363636363636364,
+          "n_avaliacao": 89,
+          "n_pacientes_avaliacao": 57,
+          "n_treino": 328,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_10Percentile",
+            "original_firstorder_90Percentile",
+            "original_firstorder_Kurtosis",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 10,
+          "s_k_vazio": false,
+          "sha256_selecao": "e0e2ddde10551a70f25860a44724594948f5d4058e73608f6e44fa9bb0950c81"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794,
+            1.0
+          ],
+          "auc": {
+            "M0": 0.9774358974358973,
+            "M1": 0.9794871794871794,
+            "M2v": 0.9661538461538461,
+            "M3v": 0.9661538461538461,
+            "M4v": 0.9661538461538461
+          },
+          "fingerprint_folds": "e84a9c34771a0f45a64d68a311fd8aee77176693a222169e48ab1f3b5ea9136c",
+          "fold": 4,
+          "jaccard_painel_declarado": 0.7272727272727273,
+          "n_avaliacao": 89,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 328,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Correlation",
+            "original_glcm_Idmn",
+            "original_glcm_Imc2",
+            "original_ngtdm_Busyness",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 11,
+          "s_k_vazio": false,
+          "sha256_selecao": "998fd0ae7a611cbef35e3ea49eab447d2df429c6fcd2be2c3d713a9642446624"
+        }
+      ],
+      "folds_com_s_k_vazio": 0,
+      "frequencia_entre_folds_externos": {
+        "original_firstorder_10Percentile": 1,
+        "original_firstorder_90Percentile": 5,
+        "original_firstorder_Kurtosis": 1,
+        "original_firstorder_RootMeanSquared": 5,
+        "original_firstorder_Skewness": 2,
+        "original_glcm_ClusterShade": 1,
+        "original_glcm_Correlation": 1,
+        "original_glcm_Id": 1,
+        "original_glcm_Idmn": 2,
+        "original_glcm_Imc1": 3,
+        "original_glcm_Imc2": 5,
+        "original_ngtdm_Busyness": 1,
+        "original_ngtdm_Coarseness": 1,
+        "original_shape_Elongation": 4,
+        "original_shape_MajorAxisLength": 1,
+        "original_shape_Sphericity": 5,
+        "original_shape_SurfaceVolumeRatio": 5
+      },
+      "repeticao": 8,
+      "seed_cv_externa": 50,
+      "warnings": {
+        "modelos": [],
+        "selecao": [
+          {
+            "categoria": "ConvergenceWarning",
+            "contagem": 10,
+            "mensagem": "Liblinear failed to converge, increase the number of iterations."
+          }
+        ]
+      }
+    },
+    {
+      "auc_oof": {
+        "M0": 0.9450795914611705,
+        "M1": 0.9446770334928231,
+        "M2v": 0.9685544718439455,
+        "M3v": 0.9682784320942215,
+        "M4v": 0.9680944055944056
+      },
+      "contrastes_descritivos": {
+        "M3v-M0": 0.023198840633051,
+        "M4v-M1": 0.023417372101582568
+      },
+      "folds": [
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.1,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.952485380116959,
+            "M1": 0.9561403508771931,
+            "M2v": 0.9890350877192983,
+            "M3v": 0.9875730994152047,
+            "M4v": 0.9875730994152047
+          },
+          "fingerprint_folds": "91f6bbe8abc9a53533bab22d9b84ef4ac69c845ce92d91c420448a95b9d8044d",
+          "fold": 0,
+          "jaccard_painel_declarado": 0.6,
+          "n_avaliacao": 74,
+          "n_pacientes_avaliacao": 55,
+          "n_treino": 343,
+          "s_k": [
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Id",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "3c3c90d66efe834a724e88dd0f23bd67f18df4abbd664aa78f141398a5f65ea1"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9607535321821036,
+            "M1": 0.9586603872318158,
+            "M2v": 0.9947671376242805,
+            "M3v": 0.9958137100994243,
+            "M4v": 0.9952904238618525
+          },
+          "fingerprint_folds": "b2981adc1d69adab5c9df876867f0d00a09d8b86edb704bc3cb0caf8962b1fd6",
+          "fold": 1,
+          "jaccard_painel_declarado": 0.6,
+          "n_avaliacao": 88,
+          "n_pacientes_avaliacao": 60,
+          "n_treino": 329,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_Id",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 8,
+          "s_k_vazio": false,
+          "sha256_selecao": "ba40922be9d18bc25aa3a5ed611335d3b75cacbe9b0506dd87299e8600474493"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            3.1622776601683795,
+            0.31622776601683794,
+            0.31622776601683794
+          ],
+          "auc": {
+            "M0": 0.9444444444444445,
+            "M1": 0.9368191721132898,
+            "M2v": 0.9847494553376906,
+            "M3v": 0.9852941176470589,
+            "M4v": 0.9852941176470589
+          },
+          "fingerprint_folds": "9cece03a7ab6581637f090d2263639ce2bbca66baff6020aaa3c9907af83a666",
+          "fold": 2,
+          "jaccard_painel_declarado": 0.6666666666666666,
+          "n_avaliacao": 87,
+          "n_pacientes_avaliacao": 59,
+          "n_treino": 330,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_RootMeanSquared",
+            "original_glcm_ClusterShade",
+            "original_glcm_Imc2"
+          ],
+          "s_k_tamanho": 7,
+          "s_k_vazio": false,
+          "sha256_selecao": "be01e15db494b6043dc98134655bcc9b80819f53342b858750624d98796905ee"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            0.31622776601683794,
+            3.1622776601683795,
+            0.31622776601683794,
+            1.0
+          ],
+          "auc": {
+            "M0": 0.9487179487179488,
+            "M1": 0.9476923076923076,
+            "M2v": 0.9574358974358974,
+            "M3v": 0.9558974358974359,
+            "M4v": 0.9558974358974359
+          },
+          "fingerprint_folds": "5743187c6ae29ee386784f89b5de944fe768d9bd9335dd2d97b8d947a366248a",
+          "fold": 3,
+          "jaccard_painel_declarado": 0.6363636363636364,
+          "n_avaliacao": 89,
+          "n_pacientes_avaliacao": 60,
+          "n_treino": 328,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Flatness",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_10Percentile",
+            "original_firstorder_90Percentile",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc1",
+            "original_glcm_Imc2",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 10,
+          "s_k_vazio": false,
+          "sha256_selecao": "aca9d7ddf35197b1d1fdddf1fa3828a4a1aebf7cf233ae10c4e7478b4f29e54a"
+        },
+        {
+          "C_por_fold_estabilidade": [
+            0.31622776601683794,
+            1.0,
+            0.31622776601683794,
+            1.0,
+            1.0
+          ],
+          "auc": {
+            "M0": 0.9305555555555555,
+            "M1": 0.9321705426356589,
+            "M2v": 0.9341085271317829,
+            "M3v": 0.9341085271317829,
+            "M4v": 0.9347545219638242
+          },
+          "fingerprint_folds": "373f28d5bc9d0f8efd8547673acbfba26587b7eb0ef712088e016f0215b9f8c9",
+          "fold": 4,
+          "jaccard_painel_declarado": 0.7272727272727273,
+          "n_avaliacao": 79,
+          "n_pacientes_avaliacao": 57,
+          "n_treino": 338,
+          "s_k": [
+            "original_shape_Elongation",
+            "original_shape_Sphericity",
+            "original_shape_SurfaceVolumeRatio",
+            "original_firstorder_90Percentile",
+            "original_firstorder_Entropy",
+            "original_firstorder_Kurtosis",
+            "original_firstorder_RootMeanSquared",
+            "original_firstorder_Skewness",
+            "original_glcm_Imc2",
+            "original_glrlm_LongRunLowGrayLevelEmphasis",
+            "original_ngtdm_Coarseness"
+          ],
+          "s_k_tamanho": 11,
+          "s_k_vazio": false,
+          "sha256_selecao": "bb26171a5262615726ce853fb57ac82ac008fd0ec0f16bb2a1a8d5b2ea1a57f3"
+        }
+      ],
+      "folds_com_s_k_vazio": 0,
+      "frequencia_entre_folds_externos": {
+        "original_firstorder_10Percentile": 1,
+        "original_firstorder_90Percentile": 5,
+        "original_firstorder_Entropy": 1,
+        "original_firstorder_Kurtosis": 1,
+        "original_firstorder_RootMeanSquared": 4,
+        "original_firstorder_Skewness": 3,
+        "original_glcm_ClusterShade": 1,
+        "original_glcm_Id": 2,
+        "original_glcm_Imc1": 3,
+        "original_glcm_Imc2": 5,
+        "original_glrlm_LongRunLowGrayLevelEmphasis": 1,
+        "original_ngtdm_Coarseness": 2,
+        "original_shape_Elongation": 4,
+        "original_shape_Flatness": 1,
+        "original_shape_Sphericity": 5,
+        "original_shape_SurfaceVolumeRatio": 5
+      },
+      "repeticao": 9,
+      "seed_cv_externa": 51,
+      "warnings": {
+        "modelos": [],
+        "selecao": [
+          {
+            "categoria": "ConvergenceWarning",
+            "contagem": 4,
+            "mensagem": "Liblinear failed to converge, increase the number of iterations."
+          }
+        ]
+      }
+    }
+  ],
+  "repeticoes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "rotulo": "preliminar_exploratorio",
+  "seeds": {
+    "cv_externa_r00": 42,
+    "cv_externa_r01": 43,
+    "cv_externa_r02": 44,
+    "cv_externa_r03": 45,
+    "cv_externa_r04": 46,
+    "cv_externa_r05": 47,
+    "cv_externa_r06": 48,
+    "cv_externa_r07": 49,
+    "cv_externa_r08": 50,
+    "cv_externa_r09": 51,
+    "estabilidade": 42,
+    "interna_base": 100,
+    "logistica_avaliacao": 42,
+    "logistica_selecao": 42
+  },
+  "selecao": {
+    "frequencia_nos_treinos_externos": {
+      "original_firstorder_10Percentile": 3,
+      "original_firstorder_90Percentile": 49,
+      "original_firstorder_Energy": 0,
+      "original_firstorder_Entropy": 2,
+      "original_firstorder_InterquartileRange": 0,
+      "original_firstorder_Kurtosis": 8,
+      "original_firstorder_Maximum": 0,
+      "original_firstorder_Mean": 0,
+      "original_firstorder_MeanAbsoluteDeviation": 0,
+      "original_firstorder_Median": 0,
+      "original_firstorder_Minimum": 0,
+      "original_firstorder_Range": 0,
+      "original_firstorder_RobustMeanAbsoluteDeviation": 0,
+      "original_firstorder_RootMeanSquared": 42,
+      "original_firstorder_Skewness": 26,
+      "original_firstorder_TotalEnergy": 0,
+      "original_firstorder_Uniformity": 0,
+      "original_firstorder_Variance": 0,
+      "original_glcm_Autocorrelation": 0,
+      "original_glcm_ClusterProminence": 0,
+      "original_glcm_ClusterShade": 20,
+      "original_glcm_ClusterTendency": 0,
+      "original_glcm_Contrast": 0,
+      "original_glcm_Correlation": 2,
+      "original_glcm_DifferenceAverage": 0,
+      "original_glcm_DifferenceEntropy": 0,
+      "original_glcm_DifferenceVariance": 0,
+      "original_glcm_Id": 11,
+      "original_glcm_Idm": 0,
+      "original_glcm_Idmn": 4,
+      "original_glcm_Idn": 0,
+      "original_glcm_Imc1": 32,
+      "original_glcm_Imc2": 49,
+      "original_glcm_InverseVariance": 0,
+      "original_glcm_JointAverage": 0,
+      "original_glcm_JointEnergy": 1,
+      "original_glcm_JointEntropy": 0,
+      "original_glcm_MCC": 0,
+      "original_glcm_MaximumProbability": 0,
+      "original_glcm_SumAverage": 0,
+      "original_glcm_SumEntropy": 0,
+      "original_glcm_SumSquares": 0,
+      "original_gldm_DependenceEntropy": 0,
+      "original_gldm_DependenceNonUniformity": 0,
+      "original_gldm_DependenceNonUniformityNormalized": 0,
+      "original_gldm_DependenceVariance": 0,
+      "original_gldm_GrayLevelNonUniformity": 0,
+      "original_gldm_GrayLevelVariance": 0,
+      "original_gldm_HighGrayLevelEmphasis": 0,
+      "original_gldm_LargeDependenceEmphasis": 0,
+      "original_gldm_LargeDependenceHighGrayLevelEmphasis": 0,
+      "original_gldm_LargeDependenceLowGrayLevelEmphasis": 0,
+      "original_gldm_LowGrayLevelEmphasis": 0,
+      "original_gldm_SmallDependenceEmphasis": 0,
+      "original_gldm_SmallDependenceHighGrayLevelEmphasis": 0,
+      "original_gldm_SmallDependenceLowGrayLevelEmphasis": 0,
+      "original_glrlm_GrayLevelNonUniformity": 0,
+      "original_glrlm_GrayLevelNonUniformityNormalized": 0,
+      "original_glrlm_GrayLevelVariance": 0,
+      "original_glrlm_HighGrayLevelRunEmphasis": 0,
+      "original_glrlm_LongRunEmphasis": 0,
+      "original_glrlm_LongRunHighGrayLevelEmphasis": 0,
+      "original_glrlm_LongRunLowGrayLevelEmphasis": 1,
+      "original_glrlm_LowGrayLevelRunEmphasis": 0,
+      "original_glrlm_RunEntropy": 0,
+      "original_glrlm_RunLengthNonUniformity": 0,
+      "original_glrlm_RunLengthNonUniformityNormalized": 0,
+      "original_glrlm_RunPercentage": 0,
+      "original_glrlm_RunVariance": 0,
+      "original_glrlm_ShortRunEmphasis": 0,
+      "original_glrlm_ShortRunHighGrayLevelEmphasis": 0,
+      "original_glrlm_ShortRunLowGrayLevelEmphasis": 0,
+      "original_glszm_GrayLevelNonUniformity": 0,
+      "original_glszm_GrayLevelNonUniformityNormalized": 0,
+      "original_glszm_GrayLevelVariance": 0,
+      "original_glszm_HighGrayLevelZoneEmphasis": 0,
+      "original_glszm_LargeAreaEmphasis": 0,
+      "original_glszm_LargeAreaHighGrayLevelEmphasis": 0,
+      "original_glszm_LargeAreaLowGrayLevelEmphasis": 0,
+      "original_glszm_LowGrayLevelZoneEmphasis": 0,
+      "original_glszm_SizeZoneNonUniformity": 0,
+      "original_glszm_SizeZoneNonUniformityNormalized": 0,
+      "original_glszm_SmallAreaEmphasis": 0,
+      "original_glszm_SmallAreaHighGrayLevelEmphasis": 0,
+      "original_glszm_SmallAreaLowGrayLevelEmphasis": 0,
+      "original_glszm_ZoneEntropy": 0,
+      "original_glszm_ZonePercentage": 0,
+      "original_glszm_ZoneVariance": 0,
+      "original_ngtdm_Busyness": 5,
+      "original_ngtdm_Coarseness": 14,
+      "original_ngtdm_Complexity": 0,
+      "original_ngtdm_Contrast": 0,
+      "original_ngtdm_Strength": 0,
+      "original_shape_Elongation": 45,
+      "original_shape_Flatness": 6,
+      "original_shape_LeastAxisLength": 0,
+      "original_shape_MajorAxisLength": 9,
+      "original_shape_Maximum2DDiameterColumn": 0,
+      "original_shape_Maximum2DDiameterRow": 0,
+      "original_shape_Maximum2DDiameterSlice": 0,
+      "original_shape_Maximum3DDiameter": 0,
+      "original_shape_MeshVolume": 0,
+      "original_shape_MinorAxisLength": 0,
+      "original_shape_Sphericity": 50,
+      "original_shape_SurfaceArea": 0,
+      "original_shape_SurfaceVolumeRatio": 50,
+      "original_shape_VoxelVolume": 0
+    },
+    "jaccard_painel_declarado": {
+      "maximo": 1.0,
+      "media": 0.6526060606060606,
+      "minimo": 0.3,
+      "painel": [
+        "original_glcm_Imc2",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio",
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_shape_Elongation",
+        "original_firstorder_Skewness",
+        "original_ngtdm_Coarseness"
+      ]
+    },
+    "n_treinos_externos": 50,
+    "tamanho_s_k": {
+      "contagem_por_tamanho": {
+        "10": 8,
+        "11": 4,
+        "5": 1,
+        "6": 1,
+        "7": 6,
+        "8": 18,
+        "9": 12
+      },
+      "maximo": 11,
+      "media": 8.58,
+      "minimo": 5
+    },
+    "treinos_externos_com_s_k_vazio": 0
+  },
+  "sha256_dados": {
+    "split": "ed120c2b5c0f308d41c11cfc32dae0e897a179c71d6ea803588720ba1ba4f65f",
+    "tabela": "5e92e7e860ad8edd327570c929cd263cd780be98902e57017551ad0080da60ab"
+  },
+  "versao_formato": 1,
+  "warnings": {
+    "modelos": [],
+    "selecao": [
+      {
+        "categoria": "ConvergenceWarning",
+        "contagem": 80,
+        "mensagem": "Liblinear failed to converge, increase the number of iterations."
+      }
+    ]
+  }
+}

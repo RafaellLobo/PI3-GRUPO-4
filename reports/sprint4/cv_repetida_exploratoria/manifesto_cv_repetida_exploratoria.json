@@ -1,0 +1,214 @@
+{
+  "execucao": {
+    "ambiente": {
+      "confere_com_esperado": true,
+      "divergencias": {},
+      "implementacao": "CPython",
+      "plataforma": "win32",
+      "versoes": {
+        "numpy": "1.23.5",
+        "pandas": "1.5.3",
+        "python": "3.9.13",
+        "scikit-learn": "1.3.2",
+        "scipy": "1.10.1"
+      }
+    },
+    "atividade": "cv_repetida_exploratoria",
+    "autorizacao": {
+      "atividade": "cv_repetida_exploratoria",
+      "decisoes_exigidas": [],
+      "hash_configuracao": "c36335c1696b99f5d2344e80f14884721007da5810f6be6c8b892de60f4c5885",
+      "head": null,
+      "verificacoes": []
+    },
+    "codigo": {
+      "src.incremental.__init__": {
+        "bytes": 570,
+        "caminho": "src/incremental/__init__.py",
+        "sha256": "1e441cf4d406e7ab088e37c39c4c0d92a4ed7145698200afd002e2d208548ace",
+        "sha256_lf": "1e441cf4d406e7ab088e37c39c4c0d92a4ed7145698200afd002e2d208548ace"
+      },
+      "src.incremental.checkpoints": {
+        "bytes": 30007,
+        "caminho": "src/incremental/checkpoints.py",
+        "sha256": "6a19bb410b59b93a861980f43374eed6425923f77e584d047fdead24b3741b17",
+        "sha256_lf": "6a19bb410b59b93a861980f43374eed6425923f77e584d047fdead24b3741b17"
+      },
+      "src.incremental.config": {
+        "bytes": 27029,
+        "caminho": "src/incremental/config.py",
+        "sha256": "cedb0f557fe6dbbd48545267980c9fdbbf6a72fb7e5e7cba5f85f99679168b26",
+        "sha256_lf": "cedb0f557fe6dbbd48545267980c9fdbbf6a72fb7e5e7cba5f85f99679168b26"
+      },
+      "src.incremental.cv_repetida": {
+        "bytes": 17380,
+        "caminho": "src/incremental/cv_repetida.py",
+        "sha256": "c14c673d2f6947425b9c292361470677a3decbcb79769bb896e945140f52a684",
+        "sha256_lf": "c14c673d2f6947425b9c292361470677a3decbcb79769bb896e945140f52a684"
+      },
+      "src.incremental.dados": {
+        "bytes": 27973,
+        "caminho": "src/incremental/dados.py",
+        "sha256": "a12a6a9c9750bb4f5ca3648c26158c1bdc78a29dbc164d09469e68c3745782b7",
+        "sha256_lf": "a12a6a9c9750bb4f5ca3648c26158c1bdc78a29dbc164d09469e68c3745782b7"
+      },
+      "src.incremental.folds": {
+        "bytes": 16917,
+        "caminho": "src/incremental/folds.py",
+        "sha256": "95ab321f90e14996329a150da9eb225482e06f858d99318fb3d4e40cbbd6cb09",
+        "sha256_lf": "95ab321f90e14996329a150da9eb225482e06f858d99318fb3d4e40cbbd6cb09"
+      },
+      "src.incremental.guardas": {
+        "bytes": 25961,
+        "caminho": "src/incremental/guardas.py",
+        "sha256": "34fbc1294548aa3ecd8c404fa76b6014a5ef5f84b3940884aacf05eef544ba25",
+        "sha256_lf": "34fbc1294548aa3ecd8c404fa76b6014a5ef5f84b3940884aacf05eef544ba25"
+      },
+      "src.incremental.modelos": {
+        "bytes": 9684,
+        "caminho": "src/incremental/modelos.py",
+        "sha256": "8e2eaa1ec63c6926f304a726fbe354819e46de7c9e1b580460b82dd6b89532b1",
+        "sha256_lf": "8e2eaa1ec63c6926f304a726fbe354819e46de7c9e1b580460b82dd6b89532b1"
+      },
+      "src.incremental.piloto": {
+        "bytes": 28789,
+        "caminho": "src/incremental/piloto.py",
+        "sha256": "9b14f3d80b4d75a69c6ed55bbf282c96fd7643ae32976f7474b2e47c36517161",
+        "sha256_lf": "9b14f3d80b4d75a69c6ed55bbf282c96fd7643ae32976f7474b2e47c36517161"
+      },
+      "src.incremental.rastreabilidade": {
+        "bytes": 39656,
+        "caminho": "src/incremental/rastreabilidade.py",
+        "sha256": "884ba49689ee0f89fc81ef33efe6ae701ffe34141fc13d28c6152739632460e0",
+        "sha256_lf": "884ba49689ee0f89fc81ef33efe6ae701ffe34141fc13d28c6152739632460e0"
+      },
+      "src.incremental.selecao": {
+        "bytes": 15387,
+        "caminho": "src/incremental/selecao.py",
+        "sha256": "0f809fe49434f624920a90065148bffefefabff740cd2eef6eef29dd74e384b5",
+        "sha256_lf": "0f809fe49434f624920a90065148bffefefabff740cd2eef6eef29dd74e384b5"
+      },
+      "src.incremental.transformadores": {
+        "bytes": 7482,
+        "caminho": "src/incremental/transformadores.py",
+        "sha256": "b6eedb9aafbd50465fc4cbafa9131d23ef9f6712050fd9f2cf5fe9bb81173e27",
+        "sha256_lf": "b6eedb9aafbd50465fc4cbafa9131d23ef9f6712050fd9f2cf5fe9bb81173e27"
+      }
+    },
+    "elegivel_definitiva": false,
+    "entradas": {
+      "split": {
+        "bytes": 9417,
+        "caminho": "reports/sprint3/baseline/patient_split.csv",
+        "sha256": "ed120c2b5c0f308d41c11cfc32dae0e897a179c71d6ea803588720ba1ba4f65f",
+        "sha256_lf": "812fe3ffe51f11257a9aa74529e1bfc19ed58285a11142f0e8b5739c1d1a4363"
+      },
+      "tabela": {
+        "bytes": 1189518,
+        "caminho": "data/modeling_table_sprint3.csv",
+        "sha256": "5e92e7e860ad8edd327570c929cd263cd780be98902e57017551ad0080da60ab",
+        "sha256_lf": "fd01a1daf19503e84ec40df20e66190f99b4a460180879bdb5d279bd0b1506ea"
+      }
+    },
+    "finalidade": "exploratoria",
+    "git": {
+      "alteracoes": [],
+      "branch": "feat/s4-incremental-radiomics",
+      "head": "9eef000785bc1d9499c945dae018cb97b3885c9b",
+      "limpo": true
+    },
+    "hash_configuracao": "c36335c1696b99f5d2344e80f14884721007da5810f6be6c8b892de60f4c5885",
+    "parametros": {
+      "contrastes": [
+        "M3v-M0",
+        "M4v-M1"
+      ],
+      "modelos": [
+        "M0",
+        "M1",
+        "M2v",
+        "M3v",
+        "M4v"
+      ],
+      "n_folds_externos": 5,
+      "painel_jaccard": [
+        "original_glcm_Imc2",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio",
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_shape_Elongation",
+        "original_firstorder_Skewness",
+        "original_ngtdm_Coarseness"
+      ],
+      "particoes": [
+        "train"
+      ],
+      "repeticoes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "rotulo": "preliminar_exploratorio",
+      "unidade_de_resumo": "repeticao"
+    },
+    "seeds": {
+      "cv_externa_r00": 42,
+      "cv_externa_r01": 43,
+      "cv_externa_r02": 44,
+      "cv_externa_r03": 45,
+      "cv_externa_r04": 46,
+      "cv_externa_r05": 47,
+      "cv_externa_r06": 48,
+      "cv_externa_r07": 49,
+      "cv_externa_r08": 50,
+      "cv_externa_r09": 51,
+      "estabilidade": 42,
+      "interna_base": 100,
+      "logistica_avaliacao": 42,
+      "logistica_selecao": 42
+    }
+  },
+  "formato": "manifesto-cartao4-sprint4",
+  "resultado": {
+    "erro": null,
+    "git_final": {
+      "alteracoes": [
+        {
+          "caminho": "reports/sprint4/cv_repetida_exploratoria/relatorio_cv_repetida_exploratoria.json",
+          "codigo": "??"
+        }
+      ],
+      "alteracoes_alem_das_saidas": [],
+      "branch": "feat/s4-incremental-radiomics",
+      "head": "9eef000785bc1d9499c945dae018cb97b3885c9b",
+      "limpo": false
+    },
+    "saidas": {
+      "relatorio": {
+        "bytes": 88576,
+        "caminho": "reports/sprint4/cv_repetida_exploratoria/relatorio_cv_repetida_exploratoria.json",
+        "sha256": "a5a8eae289a1ed379913f52d1106db9905978b66e972bd554e8c35fadffc0118",
+        "sha256_lf": "a5a8eae289a1ed379913f52d1106db9905978b66e972bd554e8c35fadffc0118"
+      }
+    },
+    "status": "concluida",
+    "warnings": []
+  },
+  "sha256_execucao": "350925bb6f22bc90486c0771bbb26100ee092cbc676dd5f892a4ffc9a339683d",
+  "sha256_manifesto": "df32951ae28407e6f4e401f444d65691355f07ba95d1ec7ea43b7f11de76803f",
+  "sha256_reprodutivel": "3ace68e0ef2e150f49acff4f2d54030e8b159bda3d4f93d443435dc1cf90e7c2",
+  "tempo": {
+    "duracao_s": 3424.078,
+    "inicio": "2026-10-13T03:37:47.436243Z",
+    "termino": "2026-10-13T04:34:51.510393Z"
+  },
+  "versao_formato": 1
+}
