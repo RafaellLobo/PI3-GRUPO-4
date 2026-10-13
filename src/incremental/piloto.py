@@ -22,6 +22,11 @@ Etapas 1–5 e nunca definitiva — sobre a partição ``train``:
    arquivo à parte, no diretório local de checkpoints, fora das saídas
    registradas: o relatório é idêntico entre execuções e retomadas.
 
+Os passos 1–5 recebem atividade, repetição e formato do payload pelo
+``_Contexto`` (nada disso é constante global nas funções internas), para que
+outra atividade exploratória reutilize a execução por fold e a consolidação
+por repetição sem copiá-las. O piloto continua fixo em r = 0.
+
 Fora desta modalidade, sem parâmetro que os habilite: permutações, spline,
 M2–M4 fixos e as partições ``validation`` e ``test``. Inconsistências de
 configuração, folds, seleção, checkpoints ou autorizações levantam exceção;
@@ -103,16 +108,21 @@ class ResultadoPiloto:
 # --------------------------------------------------------------------------- #
 
 
-def seeds_piloto() -> Dict[str, int]:
-    """Seeds da unidade, todas de ``config``."""
+def seeds_repeticao(repeticao: int) -> Dict[str, int]:
+    """Seeds de uma unidade da repetição ``repeticao``, todas de ``config``."""
     selecao_espec = cfg.ESPEC_SELECAO
     return {
-        "cv_externa": cfg.ESPEC_CV.seeds_repeticoes()[REPETICAO],
+        "cv_externa": cfg.ESPEC_CV.seeds_repeticoes()[repeticao],
         "estabilidade": selecao_espec.seed_estabilidade,
         "interna_base": selecao_espec.seed_interna_base,
         "logistica_selecao": selecao_espec.random_state,
         "logistica_avaliacao": cfg.ESPEC_AVALIACAO.random_state,
     }
+
+
+def seeds_piloto() -> Dict[str, int]:
+    """Seeds da unidade, todas de ``config``."""
+    return seeds_repeticao(REPETICAO)
 
 
 def _parametros() -> Dict[str, Any]:
@@ -121,23 +131,25 @@ def _parametros() -> Dict[str, Any]:
             "n_folds_externos": cfg.ESPEC_CV.n_folds_externos}
 
 
-def _exigir_destino(destino: Path, repo: Path) -> Tuple[Path, Path]:
+def _exigir_destino(destino: Path, repo: Path, arquivo_relatorio: str = ARQUIVO_RELATORIO,
+                    arquivo_manifesto: str = ARQUIVO_MANIFESTO) -> Tuple[Path, Path]:
     if not destino.is_dir():
         raise PilotoInvalido("diretório de destino inexistente")
     relativo = rst.caminho_relativo(destino, repo)
     if relativo == "data" or relativo.startswith("data/"):
-        raise PilotoInvalido("o relatório do piloto não é gravado em data/")
-    relatorio, manifesto = destino / ARQUIVO_RELATORIO, destino / ARQUIVO_MANIFESTO
+        raise PilotoInvalido("o relatório exploratório não é gravado em data/")
+    relatorio, manifesto = destino / arquivo_relatorio, destino / arquivo_manifesto
     existentes = [p.name for p in (relatorio, manifesto) if p.exists()]
     if existentes:
         raise rst.SobrescritaRecusada(f"já existem no destino: {existentes}; nada é sobrescrito")
     return relatorio, manifesto
 
 
-def _autorizar(decisoes: Mapping[str, cfg.Decisao], repo: Path) -> guardas.Autorizacao:
-    autorizacao = guardas.exigir_autorizacao(ATIVIDADE, decisoes, repo)
-    if guardas.exigir_autorizacao(ATIVIDADE, decisoes, repo, modelos=MODELOS) != autorizacao:
-        raise PilotoInvalido("os modelos do piloto exigiriam decisões além das da atividade")
+def _autorizar(atividade: str, modelos_usados: Sequence[str], decisoes: Mapping[str, cfg.Decisao],
+               repo: Path) -> guardas.Autorizacao:
+    autorizacao = guardas.exigir_autorizacao(atividade, decisoes, repo)
+    if guardas.exigir_autorizacao(atividade, decisoes, repo, modelos=modelos_usados) != autorizacao:
+        raise PilotoInvalido("os modelos exigiriam decisões além das da atividade")
     return autorizacao
 
 
@@ -167,13 +179,13 @@ def _parametros_ajustados(ajustado: modelos.ModeloAjustado) -> dict:
     }
 
 
-def _validar_payload(payload: Any, modelo: str, k: int, features: Tuple[str, ...],
+def _validar_payload(ctx: "_Contexto", payload: Any, modelo: str, k: int, features: Tuple[str, ...],
                      ids_avaliacao: List[str]) -> dict:
-    onde = f"r{REPETICAO:03d}-f{k:02d}-{modelo}"
+    onde = f"r{ctx.repeticao:03d}-f{k:02d}-{modelo}"
     if not isinstance(payload, dict) or set(payload) != set(_CHAVES_PAYLOAD):
         raise PilotoInvalido(f"{onde}: payload com chaves inesperadas")
-    esperado = {"formato": FORMATO_PAYLOAD, "versao": VERSAO, "atividade": ATIVIDADE,
-                "repeticao": REPETICAO, "fold": k, "modelo": modelo}
+    esperado = {"formato": ctx.formato_payload, "versao": VERSAO, "atividade": ctx.atividade,
+                "repeticao": ctx.repeticao, "fold": k, "modelo": modelo}
     if {c: payload[c] for c in esperado} != esperado:
         raise PilotoInvalido(f"{onde}: payload de outra unidade ou formato")
     if payload["features"] != list(features):
@@ -187,13 +199,14 @@ def _validar_payload(payload: Any, modelo: str, k: int, features: Tuple[str, ...
     return payload
 
 
-def _validar_registro_selecao(gravado: Any, k: int, fingerprint: str, amostra: fl.Amostra) -> Tuple[str, ...]:
+def _validar_registro_selecao(gravado: Any, k: int, fingerprint: str, amostra: fl.Amostra,
+                              repeticao: int) -> Tuple[str, ...]:
     if not (isinstance(gravado, dict) and set(gravado) == {"sha256", "s_k", "registro"}):
         raise PilotoInvalido(f"fold {k}: seleção gravada com forma inválida")
     registro = gravado["registro"]
     if rst.sha256_canonico(registro) != gravado["sha256"]:
         raise PilotoInvalido(f"fold {k}: hash do registro de seleção não confere")
-    esperado = {"repeticao": REPETICAO, "fold_externo": k, "fingerprint_folds": fingerprint,
+    esperado = {"repeticao": repeticao, "fold_externo": k, "fingerprint_folds": fingerprint,
                 "sha256_amostra": amostra.sha256, "hash_configuracao": cfg.hash_configuracao()}
     if {c: registro.get(c) for c in esperado} != esperado:
         raise PilotoInvalido(f"fold {k}: registro de seleção de outro fold, amostra ou configuração")
@@ -209,6 +222,8 @@ def _validar_registro_selecao(gravado: Any, k: int, fingerprint: str, amostra: f
 
 @dataclass
 class _Contexto:
+    """Estado de UMA repetição de uma atividade; as funções internas não leem globais de unidade."""
+
     carga: dados.DadosCarregados
     frame: Any
     amostra: fl.Amostra
@@ -218,6 +233,14 @@ class _Contexto:
     decisoes: Mapping[str, cfg.Decisao]
     repo: Path
     tempos: Dict[str, Any]
+    atividade: str
+    repeticao: int
+    formato_payload: str
+
+    def __post_init__(self) -> None:
+        if self.plano.repeticao != self.repeticao or self.sessao.atividade != self.atividade \
+                or self.carga.atividade != self.atividade:
+            raise PilotoInvalido("contexto com repetição ou atividade incoerentes")
 
 
 def _selecao_do_fold(ctx: _Contexto, k: int, fingerprint: str, gravados: Mapping[str, dict],
@@ -225,7 +248,7 @@ def _selecao_do_fold(ctx: _Contexto, k: int, fingerprint: str, gravados: Mapping
     """Seleção do fold: recalculada só se algum Mv estiver pendente, sempre conferida com a gravada."""
     variaveis_gravados = {m: gravados[m] for m in cfg.MODELOS_VARIAVEIS if m in gravados}
     for payload in variaveis_gravados.values():
-        _validar_registro_selecao(payload["selecao"], k, fingerprint, ctx.amostra)
+        _validar_registro_selecao(payload["selecao"], k, fingerprint, ctx.amostra, ctx.repeticao)
     shas = {p["selecao"]["sha256"] for p in variaveis_gravados.values()}
     if len(shas) > 1:
         raise SelecaoDivergente(f"fold {k}: M2v, M3v e M4v gravados com seleções diferentes")
@@ -261,8 +284,9 @@ def _executar_unidade(ctx: _Contexto, identidade: ck.IdentidadeUnidade, construi
         raise
     ctx.tempos["unidades_s"][identidade.slot] = round(time.monotonic() - inicio, 6)
     payload = {
-        "formato": FORMATO_PAYLOAD, "versao": VERSAO, "atividade": ATIVIDADE, "repeticao": REPETICAO,
-        "fold": externa.fold_externo, "modelo": construido.nome, "features": colunas,
+        "formato": ctx.formato_payload, "versao": VERSAO, "atividade": ctx.atividade,
+        "repeticao": ctx.repeticao, "fold": externa.fold_externo, "modelo": construido.nome,
+        "features": colunas,
         "nodulos_avaliacao": avaliacao[cfg.COLUNA_NODULO].tolist(),
         "proba": [float(p) for p in proba],
         "parametros_ajustados": _parametros_ajustados(ajustado),
@@ -283,10 +307,15 @@ def _auc(rotulos: np.ndarray, proba: Sequence[float]) -> float:
     return float(roc_auc_score(rotulos, np.asarray(proba, dtype=np.float64)))
 
 
+def _identidades_do_fold(ctx: _Contexto, k: int) -> Dict[str, ck.IdentidadeUnidade]:
+    fingerprint = fl.fingerprint_unidade(ctx.amostra, ctx.plano, k)
+    return {m: ctx.sessao.identidade(ctx.repeticao, k, m, ctx.seeds, fingerprint) for m in MODELOS}
+
+
 def _executar_fold(ctx: _Contexto, k: int) -> Tuple[Dict[str, dict], dict]:
     externa = ctx.plano.externos[k]
     fingerprint = fl.fingerprint_unidade(ctx.amostra, ctx.plano, k)
-    identidades = {m: ctx.sessao.identidade(REPETICAO, k, m, ctx.seeds, fingerprint) for m in MODELOS}
+    identidades = _identidades_do_fold(ctx, k)
     ids_avaliacao = ctx.frame[cfg.COLUNA_NODULO].iloc[externa.avaliacao].tolist()
     gravados: Dict[str, dict] = {}
     for modelo, identidade in identidades.items():
@@ -299,22 +328,22 @@ def _executar_fold(ctx: _Contexto, k: int) -> Tuple[Dict[str, dict], dict]:
     especificacoes = {"M0": cfg.modelo_fixo("M0"), "M1": cfg.modelo_fixo("M1"),
                       **{m: cfg.modelo_variavel(m, s_k) for m in cfg.MODELOS_VARIAVEIS}}
     for modelo, payload in gravados.items():
-        _validar_payload(payload, modelo, k, especificacoes[modelo].features, ids_avaliacao)
+        _validar_payload(ctx, payload, modelo, k, especificacoes[modelo].features, ids_avaliacao)
         if (modelo in cfg.MODELOS_VARIAVEIS) != (payload["selecao"] is not None):
             raise PilotoInvalido(f"fold {k}: {modelo} gravado com seleção indevida ou ausente")
 
     if pendentes:
-        construidos = {m: modelos.construir_fixo(m, ATIVIDADE, ctx.decisoes, ctx.repo)
+        construidos = {m: modelos.construir_fixo(m, ctx.atividade, ctx.decisoes, ctx.repo)
                        for m in MODELOS_FIXOS_PILOTO if m in pendentes}
         if sel is not None:
-            construidos.update(modelos.modelos_do_fold(sel, ATIVIDADE, ctx.decisoes, ctx.repo))
+            construidos.update(modelos.modelos_do_fold(sel, ctx.atividade, ctx.decisoes, ctx.repo))
         for modelo in pendentes:
             construido = construidos[modelo]
             if construido.features != especificacoes[modelo].features:
                 raise PilotoInvalido(f"fold {k}: composição de {modelo} diverge do S_k do fold")
             gravada = selecao_gravada if modelo in cfg.MODELOS_VARIAVEIS else None
             payload = _executar_unidade(ctx, identidades[modelo], construido, externa, gravada)
-            gravados[modelo] = _validar_payload(payload, modelo, k, construido.features, ids_avaliacao)
+            gravados[modelo] = _validar_payload(ctx, payload, modelo, k, construido.features, ids_avaliacao)
     return gravados, selecao_gravada
 
 
@@ -323,8 +352,16 @@ def _executar_fold(ctx: _Contexto, k: int) -> Tuple[Dict[str, dict], dict]:
 # --------------------------------------------------------------------------- #
 
 
-def _consolidar(ctx: _Contexto, por_fold: List[Tuple[Dict[str, dict], dict]]) -> dict:
+def _consolidar_repeticao(ctx: _Contexto, por_fold: List[Tuple[Dict[str, dict], dict]]) -> dict:
+    """Agregados de UMA repetição, sempre a partir dos payloads gravados.
+
+    Devolve AUC OOF por modelo (uma predição por nódulo, cobertura exigida),
+    resumo por fold, frequência de S_k entre os folds externos e warnings
+    agregados de seleção e modelos.
+    """
     amostra, plano = ctx.amostra, ctx.plano
+    if len(por_fold) != len(plano.externos):
+        raise PilotoInvalido("consolidação com número de folds diferente do plano")
     posicao = {nodulo: i for i, nodulo in enumerate(amostra.ids.tolist())}
     oof = {m: np.full(amostra.n, np.nan) for m in MODELOS}
     vistos = {m: np.zeros(amostra.n, dtype=np.int64) for m in MODELOS}
@@ -363,23 +400,12 @@ def _consolidar(ctx: _Contexto, por_fold: List[Tuple[Dict[str, dict], dict]]) ->
         for payload in payloads.values():
             for w in payload["warnings"]:
                 avisos_modelos[(w["categoria"], w["mensagem"])] += w["contagem"]
-    rotulos = amostra.y
     return {
-        "formato": FORMATO_RELATORIO, "versao_formato": VERSAO, "rotulo": ROTULO, "aviso": AVISO,
-        "atividade": ATIVIDADE, "finalidade": rst.Finalidade.EXPLORATORIA.value,
-        "hash_configuracao": cfg.hash_configuracao(ctx.decisoes), "sha256_dados": dict(ctx.carga.sha256_entradas),
-        "particoes_lidas": list(ctx.carga.particoes), "repeticao": REPETICAO, "seeds": dict(ctx.seeds),
-        "amostra": {"n_nodulos": amostra.n, "n_pacientes": len(set(amostra.grupos.tolist())),
-                    "classe_0": int((rotulos == 0).sum()), "classe_1": int((rotulos == 1).sum())},
-        "modelos": list(MODELOS),
-        "fora_desta_modalidade": {"modelos_com_painel": list(cfg.MODELOS_COM_PAINEL), "permutacoes": False,
-                                  "spline": False, "particoes_nao_lidas": ["validation", "test"]},
-        "decisoes_pendentes": [c for c, d in ctx.decisoes.items() if not d.aprovada],
         "auc_oof": auc_oof,
         "contrastes_descritivos": {f"{a}-{b}": auc_oof[a] - auc_oof[b] for a, b in CONTRASTES},
         "folds": folds_relatorio,
-        "selecao": {"frequencia_entre_folds_externos": dict(sorted(frequencia.items())),
-                    "folds_com_s_k_vazio": sum(f["s_k_vazio"] for f in folds_relatorio)},
+        "frequencia_entre_folds_externos": dict(sorted(frequencia.items())),
+        "folds_com_s_k_vazio": sum(f["s_k_vazio"] for f in folds_relatorio),
         "warnings": {
             "selecao": [{"categoria": c, "mensagem": m, "contagem": n} for (c, m), n in sorted(avisos_selecao.items())],
             "modelos": [{"categoria": c, "mensagem": m, "contagem": n} for (c, m), n in sorted(avisos_modelos.items())],
@@ -387,9 +413,65 @@ def _consolidar(ctx: _Contexto, por_fold: List[Tuple[Dict[str, dict], dict]]) ->
     }
 
 
+def _consolidar(ctx: _Contexto, por_fold: List[Tuple[Dict[str, dict], dict]]) -> dict:
+    repeticao = _consolidar_repeticao(ctx, por_fold)
+    amostra, rotulos = ctx.amostra, ctx.amostra.y
+    return {
+        "formato": FORMATO_RELATORIO, "versao_formato": VERSAO, "rotulo": ROTULO, "aviso": AVISO,
+        "atividade": ATIVIDADE, "finalidade": rst.Finalidade.EXPLORATORIA.value,
+        "hash_configuracao": cfg.hash_configuracao(ctx.decisoes), "sha256_dados": dict(ctx.carga.sha256_entradas),
+        "particoes_lidas": list(ctx.carga.particoes), "repeticao": REPETICAO, "seeds": dict(ctx.seeds),
+        "amostra": _resumo_amostra(amostra, rotulos),
+        "modelos": list(MODELOS),
+        "fora_desta_modalidade": {"modelos_com_painel": list(cfg.MODELOS_COM_PAINEL), "permutacoes": False,
+                                  "spline": False, "particoes_nao_lidas": ["validation", "test"]},
+        "decisoes_pendentes": [c for c, d in ctx.decisoes.items() if not d.aprovada],
+        "auc_oof": repeticao["auc_oof"],
+        "contrastes_descritivos": repeticao["contrastes_descritivos"],
+        "folds": repeticao["folds"],
+        "selecao": {"frequencia_entre_folds_externos": repeticao["frequencia_entre_folds_externos"],
+                    "folds_com_s_k_vazio": repeticao["folds_com_s_k_vazio"]},
+        "warnings": repeticao["warnings"],
+    }
+
+
+def _resumo_amostra(amostra: fl.Amostra, rotulos: np.ndarray) -> dict:
+    return {"n_nodulos": amostra.n, "n_pacientes": len(set(amostra.grupos.tolist())),
+            "classe_0": int((rotulos == 0).sum()), "classe_1": int((rotulos == 1).sum())}
+
+
 def _gravar_json(conteudo: Mapping[str, Any], destino: Path) -> None:
     rst._exigir_sem_dados_individuais(dict(conteudo), destino.name)
     ck._publicar(rst.serializar(conteudo), destino)
+
+
+# --------------------------------------------------------------------------- #
+# Carga e encerramento compartilhados
+# --------------------------------------------------------------------------- #
+
+
+def _carregar_treino(atividade: str, particoes: Tuple[str, ...], autorizacao: guardas.Autorizacao,
+                     decisoes: Mapping[str, cfg.Decisao], repo: Path, fonte: dados.FonteDados
+                     ) -> Tuple[dados.DadosCarregados, Any, fl.Amostra]:
+    """Carga de ``train`` pela porta única de ``dados``; contagens e amostra conferidas."""
+    carga = dados.carregar(atividade, particoes, fonte.nomes_pool, decisoes, repo, fonte)
+    if (carga.atividade, carga.particoes, carga.autorizacao) != (atividade, particoes, autorizacao):
+        raise PilotoInvalido("carga com atividade, partições ou autorização inesperadas")
+    frame = carga.frame(particoes[0])
+    esperado = fonte.particoes[particoes[0]]
+    if (len(frame), frame[cfg.COLUNA_PACIENTE].nunique()) != (esperado["nodulos"], esperado["pacientes"]):
+        raise PilotoInvalido("partição de treino com contagens inesperadas")
+    amostra = fl.criar_amostra(frame[cfg.COLUNA_NODULO], frame[cfg.COLUNA_ALVO],
+                               frame[cfg.COLUNA_PACIENTE], X=frame)
+    return carga, frame, amostra
+
+
+def _gravar_tempos(tempos: Dict[str, Any], manifesto: Mapping[str, Any], sessao: ck.SessaoCheckpoints,
+                   atividade: str) -> Path:
+    tempos.update(sha256_manifesto=manifesto["sha256_manifesto"], duracao_total_s=manifesto["tempo"]["duracao_s"])
+    caminho = sessao.diretorio / f"tempos-{atividade}-{manifesto['sha256_manifesto'][:16]}.json"
+    _gravar_json(tempos, caminho)
+    return caminho
 
 
 # --------------------------------------------------------------------------- #
@@ -411,7 +493,7 @@ def executar_piloto(diretorio_checkpoints: Union[str, Path], destino: Union[str,
     """
     repo, destino = Path(repo), Path(destino)
     caminho_relatorio, caminho_manifesto = _exigir_destino(destino, repo)
-    autorizacao = _autorizar(decisoes, repo)
+    autorizacao = _autorizar(ATIVIDADE, MODELOS, decisoes, repo)
     fonte = fonte or dados.fonte_oficial()
     entradas = {"tabela": fonte.tabela.caminho, "split": fonte.split.caminho}
     sessao = ck.SessaoCheckpoints(diretorio_checkpoints, ATIVIDADE, autorizacao, entradas,
@@ -423,19 +505,11 @@ def executar_piloto(diretorio_checkpoints: Union[str, Path], destino: Union[str,
     relatorio = None
     try:
         with execucao:
-            carga = dados.carregar(ATIVIDADE, PARTICOES, fonte.nomes_pool, decisoes, repo, fonte)
-            if (carga.atividade, carga.particoes, carga.autorizacao) != (ATIVIDADE, PARTICOES, autorizacao):
-                raise PilotoInvalido("carga com atividade, partições ou autorização inesperadas")
-            frame = carga.frame(PARTICOES[0])
-            esperado = fonte.particoes[PARTICOES[0]]
-            if (len(frame), frame[cfg.COLUNA_PACIENTE].nunique()) != (esperado["nodulos"], esperado["pacientes"]):
-                raise PilotoInvalido("partição de treino com contagens inesperadas")
-            amostra = fl.criar_amostra(frame[cfg.COLUNA_NODULO], frame[cfg.COLUNA_ALVO],
-                                       frame[cfg.COLUNA_PACIENTE], X=frame)
+            carga, frame, amostra = _carregar_treino(ATIVIDADE, PARTICOES, autorizacao, decisoes, repo, fonte)
             plano = fl.plano_repeticao(amostra, REPETICAO)
-            ctx = _Contexto(carga, frame, amostra, plano, sessao, seeds, decisoes, repo, tempos)
-            esperadas = [sessao.identidade(REPETICAO, k, m, seeds, fl.fingerprint_unidade(amostra, plano, k))
-                         for k in range(len(plano.externos)) for m in MODELOS]
+            ctx = _Contexto(carga, frame, amostra, plano, sessao, seeds, decisoes, repo, tempos,
+                            atividade=ATIVIDADE, repeticao=REPETICAO, formato_payload=FORMATO_PAYLOAD)
+            esperadas = [i for k in range(len(plano.externos)) for i in _identidades_do_fold(ctx, k).values()]
             retomada = sessao.verificar(esperadas)  # aborta em slot corrompido, incompatível ou inesperado
             tempos["unidades_reaproveitadas"] = list(retomada.concluidas)
             por_fold = [_executar_fold(ctx, k) for k in range(len(plano.externos))]
@@ -446,9 +520,7 @@ def executar_piloto(diretorio_checkpoints: Union[str, Path], destino: Union[str,
         if execucao.manifesto is not None:
             rst.escrever_manifesto(execucao.manifesto, caminho_manifesto, repo)
     manifesto = execucao.manifesto
-    tempos.update(sha256_manifesto=manifesto["sha256_manifesto"], duracao_total_s=manifesto["tempo"]["duracao_s"])
-    caminho_tempos = sessao.diretorio / f"tempos-{ATIVIDADE}-{manifesto['sha256_manifesto'][:16]}.json"
-    _gravar_json(tempos, caminho_tempos)
+    caminho_tempos = _gravar_tempos(tempos, manifesto, sessao, ATIVIDADE)
     return ResultadoPiloto(MappingProxyType(relatorio), caminho_relatorio, caminho_manifesto,
                            MappingProxyType(manifesto), caminho_tempos)
 

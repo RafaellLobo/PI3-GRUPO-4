@@ -54,6 +54,12 @@ ORDEM_CABECALHO = tuple(random.Random(3).sample(POOL, len(POOL)))
 INFORMATIVAS = ("original_glcm_Imc1", "original_firstorder_Skewness", "original_glcm_Imc2")
 NAO_CONSTANTES = (*cfg.FEATURES_M1, *INFORMATIVAS)
 SLOTS = piloto.ATIVIDADE
+#: SHA-256 do relatório do piloto sobre os dados sintéticos abaixo, registrado
+#: ANTES da refatoração que tirou repetição e atividade das globais (Fase B,
+#: configuração c36335c1…). Depende só de dados sintéticos, seeds e
+#: configuração: muda com ``hash_configuracao``, nunca com código equivalente.
+SHA256_RELATORIO_SINTETICO = "8e10dafa6f081959b79825eca7c232b4168ef71ca94cebb9623fbdd34d654827"
+HASH_CONFIG_DA_REFERENCIA = "c36335c1696b99f5d2344e80f14884721007da5810f6be6c8b892de60f4c5885"
 
 
 # --------------------------------------------------------------------------- #
@@ -270,6 +276,12 @@ class TestPontaAPonta(unittest.TestCase):
             rst.exigir_resultado_definitivo(self.resultado.caminho_manifesto, self.amb.raiz)
         self.assertIn("src.incremental.piloto", m["execucao"]["codigo"])
 
+    def test_relatorio_sintetico_identico_a_referencia_anterior_a_refatoracao(self):
+        if cfg.hash_configuracao() != HASH_CONFIG_DA_REFERENCIA:  # pragma: no cover — referência de outra config
+            self.skipTest("configuração mudou: registre uma nova referência antes de refatorar")
+        bruto = self.resultado.caminho_relatorio.read_bytes()
+        self.assertEqual(hashlib.sha256(bruto).hexdigest(), SHA256_RELATORIO_SINTETICO)
+
     def test_tempos_separados_e_predicoes_so_nos_checkpoints(self):
         tempos = json.loads(self.resultado.caminho_tempos.read_text(encoding="utf-8"))
         self.assertEqual(self.resultado.caminho_tempos.parent, self.amb.checkpoints.resolve())
@@ -467,6 +479,45 @@ class TestRecusas(unittest.TestCase):
 
 
 class TestModulo(unittest.TestCase):
+    #: Funções que podem ler as constantes de unidade do piloto; as demais as recebem pelo contexto.
+    PODEM_LER_GLOBAIS = {"seeds_piloto", "_parametros", "_consolidar", "executar_piloto", "main"}
+
+    def test_funcoes_compartilhadas_nao_leem_globais_de_unidade(self):
+        arvore = ast.parse((REPO_ROOT / "src" / "incremental" / "piloto.py").read_text(encoding="utf-8"))
+        globais = {"REPETICAO", "ATIVIDADE", "FORMATO_PAYLOAD", "FORMATO_RELATORIO", "ARQUIVO_RELATORIO"}
+        for no in arvore.body:
+            if isinstance(no, ast.FunctionDef) and no.name not in self.PODEM_LER_GLOBAIS:
+                usados = {n.id for n in ast.walk(no) if isinstance(n, ast.Name)} & globais
+                # Defaults de parâmetro (nomes de arquivo) não leem unidade; o corpo, sim.
+                defaults = {n.id for d in no.args.defaults for n in ast.walk(d) if isinstance(n, ast.Name)}
+                with self.subTest(funcao=no.name):
+                    self.assertFalse(usados - defaults, usados)
+
+    def test_contexto_incoerente_e_recusado(self):
+        amb = Ambiente(self.addCleanup)
+        autorizacao = g.exigir_autorizacao(piloto.ATIVIDADE)
+        entradas = {"tabela": amb.fonte.tabela.caminho, "split": amb.fonte.split.caminho}
+        sessao = ck.SessaoCheckpoints(amb.checkpoints, piloto.ATIVIDADE, autorizacao, entradas, repo=amb.raiz)
+        carga, frame, amostra = piloto._carregar_treino(piloto.ATIVIDADE, piloto.PARTICOES, autorizacao,
+                                                        cfg.DECISOES, amb.raiz, amb.fonte)
+        plano = fl.plano_repeticao(amostra, piloto.REPETICAO)
+        base = dict(carga=carga, frame=frame, amostra=amostra, plano=plano, sessao=sessao,
+                    seeds=piloto.seeds_piloto(), decisoes=cfg.DECISOES, repo=amb.raiz, tempos={},
+                    atividade=piloto.ATIVIDADE, repeticao=piloto.REPETICAO, formato_payload=piloto.FORMATO_PAYLOAD)
+        piloto._Contexto(**base)  # coerente
+        for campo, valor in (("repeticao", 1), ("atividade", cfg.ATIVIDADE_CV_REPETIDA_EXPLORATORIA),
+                             ("plano", fl.plano_repeticao(amostra, 1))):
+            with self.subTest(campo=campo):
+                with self.assertRaises(piloto.PilotoInvalido):
+                    piloto._Contexto(**{**base, campo: valor})
+
+    def test_seeds_por_repeticao(self):
+        self.assertEqual(piloto.seeds_piloto(), piloto.seeds_repeticao(0))
+        for r, seed in enumerate(cfg.ESPEC_CV.seeds_repeticoes()):
+            self.assertEqual(piloto.seeds_repeticao(r)["cv_externa"], seed)
+            self.assertEqual({k: v for k, v in piloto.seeds_repeticao(r).items() if k != "cv_externa"},
+                             {k: v for k, v in piloto.seeds_piloto().items() if k != "cv_externa"})
+
     def test_configuracao_inalterada(self):
         from test_guardas import HASH_CONFIG_INCREMENTO_1
         self.assertEqual(cfg.hash_configuracao(), HASH_CONFIG_INCREMENTO_1)
