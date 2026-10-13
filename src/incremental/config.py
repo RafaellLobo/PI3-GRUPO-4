@@ -384,9 +384,17 @@ ATIVIDADE_VERIFICACOES_ESTRUTURAIS: str = "verificacoes_estruturais"
 #: modelo. Lê só ``train`` (política de leitura da Etapa 1, em
 #: ``dados.ETAPA_DE_LEITURA``) e nunca produz resultado definitivo.
 ATIVIDADE_PILOTO_EXPLORATORIO: str = "piloto_exploratorio"
+#: CV repetida exploratória (10 × 5 da Seção 7.2): atividade PRÓPRIA, fora das
+#: Etapas 1–5 e distinta da Etapa 2 oficial e do piloto exploratório. Não exige
+#: decisões próprias (P1–P5 seguem pendentes); M2, M3 e M4 continuam exigindo
+#: P3, que as guardas somam por modelo. Lê só ``train`` (política de leitura da
+#: Etapa 2, em ``dados.ETAPA_DE_LEITURA``, sem as decisões da Etapa 2) e nunca
+#: produz resultado definitivo.
+ATIVIDADE_CV_REPETIDA_EXPLORATORIA: str = "cv_repetida_exploratoria"
 #: Atividades cujos resultados são sempre exploratórios: a rastreabilidade
 #: recusa execução e manifesto com finalidade definitiva.
-ATIVIDADES_SOMENTE_EXPLORATORIAS: Tuple[str, ...] = (ATIVIDADE_PILOTO_EXPLORATORIO,)
+ATIVIDADES_SOMENTE_EXPLORATORIAS: Tuple[str, ...] = (ATIVIDADE_PILOTO_EXPLORATORIO,
+                                                     ATIVIDADE_CV_REPETIDA_EXPLORATORIA)
 
 
 def _exigidas_ate(etapa: Etapa) -> Tuple[str, ...]:
@@ -401,6 +409,7 @@ DECISOES_POR_ETAPA: Mapping[str, Tuple[str, ...]] = MappingProxyType({
     **{e.value: _exigidas_ate(e) for e in Etapa},
     ATIVIDADE_CV_LISTA_FIXA: tuple(c for c in DECISOES if c in {*_exigidas_ate(Etapa.E2), "P3"}),
     ATIVIDADE_PILOTO_EXPLORATORIO: (),
+    ATIVIDADE_CV_REPETIDA_EXPLORATORIA: (),
 })
 
 

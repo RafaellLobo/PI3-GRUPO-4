@@ -43,6 +43,7 @@ from test_guardas import (  # noqa: E402
 
 E0, E1 = cfg.Etapa.E0.value, cfg.Etapa.E1.value
 PILOTO = cfg.ATIVIDADE_PILOTO_EXPLORATORIO
+CV_REPETIDA = cfg.ATIVIDADE_CV_REPETIDA_EXPLORATORIA
 DEF, EXP = r.Finalidade.DEFINITIVA, r.Finalidade.EXPLORATORIA
 UTC = dt.timezone.utc
 AMBIENTE_OK = {
@@ -563,40 +564,56 @@ class TestElegibilidade(ComRepo):
 class TestPilotoExploratorio(ComRepo):
     """O piloto exploratório nunca é definitivo: nem na execução, nem no manifesto."""
 
+    ATIVIDADE = PILOTO
+    OUTRA_EXPLORATORIA = CV_REPETIDA
+
     @staticmethod
     def corpo_de(m):
         return {k: json.loads(json.dumps(m[k])) for k in ("formato", "versao_formato", "execucao",
                                                           "resultado", "tempo")}
 
     def test_execucao_definitiva_recusada_na_construcao(self):
-        autorizacao = g.exigir_autorizacao(PILOTO, cfg.DECISOES, self.raiz)
+        autorizacao = g.exigir_autorizacao(self.ATIVIDADE, cfg.DECISOES, self.raiz)
         for finalidade in (DEF, "definitiva"):
             with self.subTest(finalidade=finalidade), \
                     mock.patch.object(g, "exigir_autorizacao", side_effect=AssertionError("não deveria chegar aqui")), \
                     mock.patch.object(r, "estado_git", side_effect=AssertionError("não deveria chegar aqui")):
                 with self.assertRaisesRegex(r.ExecucaoNaoDefinitiva, "somente exploratória"):
-                    r.Execucao(PILOTO, finalidade, autorizacao, {"tabela": self.entrada}, {"cv_externa": 42},
-                               repo=self.raiz)
+                    r.Execucao(self.ATIVIDADE, finalidade, autorizacao, {"tabela": self.entrada},
+                               {"cv_externa": 42}, repo=self.raiz)
         # Mesmo com árvore limpa e ambiente esperado (todo o resto de uma definitiva atendido).
         with self.assertRaisesRegex(r.ExecucaoNaoDefinitiva, "somente exploratória"):
-            self.rodar(DEF, atividade=PILOTO)
+            self.rodar(DEF, atividade=self.ATIVIDADE)
+
+    def test_autorizacao_de_outra_atividade_e_recusada(self):
+        # A autorização de uma exploratória não abre execução de outra, nem de uma etapa oficial.
+        autorizacao = g.exigir_autorizacao(self.ATIVIDADE, cfg.DECISOES, self.raiz)
+        for outra in (self.OUTRA_EXPLORATORIA, E0, cfg.Etapa.E2.value):
+            for finalidade in (EXP, DEF):
+                with self.subTest(outra=outra, finalidade=finalidade):
+                    with self.assertRaises((r.ErroRastreabilidade, r.ExecucaoNaoDefinitiva)) as ctx:
+                        r.Execucao(outra, finalidade, autorizacao, {"tabela": self.entrada}, {"cv_externa": 42},
+                                   repo=self.raiz)
+                    if outra != self.OUTRA_EXPLORATORIA or finalidade is EXP:
+                        self.assertRegex(str(ctx.exception), "outra atividade")
 
     def test_execucao_exploratoria_do_piloto_nunca_utilizavel(self):
-        m = self.rodar(atividade=PILOTO)
+        m = self.rodar(atividade=self.ATIVIDADE)
         ex = m["execucao"]
         self.assertEqual((ex["atividade"], ex["finalidade"], ex["elegivel_definitiva"]),
-                         (PILOTO, "exploratoria", False))
-        self.assertEqual((ex["autorizacao"]["atividade"], ex["autorizacao"]["decisoes_exigidas"]), (PILOTO, []))
+                         (self.ATIVIDADE, "exploratoria", False))
+        self.assertEqual((ex["autorizacao"]["atividade"], ex["autorizacao"]["decisoes_exigidas"]),
+                         (self.ATIVIDADE, []))
         self.assertEqual(ex["hash_configuracao"], HASH_CONFIG_INCREMENTO_1)
         self.assertFalse(r.resultado_definitivo_utilizavel(m))
-        destino = self.raiz / "ignorado" / "piloto.json"
+        destino = self.raiz / "ignorado" / f"{self.ATIVIDADE}.json"
         destino.parent.mkdir(exist_ok=True)
         r.escrever_manifesto(m, destino, self.raiz)
         with self.assertRaisesRegex(r.ResultadoNaoUtilizavel, "exploratoria"):
             r.exigir_resultado_definitivo(destino, self.raiz)
 
     def test_manifesto_do_piloto_promovido_a_definitivo_e_recusado(self):
-        piloto = self.rodar(atividade=PILOTO)  # árvore limpa, ambiente esperado, HEAD estável
+        piloto = self.rodar(atividade=self.ATIVIDADE)  # árvore limpa, ambiente esperado, HEAD estável
         casos = {
             "finalidade e elegibilidade": dict(finalidade="definitiva", elegivel_definitiva=True),
             "só elegibilidade": dict(elegivel_definitiva=True),
@@ -627,6 +644,13 @@ class TestPilotoExploratorio(ComRepo):
         e0 = self.corpo_de(self.rodar(atividade=E0))
         e0["execucao"].update(finalidade="definitiva", elegivel_definitiva=True)
         self.assertTrue(r.resultado_definitivo_utilizavel(r._com_hashes(e0)))
+
+
+class TestCvRepetidaExploratoria(TestPilotoExploratorio):
+    """A CV repetida exploratória herda as mesmas recusas: nunca definitiva nem elegível."""
+
+    ATIVIDADE = CV_REPETIDA
+    OUTRA_EXPLORATORIA = PILOTO
 
 
 # --------------------------------------------------------------------------- #

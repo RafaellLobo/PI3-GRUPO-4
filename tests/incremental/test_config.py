@@ -350,7 +350,9 @@ class TestMapaDecisoes(unittest.TestCase):
         "etapa4_congelamento": ("P1", "P2", "P3", "P5", "REVISAO_PROTOCOLO"),
         "etapa5_teste": ("P1", "P2", "P3", "P4", "P5", "REVISAO_PROTOCOLO"),
         "piloto_exploratorio": (),
+        "cv_repetida_exploratoria": (),
     }
+    EXPLORATORIAS = ("piloto_exploratorio", "cv_repetida_exploratoria")
 
     def test_mapa_explicito(self):
         self.assertEqual(dict(cfg.DECISOES_POR_ETAPA), self.ESPERADO)
@@ -361,11 +363,30 @@ class TestMapaDecisoes(unittest.TestCase):
         self.assertNotIn(piloto, {e.value for e in cfg.Etapa} | {e.name for e in cfg.Etapa})
         self.assertNotEqual(piloto, cfg.Etapa.E1.value)
         self.assertEqual(cfg.DECISOES_POR_ETAPA[piloto], ())
-        self.assertEqual(cfg.ATIVIDADES_SOMENTE_EXPLORATORIAS, (piloto,))
-        self.assertEqual(cfg.snapshot()["atividades_somente_exploratorias"], [piloto])
+        self.assertIn(piloto, cfg.ATIVIDADES_SOMENTE_EXPLORATORIAS)
         # Sem partições nem etapa próprias; nenhuma decisão aprovada.
         self.assertEqual(set(cfg.PARTICOES_POR_ETAPA), set(cfg.Etapa))
         self.assertTrue(all(not d.aprovada for d in cfg.DECISOES.values()))
+
+    def test_cv_repetida_exploratoria_e_atividade_propria_e_somente_exploratoria(self):
+        cv = cfg.ATIVIDADE_CV_REPETIDA_EXPLORATORIA
+        self.assertEqual(cv, "cv_repetida_exploratoria")
+        self.assertNotIn(cv, {e.value for e in cfg.Etapa} | {e.name for e in cfg.Etapa})
+        self.assertNotIn(cv, (cfg.Etapa.E2.value, cfg.ATIVIDADE_CV_LISTA_FIXA, cfg.ATIVIDADE_PILOTO_EXPLORATORIO))
+        self.assertEqual(cfg.DECISOES_POR_ETAPA[cv], ())
+        # A Etapa 2 oficial e a CV com lista fixa mantêm suas decisões.
+        self.assertEqual(cfg.DECISOES_POR_ETAPA[cfg.Etapa.E2.value], ("P1", "P2"))
+        self.assertEqual(cfg.DECISOES_POR_ETAPA[cfg.ATIVIDADE_CV_LISTA_FIXA], ("P1", "P2", "P3"))
+        self.assertEqual(set(cfg.PARTICOES_POR_ETAPA), set(cfg.Etapa))
+        self.assertTrue(all(not d.aprovada for d in cfg.DECISOES.values()))
+
+    def test_atividades_somente_exploratorias(self):
+        self.assertEqual(cfg.ATIVIDADES_SOMENTE_EXPLORATORIAS, self.EXPLORATORIAS)
+        self.assertEqual(cfg.snapshot()["atividades_somente_exploratorias"], list(self.EXPLORATORIAS))
+        for atividade in self.EXPLORATORIAS:
+            self.assertEqual(cfg.DECISOES_POR_ETAPA[atividade], ())
+        # Nenhuma etapa oficial é somente exploratória.
+        self.assertFalse(set(cfg.ATIVIDADES_SOMENTE_EXPLORATORIAS) & {e.value for e in cfg.Etapa})
 
     def test_cumulativo_ao_longo_das_etapas(self):
         etapas = list(cfg.Etapa)

@@ -35,10 +35,15 @@ from src.incremental import guardas as g  # noqa: E402
 
 #: Hash esperado da configuração. O nome é histórico (importado por vários
 #: testes). Valor do Incremento 1: 810c70f751a6252acc69b52b8ca7cdd380988f85d73831a2ab3122ead0c4b8b2.
-#: Atual: inclui a atividade ``piloto_exploratorio`` (sem decisões próprias)
-#: e ``atividades_somente_exploratorias`` no snapshot.
-HASH_CONFIG_INCREMENTO_1 = "b43381f773b18d687981c07170324584c62e8237e2c6055cb0aef0e41e973fb9"
+#: Com a atividade ``piloto_exploratorio`` (sem decisões próprias) e
+#: ``atividades_somente_exploratorias`` no snapshot:
+#: b43381f773b18d687981c07170324584c62e8237e2c6055cb0aef0e41e973fb9.
+#: Atual: inclui também a atividade ``cv_repetida_exploratoria`` (sem decisões
+#: próprias, somente exploratória).
+HASH_CONFIG_INCREMENTO_1 = "c36335c1696b99f5d2344e80f14884721007da5810f6be6c8b892de60f4c5885"
 PILOTO = cfg.ATIVIDADE_PILOTO_EXPLORATORIO
+CV_REPETIDA = cfg.ATIVIDADE_CV_REPETIDA_EXPLORATORIA
+EXPLORATORIAS = (PILOTO, CV_REPETIDA)
 PROTOCOLO = cfg.PROTOCOLO
 TEXTO_BASE = "# Protocolo fictício de teste\n\nTexto sem registros.\n"
 #: Conteúdos fictícios aprovados nos repositórios temporários.
@@ -203,7 +208,7 @@ class TestEstadoReal(unittest.TestCase):
 
 class TestSemGit(unittest.TestCase):
     def test_estruturais_e_etapa0_liberadas_sem_consultar_git(self):
-        for atividade in (cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS, cfg.Etapa.E0, PILOTO):
+        for atividade in (cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS, cfg.Etapa.E0, *EXPLORATORIAS):
             with self.subTest(atividade=atividade), mock.patch.object(g, "_git", git_proibido):
                 autorizacao = g.exigir_autorizacao(atividade)
                 self.assertEqual(autorizacao.decisoes_exigidas, ())
@@ -255,30 +260,44 @@ class TestSemGit(unittest.TestCase):
                 with self.assertRaises(g.AtividadeDesconhecida):
                     g.decisoes_exigidas(atividade)
 
-    def test_somente_estruturais_etapa0_e_piloto_dispensam_decisoes(self):
+    def test_somente_estruturais_etapa0_e_exploratorias_dispensam_decisoes(self):
         sem_decisoes = {a for a, exigidas in cfg.DECISOES_POR_ETAPA.items() if not exigidas}
-        self.assertEqual(sem_decisoes, {cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS, cfg.Etapa.E0.value, PILOTO})
+        self.assertEqual(sem_decisoes, {cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS, cfg.Etapa.E0.value, *EXPLORATORIAS})
         self.assertEqual(set(cfg.DECISOES_POR_ETAPA),
-                         {cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS, cfg.ATIVIDADE_CV_LISTA_FIXA, PILOTO,
+                         {cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS, cfg.ATIVIDADE_CV_LISTA_FIXA, *EXPLORATORIAS,
                           *(e.value for e in cfg.Etapa)})
 
-    def test_piloto_exploratorio_sem_decisoes_proprias_mas_com_p3_por_modelo(self):
-        self.assertNotIn(PILOTO, {e.value for e in cfg.Etapa})
+    def test_exploratorias_sem_decisoes_proprias_mas_com_p3_por_modelo(self):
+        for atividade in EXPLORATORIAS:
+            self.assertNotIn(atividade, {e.value for e in cfg.Etapa})
+            with self.subTest(atividade=atividade), mock.patch.object(g, "_git", git_proibido):
+                for modelos in ((), ("M0", "M1"), cfg.MODELOS_VARIAVEIS):
+                    with self.subTest(modelos=modelos):
+                        autorizacao = g.exigir_autorizacao(atividade, modelos=modelos)
+                        self.assertEqual((autorizacao.atividade, autorizacao.decisoes_exigidas), (atividade, ()))
+                for nome in cfg.MODELOS_COM_PAINEL:
+                    with self.subTest(modelo=nome):
+                        self.assertEqual(g.decisoes_exigidas(atividade, (nome,)), ("P3",))
+                        with self.assertRaisesRegex(cfg.BloqueioDecisao, "P3"):
+                            g.exigir_autorizacao(atividade, modelos=(nome,))
+                        with self.assertRaisesRegex(cfg.BloqueioDecisao, "P3"):
+                            g.exigir_autorizacao(atividade, modelos=("M0", nome))
+                        with self.assertRaisesRegex(cfg.BloqueioDecisao, "P3"):
+                            g.exigir_autorizacao(atividade, modelos=cfg.MODELOS_VARIAVEIS + (nome,))
+                # Modelos variáveis autorizados pela composição, sem decisões.
+                g.autorizar_modelo(cfg.modelo_variavel("M4v", ("original_glcm_Imc1",)), atividade)
+                g.autorizar_modelo(cfg.modelo_fixo("M1"), atividade)
+
+    def test_cv_repetida_nao_herda_as_decisoes_da_etapa2(self):
+        # Mesma política de leitura da Etapa 2, mas a Etapa 2 oficial continua exigindo P1 e P2.
+        self.assertEqual(g.decisoes_exigidas(cfg.Etapa.E2), ("P1", "P2"))
+        self.assertEqual(g.decisoes_exigidas(CV_REPETIDA), ())
         with mock.patch.object(g, "_git", git_proibido):
-            for modelos in ((), ("M0", "M1"), cfg.MODELOS_VARIAVEIS):
-                with self.subTest(modelos=modelos):
-                    autorizacao = g.exigir_autorizacao(PILOTO, modelos=modelos)
-                    self.assertEqual((autorizacao.atividade, autorizacao.decisoes_exigidas), (PILOTO, ()))
-            for nome in cfg.MODELOS_COM_PAINEL:
-                with self.subTest(modelo=nome):
-                    self.assertEqual(g.decisoes_exigidas(PILOTO, (nome,)), ("P3",))
-                    with self.assertRaisesRegex(cfg.BloqueioDecisao, "P3"):
-                        g.exigir_autorizacao(PILOTO, modelos=(nome,))
-                    with self.assertRaisesRegex(cfg.BloqueioDecisao, "P3"):
-                        g.exigir_autorizacao(PILOTO, modelos=("M0", nome))
-            # Modelos variáveis autorizados pela composição, sem decisões.
-            g.autorizar_modelo(cfg.modelo_variavel("M4v", ("original_glcm_Imc1",)), PILOTO)
-            g.autorizar_modelo(cfg.modelo_fixo("M1"), PILOTO)
+            with self.assertRaisesRegex(cfg.BloqueioDecisao, "P1"):
+                g.exigir_autorizacao(cfg.Etapa.E2)
+            with self.assertRaisesRegex(cfg.BloqueioDecisao, "P1"):
+                g.exigir_autorizacao(cfg.Etapa.E2, modelos=cfg.MODELOS_VARIAVEIS)
+            self.assertEqual(g.exigir_autorizacao(CV_REPETIDA).atividade, CV_REPETIDA)
 
     def test_piloto_nao_altera_etapas_nem_libera_nomes_parecidos(self):
         # As etapas oficiais mantêm exatamente suas decisões.
@@ -292,6 +311,21 @@ class TestSemGit(unittest.TestCase):
                 with self.subTest(atividade=atividade):
                     with self.assertRaises(g.AtividadeDesconhecida):
                         g.exigir_autorizacao(atividade)
+
+    def test_cv_repetida_nao_altera_etapas_nem_libera_nomes_parecidos(self):
+        self.assertEqual(g.decisoes_exigidas(cfg.Etapa.E2), ("P1", "P2"))
+        self.assertEqual(g.decisoes_exigidas(cfg.ATIVIDADE_CV_LISTA_FIXA), ("P1", "P2", "P3"))
+        with mock.patch.object(g, "_git", git_proibido):
+            for atividade in ("cv_repetida", "cv_repetida_exploratoria ", " cv_repetida_exploratoria",
+                              "CV_REPETIDA_EXPLORATORIA", "cv-repetida-exploratoria", "cv_repetida_exploratorio",
+                              "etapa2_cv_repetida_exploratoria", "cv_repetida_exploratoria\n",
+                              b"cv_repetida_exploratoria", ("cv_repetida_exploratoria",),
+                              "ATIVIDADE_CV_REPETIDA_EXPLORATORIA", "etapa2_cv_aninhada_exploratoria"):
+                with self.subTest(atividade=atividade):
+                    with self.assertRaises(g.AtividadeDesconhecida):
+                        g.exigir_autorizacao(atividade)
+                    with self.assertRaises(g.AtividadeDesconhecida):
+                        g.decisoes_exigidas(atividade)
 
     def test_modelos_incorretos_nao_dispensam_p3(self):
         # Regressão: "M2" como string era iterado como "M" e "2", e P3 sumia.

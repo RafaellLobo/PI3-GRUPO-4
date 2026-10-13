@@ -44,6 +44,7 @@ from test_guardas import (  # noqa: E402
 
 E0, E1, E2, E3, E4, E5 = (e.value for e in cfg.Etapa)
 PILOTO = cfg.ATIVIDADE_PILOTO_EXPLORATORIO
+CV_REPETIDA = cfg.ATIVIDADE_CV_REPETIDA_EXPLORATORIA
 SENTINELA = "987654.321"
 SENTINELA_ALVO_DERIVADO = "[9, 9, 9, 9]"
 
@@ -329,7 +330,9 @@ class TestAcessoSemAprovacoes(ComSintetico):
                  (E3, ["test"]), (E3, ["train", "validation", "test"]), (E5, ["validation"]),
                  (E4, ["train"]), (cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS, ["train"]),
                  (PILOTO, ["validation"]), (PILOTO, ["test"]), (PILOTO, ["train", "validation"]),
-                 (PILOTO, ["train", "test"]), (PILOTO, ["train", "validation", "test"])]
+                 (PILOTO, ["train", "test"]), (PILOTO, ["train", "validation", "test"]),
+                 (CV_REPETIDA, ["validation"]), (CV_REPETIDA, ["test"]), (CV_REPETIDA, ["train", "validation"]),
+                 (CV_REPETIDA, ["train", "test"]), (CV_REPETIDA, ["train", "validation", "test"])]
         for atividade, particoes in casos:
             with self.subTest(atividade=atividade, particoes=particoes), \
                     mock.patch.object(dados, "_ler_bytes", leituras_proibidas), \
@@ -353,6 +356,38 @@ class TestAcessoSemAprovacoes(ComSintetico):
         with mock.patch.object(dados, "_ler_bytes", leituras_proibidas):
             with self.assertRaisesRegex(cfg.BloqueioDecisao, "P1"):
                 dados.carregar(E1, ["train"], POOL, fonte=fonte)
+
+    def test_cv_repetida_exploratoria_le_somente_treino_sem_decisoes(self):
+        # Atividade própria: sem decisões (nem git), só a política de leitura da Etapa 2.
+        fonte = self.sint.escrever()
+        with mock.patch.object(g, "_git", leituras_proibidas):
+            carga = dados.carregar(CV_REPETIDA, ["train"], POOL, fonte=fonte)
+        self.assertEqual((carga.atividade, carga.particoes), (CV_REPETIDA, ("train",)))
+        self.assertEqual((carga.autorizacao.atividade, carga.autorizacao.decisoes_exigidas), (CV_REPETIDA, ()))
+        self.assertIsNone(carga.autorizacao.head)
+        self.assertEqual(set(carga.frame("train")["nodulo_id"]), self.ids_da_particao("train"))
+        for particao in ("validation", "test"):
+            with self.assertRaises(dados.AcessoNegado):
+                carga.frame(particao)
+        # A Etapa 2 oficial continua exigindo P1 e P2 para a mesma leitura.
+        with mock.patch.object(dados, "_ler_bytes", leituras_proibidas):
+            with self.assertRaisesRegex(cfg.BloqueioDecisao, "P1"):
+                dados.carregar(E2, ["train"], POOL, fonte=fonte)
+
+    def test_aprovacoes_nao_ampliam_as_particoes_das_exploratorias(self):
+        # Mesmo com todas as decisões marcadas como aprovadas, validação e teste
+        # são negados pela política de leitura, antes das guardas e de qualquer leitura.
+        fonte = self.sint.escrever()
+        todas = aprovar(P1=("1" * 40, None), P2=("1" * 40, VALOR_P2), P3=("1" * 40, VALOR_P3),
+                        P4=("1" * 40, None), P5=("1" * 40, None), REVISAO_PROTOCOLO=("1" * 40, None))
+        for atividade in (PILOTO, CV_REPETIDA):
+            for particoes in (["validation"], ["test"], ["train", "validation"], ["train", "test"]):
+                with self.subTest(atividade=atividade, particoes=particoes), \
+                        mock.patch.object(dados, "_ler_bytes", leituras_proibidas), \
+                        mock.patch.object(g, "_git", leituras_proibidas), \
+                        mock.patch.object(g, "exigir_autorizacao", leituras_proibidas):
+                    with self.assertRaises(dados.AcessoNegado):
+                        dados.carregar(atividade, particoes, POOL, todas, fonte=fonte)
 
     def test_etapas_com_decisoes_bloqueadas_sem_ler_arquivos(self):
         # Estado real: P1–P5 e REVISAO_PROTOCOLO pendentes. Nomear a etapa não basta.
@@ -894,6 +929,9 @@ class TestModulo(unittest.TestCase):
         # O piloto reutiliza só a política de leitura da Etapa 1: treino.
         self.assertIs(dados.ETAPA_DE_LEITURA[PILOTO], cfg.Etapa.E1)
         self.assertEqual(cfg.PARTICOES_POR_ETAPA[dados.ETAPA_DE_LEITURA[PILOTO]], ("train",))
+        # A CV repetida reutiliza só a política de leitura da Etapa 2: treino.
+        self.assertIs(dados.ETAPA_DE_LEITURA[CV_REPETIDA], cfg.Etapa.E2)
+        self.assertEqual(cfg.PARTICOES_POR_ETAPA[dados.ETAPA_DE_LEITURA[CV_REPETIDA]], ("train",))
         for etapa in cfg.Etapa:
             self.assertIs(dados.ETAPA_DE_LEITURA[etapa.value], etapa)  # etapas oficiais inalteradas
         for etapa in (cfg.Etapa.E0, cfg.Etapa.E1, cfg.Etapa.E2):
