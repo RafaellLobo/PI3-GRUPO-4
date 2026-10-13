@@ -18,3 +18,5 @@ reports/sprint4/feature_selection/reproducao_juan/*.csv -text whitespace=cr-at-e
 reports/sprint4/feature_selection/reproducao_juan/*.json -text whitespace=cr-at-eol
 # Script de reprodução sempre em LF, para que seu SHA-256 registrado no JSON se mantenha.
 scripts/sprint4/reproduce_juan_feature_selection.py text eol=lf
+# Piloto exploratório: o manifesto registra o SHA-256 bruto do relatório (gerado em LF).
+reports/sprint4/piloto_exploratorio/*.json text eol=lf

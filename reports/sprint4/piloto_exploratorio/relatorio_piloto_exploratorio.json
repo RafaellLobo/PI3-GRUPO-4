@@ -1,0 +1,266 @@
+{
+  "amostra": {
+    "classe_0": 209,
+    "classe_1": 208,
+    "n_nodulos": 417,
+    "n_pacientes": 291
+  },
+  "atividade": "piloto_exploratorio",
+  "auc_oof": {
+    "M0": 0.9457351858667649,
+    "M1": 0.9437338976812661,
+    "M2v": 0.9687845049687155,
+    "M3v": 0.9686004784688995,
+    "M4v": 0.9687384983437615
+  },
+  "aviso": "Resultado preliminar exploratório da atividade piloto_exploratorio: fora das Etapas 1-5 do protocolo, sem aprovação do grupo ou do professor, sem validação nem teste. Sem p-valor, intervalo de confiança ou teste de significância; AUC e contrastes são apenas descritivos.",
+  "contrastes_descritivos": {
+    "M3v-M0": 0.022865292602134657,
+    "M4v-M1": 0.025004600662495324
+  },
+  "decisoes_pendentes": [
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "REVISAO_PROTOCOLO"
+  ],
+  "finalidade": "exploratoria",
+  "folds": [
+    {
+      "C_por_fold_estabilidade": [
+        0.31622776601683794,
+        0.31622776601683794,
+        0.31622776601683794,
+        0.31622776601683794,
+        0.31622776601683794
+      ],
+      "auc": {
+        "M0": 0.968284611141754,
+        "M1": 0.9718698290126861,
+        "M2v": 0.9817981246552674,
+        "M3v": 0.9806949806949806,
+        "M4v": 0.9806949806949806
+      },
+      "fingerprint_folds": "e7d554c508a19fe5c225f532a7407d22b61edbf315ce2ad3d3e3cf52da347a37",
+      "fold": 0,
+      "n_avaliacao": 86,
+      "n_pacientes_avaliacao": 59,
+      "n_treino": 331,
+      "s_k": [
+        "original_shape_Elongation",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio",
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_firstorder_Skewness",
+        "original_glcm_Imc2",
+        "original_ngtdm_Coarseness"
+      ],
+      "s_k_vazio": false,
+      "sha256_selecao": "b6fdcf59254140a29449e1c1db092435e2c7f73fa8121851183992bb0d7539e4"
+    },
+    {
+      "C_por_fold_estabilidade": [
+        0.31622776601683794,
+        0.31622776601683794,
+        0.31622776601683794,
+        0.31622776601683794,
+        0.31622776601683794
+      ],
+      "auc": {
+        "M0": 0.9595959595959596,
+        "M1": 0.9636363636363636,
+        "M2v": 0.9872053872053872,
+        "M3v": 0.9872053872053872,
+        "M4v": 0.9872053872053872
+      },
+      "fingerprint_folds": "fd51c74e9b352642a4df01d487f42612ee47ee8478b3dfc97d319904170897bd",
+      "fold": 1,
+      "n_avaliacao": 78,
+      "n_pacientes_avaliacao": 60,
+      "n_treino": 339,
+      "s_k": [
+        "original_shape_Elongation",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio",
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_glcm_Id",
+        "original_glcm_Idmn",
+        "original_glcm_Imc1",
+        "original_glcm_Imc2"
+      ],
+      "s_k_vazio": false,
+      "sha256_selecao": "1100f8b30f70cca1a12bcda667008c0392dec52a9736b772987cb87b535b02b2"
+    },
+    {
+      "C_por_fold_estabilidade": [
+        0.31622776601683794,
+        0.31622776601683794,
+        0.31622776601683794,
+        0.31622776601683794,
+        1.0
+      ],
+      "auc": {
+        "M0": 0.9376299376299377,
+        "M1": 0.9365904365904366,
+        "M2v": 0.9714137214137214,
+        "M3v": 0.9708939708939709,
+        "M4v": 0.9708939708939709
+      },
+      "fingerprint_folds": "7bd250a99fb34fcab6cf482d18ef4c543d2ce273de3088634b10a1986079a26b",
+      "fold": 2,
+      "n_avaliacao": 89,
+      "n_pacientes_avaliacao": 54,
+      "n_treino": 328,
+      "s_k": [
+        "original_shape_Elongation",
+        "original_shape_Flatness",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio",
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_glcm_ClusterShade",
+        "original_glcm_Imc1",
+        "original_ngtdm_Busyness"
+      ],
+      "s_k_vazio": false,
+      "sha256_selecao": "cd2d643c81ce67f44f9a4f42841a9b0f8fd0c2e62affff0198894e39e7fb9f9a"
+    },
+    {
+      "C_por_fold_estabilidade": [
+        0.31622776601683794,
+        0.31622776601683794,
+        10.0,
+        0.31622776601683794,
+        0.31622776601683794
+      ],
+      "auc": {
+        "M0": 0.958411507191995,
+        "M1": 0.9524702939337086,
+        "M2v": 0.9856160100062539,
+        "M3v": 0.9843652282676673,
+        "M4v": 0.9843652282676673
+      },
+      "fingerprint_folds": "71fd35d218ac5ecda117679ba5cafd01d616f80d5f7b4ea4b4365e72352eebc5",
+      "fold": 3,
+      "n_avaliacao": 80,
+      "n_pacientes_avaliacao": 60,
+      "n_treino": 337,
+      "s_k": [
+        "original_shape_Elongation",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio",
+        "original_firstorder_90Percentile",
+        "original_firstorder_RootMeanSquared",
+        "original_glcm_ClusterShade",
+        "original_glcm_Imc1",
+        "original_glcm_Imc2",
+        "original_ngtdm_Busyness"
+      ],
+      "s_k_vazio": false,
+      "sha256_selecao": "5fbf80416083e3a29c881fe98f3fd896ceeb8900b3d84a87fb4b762dbcb45d97"
+    },
+    {
+      "C_por_fold_estabilidade": [
+        0.03162277660168379,
+        0.31622776601683794,
+        0.31622776601683794,
+        0.1,
+        0.1
+      ],
+      "auc": {
+        "M0": 0.9299999999999999,
+        "M1": 0.9217647058823529,
+        "M2v": 0.9323529411764706,
+        "M3v": 0.9317647058823529,
+        "M4v": 0.9317647058823529
+      },
+      "fingerprint_folds": "171457d035344b90c711061295999552bdee71ff01f6e753de8736d2a4f21002",
+      "fold": 4,
+      "n_avaliacao": 84,
+      "n_pacientes_avaliacao": 58,
+      "n_treino": 333,
+      "s_k": [
+        "original_shape_MajorAxisLength",
+        "original_shape_Sphericity",
+        "original_shape_SurfaceVolumeRatio",
+        "original_glcm_Imc1",
+        "original_glcm_Imc2"
+      ],
+      "s_k_vazio": false,
+      "sha256_selecao": "59faf3a3f0fddb68461fb956ec6b7a3282d48fb857361c74a2b046a83702e4fb"
+    }
+  ],
+  "fora_desta_modalidade": {
+    "modelos_com_painel": [
+      "M2",
+      "M3",
+      "M4"
+    ],
+    "particoes_nao_lidas": [
+      "validation",
+      "test"
+    ],
+    "permutacoes": false,
+    "spline": false
+  },
+  "formato": "relatorio-piloto-exploratorio-cartao4",
+  "hash_configuracao": "b43381f773b18d687981c07170324584c62e8237e2c6055cb0aef0e41e973fb9",
+  "modelos": [
+    "M0",
+    "M1",
+    "M2v",
+    "M3v",
+    "M4v"
+  ],
+  "particoes_lidas": [
+    "train"
+  ],
+  "repeticao": 0,
+  "rotulo": "preliminar_exploratorio",
+  "seeds": {
+    "cv_externa": 42,
+    "estabilidade": 42,
+    "interna_base": 100,
+    "logistica_avaliacao": 42,
+    "logistica_selecao": 42
+  },
+  "selecao": {
+    "folds_com_s_k_vazio": 0,
+    "frequencia_entre_folds_externos": {
+      "original_firstorder_90Percentile": 4,
+      "original_firstorder_RootMeanSquared": 4,
+      "original_firstorder_Skewness": 1,
+      "original_glcm_ClusterShade": 2,
+      "original_glcm_Id": 1,
+      "original_glcm_Idmn": 1,
+      "original_glcm_Imc1": 4,
+      "original_glcm_Imc2": 4,
+      "original_ngtdm_Busyness": 2,
+      "original_ngtdm_Coarseness": 1,
+      "original_shape_Elongation": 4,
+      "original_shape_Flatness": 1,
+      "original_shape_MajorAxisLength": 1,
+      "original_shape_Sphericity": 5,
+      "original_shape_SurfaceVolumeRatio": 5
+    }
+  },
+  "sha256_dados": {
+    "split": "ed120c2b5c0f308d41c11cfc32dae0e897a179c71d6ea803588720ba1ba4f65f",
+    "tabela": "5e92e7e860ad8edd327570c929cd263cd780be98902e57017551ad0080da60ab"
+  },
+  "versao_formato": 1,
+  "warnings": {
+    "modelos": [],
+    "selecao": [
+      {
+        "categoria": "ConvergenceWarning",
+        "contagem": 7,
+        "mensagem": "Liblinear failed to converge, increase the number of iterations."
+      }
+    ]
+  }
+}
