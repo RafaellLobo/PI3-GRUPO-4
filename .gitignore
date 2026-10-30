@@ -48,9 +48,13 @@ Desktop.ini
 .env.*
 !.env.example
 *.local
+.claude/settings.local.json
 .pylidcrc
 *.key
 *.pem
+
+# Saídas locais de scripts
+scripts/output/
 
 # Dataset local: preserve apenas documentação ou placeholder estrutural
 data/*
