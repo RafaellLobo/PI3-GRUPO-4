@@ -1,0 +1,417 @@
+{
+  "etapa": "Sprint 4 — Cartão 4 — Etapa 0: verificação dos modelos de referência M0 e M1",
+  "protocolo": "docs/sprint4/protocolo_valor_incremental.md (Seções 6.1, 6.2, 7.1)",
+  "status": "reproduzido",
+  "escopo": {
+    "metricas_de_desempenho_calculadas": false,
+    "predicoes_realizadas": false,
+    "modelos_ajustados": [
+      "M0",
+      "M1"
+    ],
+    "linhas_usadas_em_ajuste": "somente treino oficial",
+    "validacao_teste_lidos": "somente nodulo_id e patient_id, para contagens estruturais; na leitura de target e features, essas linhas são descartadas pelo parser (skiprows) e seus campos não são convertidos",
+    "composicao_de_classes_validacao_teste": "não verificada nesta etapa (isolamento, Seção 7.1)"
+  },
+  "git": {
+    "disponivel": true,
+    "commit_head": "9e9b3bdf3cd893f7e8e1d67eef79abc54bf1f5d3",
+    "branch": "feat/s4-incremental-radiomics",
+    "arvore_limpa": false,
+    "status_porcelain": [
+      "?? reports/sprint4/",
+      "?? scripts/sprint4/"
+    ],
+    "script": "scripts/sprint4/validate_reference_models.py",
+    "script_versionado_no_head": false,
+    "script_com_alteracoes_nao_commitadas": null,
+    "observacao": "o resultado só é rastreável a um commit quando o script está versionado e sem alterações; caso contrário, commit_head indica apenas a base da execução"
+  },
+  "leitura_isolada": {
+    "metodo": "pandas.read_csv(skiprows=callable) sobre a linha física do arquivo",
+    "linhas_de_dados_no_arquivo": 607,
+    "linhas_mantidas_pelo_parser": 417,
+    "linhas_descartadas_pelo_parser": 190,
+    "nodulo_id_lidos_coincidem_em_conteudo_e_ordem": true,
+    "colunas_lidas": [
+      "nodulo_id",
+      "patient_id",
+      "target_binary",
+      "original_shape_MeshVolume",
+      "original_shape_Maximum3DDiameter",
+      "original_shape_Sphericity"
+    ]
+  },
+  "ambiente": {
+    "python": "3.9.13",
+    "plataforma": "Windows-10-10.0.26200-SP0",
+    "numpy": "1.23.5",
+    "pandas": "1.5.3",
+    "scikit-learn": "1.3.2"
+  },
+  "seed": 42,
+  "sha256_entradas": {
+    "data/modeling_table_sprint3.csv": "5e92e7e860ad8edd327570c929cd263cd780be98902e57017551ad0080da60ab",
+    "reports/sprint3/baseline/patient_split.csv": "ed120c2b5c0f308d41c11cfc32dae0e897a179c71d6ea803588720ba1ba4f65f",
+    "reports/sprint3/baseline/baseline_metrics.json": "b69ef8ab5d31450b2b23bb5c970326ec82fb3b2e1faaf273cfe2a9b3b7c57ea3"
+  },
+  "entradas_intactas_apos_execucao": true,
+  "invariantes_estruturais": [
+    {
+      "checagem": "split: colunas",
+      "valor": [
+        "patient_id",
+        "split"
+      ]
+    },
+    {
+      "checagem": "split: linhas == pacientes únicos",
+      "valor": 416
+    },
+    {
+      "checagem": "split: pacientes",
+      "valor": 416
+    },
+    {
+      "checagem": "split: partições",
+      "valor": [
+        "test",
+        "train",
+        "validation"
+      ]
+    },
+    {
+      "checagem": "tabela: nódulos",
+      "valor": 607
+    },
+    {
+      "checagem": "tabela: pacientes únicos",
+      "valor": 416
+    },
+    {
+      "checagem": "tabela: nodulo_id duplicados",
+      "valor": 0
+    },
+    {
+      "checagem": "tabela: nodulo_id incoerentes com patient_id",
+      "valor": 0
+    },
+    {
+      "checagem": "tabela: nódulos sem partição",
+      "valor": 0
+    },
+    {
+      "checagem": "split: pacientes sem nódulo na tabela",
+      "valor": 0
+    },
+    {
+      "checagem": "composição train (pacientes, nódulos)",
+      "valor": {
+        "pacientes": 291,
+        "nodulos": 417
+      }
+    },
+    {
+      "checagem": "composição validation (pacientes, nódulos)",
+      "valor": {
+        "pacientes": 62,
+        "nodulos": 92
+      }
+    },
+    {
+      "checagem": "composição test (pacientes, nódulos)",
+      "valor": {
+        "pacientes": 63,
+        "nodulos": 98
+      }
+    },
+    {
+      "checagem": "pacientes compartilhados entre partições",
+      "valor": 0
+    },
+    {
+      "checagem": "treino: nódulos lidos com target/features",
+      "valor": 417
+    },
+    {
+      "checagem": "treino: pacientes",
+      "valor": 291
+    },
+    {
+      "checagem": "treino: todos os pacientes pertencem ao treino oficial",
+      "valor": true
+    },
+    {
+      "checagem": "treino: classes {0, 1}",
+      "valor": {
+        "0": 209,
+        "1": 208
+      }
+    },
+    {
+      "checagem": "M0: original_nodule_idx presente entre as features",
+      "valor": false
+    },
+    {
+      "checagem": "M1: original_nodule_idx presente entre as features",
+      "valor": false
+    },
+    {
+      "checagem": "treino: valores não finitos em original_shape_MeshVolume",
+      "valor": 0
+    },
+    {
+      "checagem": "treino: valores não finitos em original_shape_Maximum3DDiameter",
+      "valor": 0
+    },
+    {
+      "checagem": "treino: valores não finitos em original_shape_Sphericity",
+      "valor": 0
+    }
+  ],
+  "modelos": {
+    "M0": {
+      "features": [
+        "original_shape_Maximum3DDiameter"
+      ],
+      "parametros_logreg": {
+        "C": 1.0,
+        "penalty": "l2",
+        "class_weight": null,
+        "random_state": 42,
+        "max_iter": 1000
+      },
+      "solver": "lbfgs",
+      "coeficientes": {
+        "original_shape_Maximum3DDiameter": 3.462791028995255
+      },
+      "intercepto": 0.7645342999087851,
+      "scaler_mean": {
+        "original_shape_Maximum3DDiameter": 20.726562816151045
+      },
+      "scaler_scale": {
+        "original_shape_Maximum3DDiameter": 12.965347712659282
+      },
+      "scaler_n_samples_seen": 417,
+      "n_iteracoes": 9,
+      "convergiu": true,
+      "warnings_sklearn": []
+    },
+    "M1": {
+      "features": [
+        "original_shape_MeshVolume",
+        "original_shape_Maximum3DDiameter",
+        "original_shape_Sphericity"
+      ],
+      "parametros_logreg": {
+        "C": 1.0,
+        "penalty": "l2",
+        "class_weight": null,
+        "random_state": 42,
+        "max_iter": 1000
+      },
+      "solver": "lbfgs",
+      "coeficientes": {
+        "original_shape_MeshVolume": 0.9796783329891897,
+        "original_shape_Maximum3DDiameter": 2.694711785529296,
+        "original_shape_Sphericity": -0.5562070788104146
+      },
+      "intercepto": 0.9441287807415529,
+      "scaler_mean": {
+        "original_shape_MeshVolume": 1660.4453437250197,
+        "original_shape_Maximum3DDiameter": 20.726562816151045,
+        "original_shape_Sphericity": 0.6895369422895994
+      },
+      "scaler_scale": {
+        "original_shape_MeshVolume": 2885.7146960924038,
+        "original_shape_Maximum3DDiameter": 12.965347712659282,
+        "original_shape_Sphericity": 0.11522782656359476
+      },
+      "scaler_n_samples_seen": 417,
+      "n_iteracoes": 15,
+      "convergiu": true,
+      "warnings_sklearn": []
+    }
+  },
+  "coerencia_scaler_diametro_M0_M1": {
+    "scaler_mean": true,
+    "scaler_scale": true
+  },
+  "reproducao_M1": {
+    "reproduzido": true,
+    "identico_bit_a_bit": false,
+    "parametros_numericos": {
+      "coeficientes": {
+        "tolerancia": {
+          "rtol": 1e-06,
+          "atol": 1e-08
+        },
+        "termos": {
+          "original_shape_MeshVolume": {
+            "obtido": 0.9796783329891897,
+            "referencia": 0.9796783329891894,
+            "dif_abs": 3.3306690738754696e-16,
+            "dif_rel": 3.3997578202152837e-16,
+            "identico_bit_a_bit": false,
+            "dentro_da_tolerancia": true
+          },
+          "original_shape_Maximum3DDiameter": {
+            "obtido": 2.694711785529296,
+            "referencia": 2.694711785529296,
+            "dif_abs": 0.0,
+            "dif_rel": 0.0,
+            "identico_bit_a_bit": true,
+            "dentro_da_tolerancia": true
+          },
+          "original_shape_Sphericity": {
+            "obtido": -0.5562070788104146,
+            "referencia": -0.5562070788104145,
+            "dif_abs": 1.1102230246251565e-16,
+            "dif_rel": 1.996060580529901e-16,
+            "identico_bit_a_bit": false,
+            "dentro_da_tolerancia": true
+          }
+        },
+        "todos_dentro_da_tolerancia": true,
+        "todos_identicos_bit_a_bit": false,
+        "max_dif_abs": 3.3306690738754696e-16
+      },
+      "intercepto": {
+        "tolerancia": {
+          "rtol": 1e-06,
+          "atol": 1e-08
+        },
+        "termos": {
+          "intercepto": {
+            "obtido": 0.9441287807415529,
+            "referencia": 0.9441287807415529,
+            "dif_abs": 0.0,
+            "dif_rel": 0.0,
+            "identico_bit_a_bit": true,
+            "dentro_da_tolerancia": true
+          }
+        },
+        "todos_dentro_da_tolerancia": true,
+        "todos_identicos_bit_a_bit": true,
+        "max_dif_abs": 0.0
+      },
+      "scaler_mean": {
+        "tolerancia": {
+          "rtol": 1e-10,
+          "atol": 1e-12
+        },
+        "termos": {
+          "original_shape_MeshVolume": {
+            "obtido": 1660.4453437250197,
+            "referencia": 1660.4453437250197,
+            "dif_abs": 0.0,
+            "dif_rel": 0.0,
+            "identico_bit_a_bit": true,
+            "dentro_da_tolerancia": true
+          },
+          "original_shape_Maximum3DDiameter": {
+            "obtido": 20.726562816151045,
+            "referencia": 20.726562816151045,
+            "dif_abs": 0.0,
+            "dif_rel": 0.0,
+            "identico_bit_a_bit": true,
+            "dentro_da_tolerancia": true
+          },
+          "original_shape_Sphericity": {
+            "obtido": 0.6895369422895994,
+            "referencia": 0.6895369422895994,
+            "dif_abs": 0.0,
+            "dif_rel": 0.0,
+            "identico_bit_a_bit": true,
+            "dentro_da_tolerancia": true
+          }
+        },
+        "todos_dentro_da_tolerancia": true,
+        "todos_identicos_bit_a_bit": true,
+        "max_dif_abs": 0.0
+      },
+      "scaler_scale": {
+        "tolerancia": {
+          "rtol": 1e-10,
+          "atol": 1e-12
+        },
+        "termos": {
+          "original_shape_MeshVolume": {
+            "obtido": 2885.7146960924038,
+            "referencia": 2885.7146960924038,
+            "dif_abs": 0.0,
+            "dif_rel": 0.0,
+            "identico_bit_a_bit": true,
+            "dentro_da_tolerancia": true
+          },
+          "original_shape_Maximum3DDiameter": {
+            "obtido": 12.965347712659282,
+            "referencia": 12.965347712659282,
+            "dif_abs": 0.0,
+            "dif_rel": 0.0,
+            "identico_bit_a_bit": true,
+            "dentro_da_tolerancia": true
+          },
+          "original_shape_Sphericity": {
+            "obtido": 0.11522782656359476,
+            "referencia": 0.11522782656359476,
+            "dif_abs": 0.0,
+            "dif_rel": 0.0,
+            "identico_bit_a_bit": true,
+            "dentro_da_tolerancia": true
+          }
+        },
+        "todos_dentro_da_tolerancia": true,
+        "todos_identicos_bit_a_bit": true,
+        "max_dif_abs": 0.0
+      }
+    },
+    "contrato": {
+      "features": {
+        "obtido": [
+          "original_shape_MeshVolume",
+          "original_shape_Maximum3DDiameter",
+          "original_shape_Sphericity"
+        ],
+        "referencia": [
+          "original_shape_MeshVolume",
+          "original_shape_Maximum3DDiameter",
+          "original_shape_Sphericity"
+        ],
+        "igual": true
+      },
+      "parametros_logreg": {
+        "obtido": {
+          "C": 1.0,
+          "penalty": "l2",
+          "class_weight": null,
+          "random_state": 42,
+          "max_iter": 1000
+        },
+        "referencia": {
+          "C": 1.0,
+          "penalty": "l2",
+          "class_weight": null,
+          "random_state": 42,
+          "max_iter": 1000
+        },
+        "igual": true
+      },
+      "versao_sklearn": {
+        "obtido": "1.3.2",
+        "referencia": "1.3.2",
+        "igual": true
+      },
+      "n_iteracoes": {
+        "obtido": 15,
+        "referencia": 15,
+        "igual": true
+      },
+      "scaler_n_samples_seen": {
+        "obtido": 417,
+        "referencia": 417,
+        "igual": true
+      }
+    }
+  }
+}
