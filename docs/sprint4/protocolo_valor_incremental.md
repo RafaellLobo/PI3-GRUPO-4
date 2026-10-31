@@ -31,7 +31,7 @@ Nenhum resultado obtido sob este protocolo deve ser apresentado como desempenho 
 A pergunta é motivada por três evidências já registradas no projeto:
 
 - o baseline da Sprint 3 obteve AUC-ROC de 0,9762 no teste com apenas três atributos de forma, dois deles de tamanho;
-- o estudo de máscaras reduzidas (Samara) observou que um modelo com **somente o diâmetro** atinge AUC-ROC de 0,9641, contra 0,9644 do modelo de três features — em um split **reconstruído**, não no split canônico; a revalidação no split oficial (Experimento 13) obteve AUC-ROC de 0,9772 para o diâmetro isolado e de 0,9778 para a reprodução do baseline (Seção 4.1);
+- o estudo de máscaras reduzidas (Samara) observou que um modelo com **somente o diâmetro** atinge AUC-ROC de 0,9641, contra 0,9644 do modelo de três features — em um split **reconstruído**, não no split canônico; a revalidação no split oficial (Experimento 10 revalidado; citado antes como Experimento 13) obteve AUC-ROC de 0,9772 para o diâmetro isolado e de 0,9778 para um notebook que difere do baseline em dois pontos (Seção 4.1 e Emenda 1, E2);
 - o feedback da Sprint 3 pediu explicitamente que o grupo testasse se o resultado é dominado pelo tamanho e se a radiômica acrescenta algo além dele.
 
 ### 1.1 Hipóteses do contraste primário
@@ -101,12 +101,12 @@ O teste **não é cego** para todos os modelos, e isso é declarado aqui antes d
 | Modelo | Resultado já conhecido | Onde |
 |---|---|---|
 | M1 — baseline canônico | AUC-ROC 0,9440 (validação) e **0,9762** [0,9477 – 0,9946] (teste), com matrizes de confusão | `reports/sprint3/baseline/baseline_metrics.json` — artefato versionado |
-| M1 — reprodução da Samara | AUC-ROC 0,9778, **no teste oficial** | Experimento 13 (Samara) — revalidação com o split oficial: ajuste no treino oficial, avaliação no teste oficial, sem uso da validação |
-| M0 | AUC-ROC 0,9772 com diâmetro isolado, **no teste oficial** | Experimento 13 (Samara) — mesmo desenho |
+| M1 — notebook do Experimento 10 revalidado (Samara) | AUC-ROC 0,9778, **no teste oficial**. **Não é o baseline:** o notebook usa `original_shape_VoxelVolume` no lugar de `original_shape_MeshVolume` e ajusta a regressão sem `StandardScaler` (Emenda 1, E2) | revalidação com o split oficial: ajuste no treino oficial, avaliação no teste oficial, sem uso da validação |
+| M0 | AUC-ROC 0,9772 com diâmetro isolado, **no teste oficial** | Experimento 10 revalidado (Samara) — mesmo desenho; valor reproduzido na auditoria de 30/10/2026 |
 | M0 e M1 (histórico) | AUC-ROC 0,9641 (diâmetro isolado) e 0,9644 (três features), **em split reconstruído**, não no canônico | estudo de máscaras reduzidas (Samara) |
 | M2, M3, M4 | **Nenhum.** Nenhum artefato do projeto registra desempenho desses modelos em validação ou teste | — |
 
-**O valor canônico do M1 continua sendo 0,9762**, porque é o que está no artefato versionado e reprodutível do baseline. Os valores do Experimento 13 são uma revalidação independente e não o substituem. Segundo o DoD do Experimento 13, a revalidação usou treino e teste oficiais e não usou a validação; os valores de M0 e M1 acima são, portanto, **AUCs no teste oficial**. A reprodução da Samara (0,9778) **não coincide** com o baseline canônico (0,9762) na mesma partição de teste. A causa dessa diferença não está documentada neste protocolo; possíveis origens — ambiente, versão de bibliotecas, tabela de entrada, pré-processamento — não foram verificadas. Os registros dos Experimentos 10 e 13 **não estão versionados** no repositório.
+**O valor canônico do M1 continua sendo 0,9762**, porque é o que está no artefato versionado e reprodutível do baseline. Os valores do Experimento 10 revalidado não o substituem. Segundo o DoD do Experimento 13, a revalidação usou treino e teste oficiais e não usou a validação; os valores de M0 e M1 acima são, portanto, **AUCs no teste oficial**. O valor 0,9778 **não coincide** com o baseline canônico (0,9762) na mesma partição de teste. **Causa explicada em 30/10/2026 (Emenda 1, E2):** o notebook tem dois desvios em relação a `scripts/run_baseline.py` — volume por voxels em vez de volume por malha, e ausência de `StandardScaler` —, e reexecutado com ambos devolve exatamente 0,9778. O baseline canônico foi reproduzido por terceiro (scikit-learn 1.9.1) com AUC de teste de 0,9761705686, igual em dez casas ao artefato gerado em 1.3.2. Os registros dos Experimentos 10 e 13 **não estão versionados** no repositório (pendência P5). O histórico completo de uso do teste está na Emenda 1, E1.
 
 Consequências:
 
@@ -530,7 +530,7 @@ Subgrupos com poucos nódulos ou uma única classe não têm AUC calculada.
 | P1 | Número de permutações K e esquema de permutação — por nódulo ou por paciente — do controle da Seção 7.2 | antes da Etapa 1 |
 | P2 | Confirmação dos parâmetros do spline da Seção 10.1 | antes da Etapa 1 |
 | P3 | Confirmação da regra para divergência na reprodução fiel (Seção 7.1, item 1) | antes da Etapa 3 |
-| P4 | Explicar a divergência entre M1 = 0,9778 (Experimento 13, Samara) e M1 = 0,9762 (baseline canônico), ambos no teste oficial. A partição do Experimento 13 já está confirmada como teste oficial (Seção 4.1) | antes da Etapa 5 |
+| P4 | ~~Explicar a divergência entre M1 = 0,9778 e M1 = 0,9762~~ — **encerrada** pela Emenda 1 (E2): dois desvios do notebook, reproduzidos | encerrada |
 | P5 | Versionamento dos registros dos Experimentos 10 e 13 e do notebook de seleção de Juan, com suas saídas | antes da Etapa 4 |
 
 Qualquer decisão tomada sobre esses pontos é registrada em revisão deste documento, com data, antes da etapa indicada.
