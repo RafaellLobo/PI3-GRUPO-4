@@ -4,12 +4,14 @@
 **Card relacionado:** S6 [P0] — Auditoria do teste e congelamento do protocolo final
 **Protocolo emendado:** [`protocolo_valor_incremental.md`](protocolo_valor_incremental.md), commit `9e9b3bd`
 **Responsável:** Samara Ruiz · **Revisor:** Rafael Lazarin Lobo de Almeida
-**Registro:** 30/10/2026 (revisão 1) · **Revisão 2:** 31/10/2026, após o comentário de revisão do PR #10
+**Registro:** 30/10/2026 (revisão 1) · **Revisão 2:** 31/10/2026, após o comentário de revisão do PR #10 · **Revisão 3:** 02/11/2026, reconciliação com o benchmark da Sprint 6
 **Prazo do card:** 31/10/2026, 23h59 (janela original 27–28/10, prorrogada no cartão)
-**Situação:** proposta — **não congelada**. Decisões P1 a P7 registradas na Seção E11; aguardam a confirmação do revisor.
+**Situação:** proposta — **não aprovada e não congelada**. Decisões P1 a P9 registradas na Seção E11, com os estados definidos na legenda dessa seção; aguardam a aprovação do revisor.
 
 Registro de auditoria completo: `DoD_S6_P0_Auditoria_do_Teste_e_Protocolo_v1.docx` (Drive).
-Fundamentação das decisões P1 a P7: `Proposta_Tecnica_Decisoes_P1_P7.docx` (Drive).
+Fundamentação das decisões: `Proposta_Tecnica_Decisoes_P1_P7.docx` (Drive, versão 1.0 de 31/10/2026, que cobre
+P1 a P3 e P5 a P9). Ela é anterior à revisão 3: onde divergir desta emenda — P6, P9 e a ordem de execução da
+sua Seção 4 —, prevalece a emenda.
 
 ---
 
@@ -19,6 +21,12 @@ Esta emenda **não altera** coorte, alvo, split, lista de características, mode
 interpretação do protocolo. Ela corrige o registro do que já se sabe sobre o conjunto de teste, fixa o
 papel dele daqui em diante, registra as decisões pendentes e acrescenta o que faltava para o protocolo
 ser congelável. A decisão P3 (E11) **confirma** a regra da Seção 7.1, item 1, sem alterá-la.
+
+A revisão 3 delimita as decisões P6 e P9 ao **benchmark de classificadores da Sprint 6**, que passa a ser
+protocolo complementar, com pré-registro próprio e fora do escopo da Seção 14 do protocolo. As etapas
+oficiais do protocolo da Sprint 4 (Seções 4 e 7) **não mudam**. Exceção à primeira frase deste aviso,
+registrada na revisão 3: o **critério de interpretação** muda de partição — a régua da Seção 9 e a leitura
+de H0/H1 passam a ser aplicadas à validação oficial (Etapa 3), e o teste fica apenas descritivo (E3).
 
 Verificações desta emenda classificadas como **verificado** foram reexecutadas em 30 e 31/10/2026
 em **Python 3.13 / scikit-learn 1.9.1**, a partir dos arquivos canônicos, com SHA-256 conferido
@@ -42,6 +50,51 @@ assim, os erros de fato estão corrigidos abaixo, porque o texto anterior estava
 | 4 | E10 — dados individuais versionados | procedente: 10 arquivos, não 4 | inventário corrigido; exceções históricas declaradas; P8 aberta (E10, E11) |
 | 5 | P6 — 353 × 416 | procedente: a recomendação anterior contradizia a E7 | recomendação invertida para 353; a base de 416 não é executada (E11) |
 | 6 | Coorte — 19 linhas × 616/607 | procedente: duas grandezas misturadas | decomposição separada; as 19 linhas foram identificadas (E9) |
+
+---
+
+## Registro da revisão 3 (02/11/2026)
+
+Reconciliação entre o protocolo da Sprint 4 (S4) e o benchmark de classificadores da Sprint 6 (S6),
+acordada entre a responsável e o revisor. Pontos confirmados pela responsável:
+
+1. a S4 permanece um estudo de valor incremental da radiômica, com suas etapas e limitações;
+2. o benchmark de regressão logística, Random Forest, XGBoost e SVM terá protocolo complementar próprio;
+3. o benchmark usa 353 pacientes, as três características do baseline, validação cruzada agrupada por
+   paciente e dobras idênticas para os quatro algoritmos;
+4. o teste histórico permanece exclusivamente descritivo e não orienta decisões;
+5. as decisões dos dois protocolos são registradas antes dos experimentos definitivos;
+6. o pré-registro P9 especifica previamente contrastes, intervalos de confiança, multiplicidade e regra de
+   seleção;
+7. **sensibilidades:** spline, lista reproduzida e C = 0,1 são avaliadas separadamente, cada uma alterando um
+   único fator, sem combinações adicionais;
+8. **ordem de execução:** os protocolos da S4 e da S6 são definidos e congelados antes dos experimentos
+   definitivos, e a Etapa 3 da S4 é concluída e registrada antes de o benchmark definitivo da S6 usar os
+   pacientes de validação;
+9. **evidência principal:** a Etapa 3 sustenta os contrastes dos modelos com features fixas; a CV aninhada
+   da Etapa 2 avalia o procedimento de seleção; o teste histórico é apenas descritivo e não orienta nenhuma
+   decisão.
+
+**Governança.** Os pontos acima foram confirmados pela responsável em 02/11/2026. A confirmação da
+responsável **não equivale** à aprovação formal do grupo nem à aprovação desta emenda pelo revisor, que
+continua pendente (ver Congelamento).
+
+| Conflito | Correção | Onde |
+|---|---|---|
+| P9 incluía outros algoritmos, que a Seção 14 do protocolo põe fora do escopo | P9 transferida para o protocolo da S6 | E11, E12; protocolo §13 e §14 |
+| P6 alterava as etapas oficiais (Seções 4, 7.1 item 4, 7.2 e 7.5) | P6 restrita ao benchmark S6; etapas da S4 inalteradas | E11; protocolo §13 |
+| E3, item 1, tomava a validação cruzada sobre a base da P6 como evidência principal de todo o projeto | evidência separada por protocolo; na S4, a Etapa 3 sustenta os contrastes com features fixas e o teste é apenas descritivo | E3; protocolo §1.1, §4, §7, §7.3, §7.5, §9 e §11 |
+| A régua da Seção 9 e a leitura de H0/H1 dependiam do teste, já usado em análises anteriores | régua aplicada à validação oficial (Etapa 3); redação original registrada | E3; protocolo §1.1 e §9 |
+| O uso da validação pelo benchmark ameaçava a independência da Etapa 3 | regra de precedência: Etapa 3 registrada antes do benchmark definitivo | E7; protocolo §4 |
+| Sensibilidades de P3 e P7 ausentes da Seção 7.5 | listadas com o spline, cada uma alterando um único fator | E7; protocolo §7.5 |
+| "Registrada pelo grupo" (Seção 7.1) × decisão tomada por duas pessoas | governança explícita | protocolo §7.1 |
+| Restos da revisão 1 no protocolo (Seção 2; limitações 8, 15 e 19) | redação alinhada à E1, E8 e E9 | protocolo §2 e §11 |
+| Estados divergentes entre a Seção 13 e a E11; cabeçalho com "P1 a P7" | legenda única de estados; P1 a P9 | E11; cabeçalho; protocolo §13 |
+| A Seção 12 dava como feita a fixação de `python=3.9.13` | redação condicional | E4; protocolo §12 |
+| Caminho incompleto de `patient_split.csv` | caminho completo | E10 |
+
+Hiperparâmetros, grade de busca e validação interna do benchmark **não** fazem parte desta emenda nem do
+protocolo da S4: serão definidos no pré-registro P9.
 
 ---
 
@@ -129,13 +182,27 @@ reprodutível por terceiro e robusto a versão de biblioteca.
 
 ## E3 — Nova Seção 4.2: papel do conjunto de teste
 
-1. A **evidência principal** de qualquer comparação do projeto é a validação cruzada agrupada por
-   paciente, com IC por bootstrap pareado de pacientes, **sobre a base definida em P6** (E11).
-2. Resultados no teste são **descrição complementar** e levam sempre a declaração: *"conjunto já
+1. **Protocolo da S4.** As etapas da Seção 7 não mudam. A **validação oficial (Etapa 3)** sustenta a leitura
+   de H0/H1 (Seção 1.1) e dos contrastes dos modelos com features fixas: a régua da Seção 9 passa a ser
+   aplicada ao IC95% de Δ na validação. A **CV aninhada (Etapa 2)** avalia o procedimento de seleção. O
+   **teste (Etapa 5)** é **apenas descritivo**: seus Δ e IC são calculados e relatados uma única vez, sem
+   leitura confirmatória, e discordância de sinal entre validação e teste é declarada como limitação, sem
+   alterar a leitura da Etapa 3 (revisão 3).
+2. **Protocolo complementar da S6 (benchmark).** A evidência principal é a validação cruzada agrupada por
+   paciente sobre os 353 pacientes de treino e validação (P6, E11), com contrastes, intervalos de confiança
+   e multiplicidade fixados no pré-registro P9. O benchmark não usa o teste (E7).
+3. Resultados no teste são **descrição complementar** e levam sempre a declaração: *"conjunto já
    avaliado em análises anteriores do projeto; não constitui evidência independente."*
-3. **Nenhum** resultado do teste entra em escolha de modelo, característica, limiar, faixa,
+4. **Nenhum** resultado do teste entra em escolha de modelo, característica, limiar, faixa,
    parâmetro ou critério de parada.
-4. Números de desenhos diferentes não se misturam (Quadro 13 do relatório da Sprint 4).
+5. Números de desenhos diferentes não se misturam (Quadro 13 do relatório da Sprint 4), inclusive os da S4
+   e os do benchmark S6, que usam bases e partições diferentes.
+
+**Histórico da redação.** O protocolo de 10/10/2026 lia H0/H1 pelo IC de Δ **no teste** (Seções 1.1 e 9), e
+a discordância de sinal entre teste e validação qualificava a conclusão como instável. A revisão 2 desta
+emenda tomava como evidência principal de qualquer comparação do projeto a validação cruzada agrupada por
+paciente sobre a base da P6. A revisão 3 substitui as duas redações pelo item 1 acima, antes de qualquer
+resultado de M2, M3 ou M4 em validação ou teste (Seção 4.1 do protocolo).
 
 ---
 
@@ -161,7 +228,8 @@ versões, código, saídas e hash do commit registrados juntos. O 3.9.23 do base
 histórico **equivalente por evidência indireta**: o baseline reproduz em dez casas decimais entre
 scikit-learn 1.3.2 (3.9.23) e 1.9.1 (3.13), o que sugere que o patch do Python não pesa para esse
 modelo. Isso **não** foi testado isoladamente para os demais modelos. **Decidido em 31/10/2026:** o `environment.yml`
-passa a fixar `python=3.9.13`. Execução para o revisor: conferir que o canal conda ainda serve esse patch;
+deve fixar `python=3.9.13` — alteração ainda **não aplicada**, a fazer em commit próprio, fora dos dois arquivos
+deste PR. Execução para o revisor: conferir que o canal conda ainda serve esse patch;
 se não servir, o `environment.yml` mantém `3.9` e o registro do patch por artefato passa a ser obrigatório,
 com a troca registrada aqui.
 
@@ -238,18 +306,36 @@ contrastes M3 − M0 e M4 − M1 ainda não existem.
 | Item | Valor |
 |---|---|
 | Aberturas restantes do teste | **uma**, na Etapa 5 |
-| O que é calculado nessa abertura | todos os contrastes pré-especificados, de uma vez |
+| O que é calculado nessa abertura | todos os contrastes pré-especificados da S4, de uma vez, como descrição: M0–M4, a sensibilidade do spline (Seção 10.1) e as sensibilidades da lista reproduzida (P3) e de C = 0,1 (P7), avaliadas separadamente, cada uma alterando um único fator, sem combinações entre elas; a mesma regra vale na Etapa 3 (protocolo, Seção 7.5) |
 | Reexecução por falha técnica | permitida, com causa documentada, sem alterar modelo/feature/critério |
 | Uso dos 38 nódulos da faixa | **descritivo apenas** |
+| Uso do teste pelo benchmark S6 | **nenhum** |
 
 **Justificativa do uso descritivo dos 38 nódulos (revisão 2).** A decisão não depende da meia-largura de
 0,1381, que é a precisão de **uma** AUC e pode superestimar a incerteza de uma diferença pareada. Ela
 decorre do tamanho da amostra (38 nódulos, 30 pacientes, 22 malignos) e da regra de orçamento: cada
 abertura adicional do teste é mais uma olhada num conjunto já consumido (E1).
 
-**Consequência para P6:** análises novas em validação cruzada **não** podem incluir os pacientes de
-teste — nem como análise principal, nem como análise de sensibilidade —, ou esta tabela deixa de
-valer. Ver P6 na E11.
+**Consequência para P6:** análises novas em validação cruzada — da S4 ou do benchmark S6 — **não** podem
+incluir os pacientes de teste, nem como análise principal, nem como análise de sensibilidade, ou esta
+tabela deixa de valer. Ver P6 na E11.
+
+**Uso da validação pelo benchmark S6 e ordem de execução (revisão 3).** Para preservar a avaliação oficial
+da Etapa 3 da S4:
+
+1. os protocolos da S4 (com esta emenda) e da S6 (pré-registro P9) são definidos e congelados **antes** dos
+   experimentos definitivos de cada um;
+2. o benchmark definitivo só usa os pacientes de validação **depois de a Etapa 3 da S4 estar concluída e
+   registrada**; verificações de implementação do benchmark anteriores a esse registro usam apenas o treino
+   e não são resultado;
+3. qualquer análise do benchmark com características radiômicas precisa constar do pré-registro P9 ou de
+   adendo datado anterior à execução;
+4. nenhum resultado do benchmark altera modelo, característica, critério ou etapa da S4.
+
+Motivo: a Etapa 3 sustenta os contrastes dos modelos com features fixas (E3). Usar os pacientes de
+validação no benchmark antes do registro dela seria mais uma olhada na partição que sustenta a leitura da
+S4. Limitação declarada: depois do registro da Etapa 3, os pacientes de validação passam a ser usados também
+pelo benchmark; nenhum resultado dele retroage sobre a S4.
 
 ---
 
@@ -260,7 +346,8 @@ devolve 6 das 8 declaradas (troca `Skewness` e `Coarseness` por `Imc1` e `Cluste
 entradas, a regeneração recente devolve a lista declarada; a divergência começa na composição dos folds.
 A hipótese de versão de biblioteca (H1) continua **aberta**. A decisão entre as listas é **de
 procedimento, nunca de desempenho**. Decidida em 31/10/2026 (E11, P3): **mantida a lista declarada**,
-com a reproduzida avaliada como sensibilidade.
+com a reproduzida avaliada como sensibilidade. A P3 vale só para o protocolo da S4: as oito características
+não entram na comparação principal do benchmark S6 (E7).
 
 Verificado: a seleção usou **somente o treino oficial** (417/291) — não há contaminação por teste.
 Limitação metodológica mantida em registro: os filtros são ajustados fora da CV interna.
@@ -292,6 +379,7 @@ ausentes (607 de 616)", o que mistura duas coisas. A decomposição documentada 
 
 **As 19 linhas são linhas da extração de qualquer classe; só 3 delas eram modeláveis.** Por isso 19 linhas
 ausentes correspondem a −3 nódulos modeláveis, e não a −9 (a diferença 616 − 607 = 9 soma as duas causas).
+A Seção 2 e a limitação 19 do protocolo foram alinhadas a esta decomposição na revisão 3.
 
 **Verificado em 31/10/2026** (pylidc 0.2.3, banco de anotações, sem DICOM; Python 3.13, ambiente não
 oficial): o código versionado `selecionar_clusters` devolve **977** clusters esperados nos 420 scans, contra
@@ -318,7 +406,7 @@ versionados e que `reports/` não tem valor de feature por nódulo. Isso estava 
 
 | Arquivos | Conteúdo individual |
 |---|---|
-| `patient_split.csv` | `patient_id` e partição |
+| `reports/sprint3/baseline/patient_split.csv` | `patient_id` e partição |
 | `reports/sprint2/features/piloto_piloto_v2_consenso50.csv` e `.parquet` | 44 nódulos; `patient_id`, notas individuais, 88 colunas `original_*` |
 | `reports/sprint2/features/piloto_piloto_v3_consenso50.csv` | 44 nódulos; `patient_id`, mediana, 88 colunas `original_*` |
 | `reports/sprint2/historico/v1/piloto_piloto_v1_consenso50.csv` e `.parquet` | 43 nódulos; idem |
@@ -354,18 +442,29 @@ impactos à vista. Os demais integrantes do grupo foram consultados havia duas o
 responderam. As decisões abaixo foram tomadas pela responsável (Samara) e estão **aguardando
 a confirmação do revisor** (Rafael). O silêncio do grupo fica registrado; **não equivale a aprovação** do
 grupo. Fundamentação, alternativas e impactos de cada uma: `Proposta_Tecnica_Decisoes_P1_P7.docx`.
+Na revisão 3 (02/11/2026), P6 e P9 foram delimitadas ao benchmark S6, em acordo entre responsável e
+revisor; o conteúdo das demais decisões não mudou.
+
+**Estados usados nesta emenda e na Seção 13 do protocolo:**
+
+- **decidida** — registrada pela responsável, com data, e **pendente de aprovação do revisor**; não equivale a
+  aprovação do grupo;
+- **encerrada** — resolvida por evidência reproduzida;
+- **transferida (S6)** — fora do escopo do protocolo da S4; definida no pré-registro do protocolo
+  complementar da Sprint 6, antes de qualquer experimento definitivo;
+- **em aberto** — sem decisão.
 
 | # | Decisão | Situação | Prazo |
 |---|---|---|---|
-| P1 | Permutações: K e esquema | **decidida**: K = 100; permutação por paciente, em blocos; seeds `10000 + k` | antes da Etapa 1 |
-| P2 | Parâmetros da spline | **decidida**: manter os atuais do protocolo | antes da Etapa 1 |
-| P3 | Lista fixa de features | **decidida**: **manter a lista declarada** da Seção 5.1; a lista reproduzida no ambiente oficial (`Imc1` e `ClusterShade` no lugar de `Skewness` e `Coarseness`) entra como sensibilidade, com os mesmos contrastes. Confirma a regra da Seção 7.1, item 1, sem alterá-la | antes da Etapa 3 |
-| P4 | Divergência 0,9778 × 0,9762 | **ENCERRADA** por esta emenda (E2) | — |
-| P5 | Versionar registros dos Exp. 10 e 13 e o notebook de seleção | **decidida**: versionar com saídas removidas, manifesto de SHA-256 e números agregados | antes da Etapa 4 |
-| P6 | Base da evidência principal | **decidida**: **353 pacientes** (treino + validação), em todas as análises novas; a base de 416 **não** é executada | antes da Etapa 2 |
-| P7 | Regularização | **decidida**: C = 1 (L2) para M0–M4; C = 0,1 como sensibilidade; linhas 26–28 mantêm C = 0,1 como análise própria | antes da Etapa 2 |
-| P9 | **Nova.** Hiperparâmetros dos classificadores do benchmark (Random Forest, XGBoost, SVM) | **decidida**: declarados pelo revisor em anexo datado **antes** de treinar — grade, validação interna, sementes e ambiente —, com uso restrito a treino e validação. Sem essa declaração prévia, o resultado é exploratório e não entra na comparação final | antes do treinamento |
-| P8 | **Nova.** Destino dos 10 arquivos históricos com dado individual (E10) | **decidida em parte**: os 10 arquivos ficam declarados como **exceção histórica**, em 31/10/2026, e a política nova vale para tudo o que for criado daqui em diante. O destino final — retirar do `main` com adaptação das duas rotinas de validação, ou manter — fica a decidir | antes da entrega final |
+| P1 | Permutações: K e esquema | **decidida** (31/10/2026): K = 100; permutação por paciente, em blocos; seeds `10000 + k` | antes da Etapa 1 |
+| P2 | Parâmetros da spline | **decidida** (31/10/2026): manter os atuais do protocolo | antes da Etapa 1 |
+| P3 | Lista fixa de features | **decidida** (31/10/2026): **manter a lista declarada** da Seção 5.1; a lista reproduzida no ambiente oficial (`Imc1` e `ClusterShade` no lugar de `Skewness` e `Coarseness`) entra como sensibilidade, com os mesmos contrastes. Confirma a regra da Seção 7.1, item 1, sem alterá-la. Vale só para a S4 | antes da Etapa 3 |
+| P4 | Divergência 0,9778 × 0,9762 | **encerrada** por esta emenda (E2) | — |
+| P5 | Versionar registros dos Exp. 10 e 13 e o notebook de seleção | **decidida** (31/10/2026): versionar com saídas removidas, manifesto de SHA-256 e números agregados | antes da Etapa 4 |
+| P6 | Base da evidência principal | **transferida (S6)** (revisão 3): a base de **353 pacientes** (treino + validação; 509 nódulos) vale só para o benchmark S6, nas condições da E7; as etapas da S4 permanecem como nas Seções 4 e 7 do protocolo. Nenhuma validação cruzada sobre os 416 pacientes é executada | antes do benchmark S6 |
+| P7 | Regularização dos modelos M0–M4 da S4 | **decidida** (31/10/2026): C = 1 (L2) para M0–M4; C = 0,1 como sensibilidade; linhas 26–28 mantêm C = 0,1 como análise própria. Não rege o benchmark S6 | antes da Etapa 2 |
+| P8 | **Nova.** Destino dos 10 arquivos históricos com dado individual (E10) | **decidida em parte** (31/10/2026): os 10 arquivos ficam declarados como **exceção histórica**, e a política nova vale para tudo o que for criado daqui em diante. **Em aberto:** o destino final — retirar do `main` com adaptação das duas rotinas de validação, ou manter | antes da entrega final |
+| P9 | **Nova.** Especificação do benchmark de classificadores (regressão logística, Random Forest, XGBoost, SVM) | **transferida (S6)** (revisão 3): pré-registro datado, elaborado pelo revisor **antes** de qualquer treinamento definitivo, com uso restrito a treino e validação nas condições da E7. Fixa previamente: base, partições e sementes, características, algoritmos e ajuste de hiperparâmetros, contrastes, intervalos de confiança, correção de multiplicidade, regra de seleção e ambiente. Sem esse registro prévio, o resultado é exploratório | antes do benchmark S6 |
 
 **Ressalvas registradas por decisão:**
 
@@ -379,7 +478,10 @@ grupo. Fundamentação, alternativas e impactos de cada uma: `Proposta_Tecnica_D
   `Coarseness` com coeficiente próximo de zero; `Imc1` em 4 de 5 e `ClusterShade` exatamente no limiar de
   3 em 5, com coeficiente próximo de zero em duas dessas três. A lista reproduzida é avaliada como
   sensibilidade, com os mesmos contrastes.
-- **P6** inverte a recomendação da revisão 1 (416 pacientes). A revisão 1 justificou os 416 por poder
+- **P6** foi delimitada ao benchmark S6 na revisão 3: as etapas oficiais da S4 continuam nas partições das
+  Seções 4 e 7 do protocolo (Etapas 0 a 2 só no treino, Etapa 3 na validação, Etapa 5 no teste), sem
+  alteração retroativa. O raciocínio abaixo, da revisão 2, vale para o benchmark.
+  P6 inverte a recomendação da revisão 1 (416 pacientes). A revisão 1 justificou os 416 por poder
   estatístico, mas usar o teste em nova validação cruzada gastaria a "abertura única" da E7. O teste já foi
   usado em 6 análises de tipo A e 10 de tipo B (E1): **a escolha dos 353 não restaura a independência do teste**,
   apenas evita mais uma olhada. A escolha é de procedimento, tomada antes de qualquer resultado das novas
@@ -390,9 +492,12 @@ grupo. Fundamentação, alternativas e impactos de cada uma: `Proposta_Tecnica_D
   que não toca o teste é medir a largura do IC em subamostras dos próprios 353 e observar como ela varia
   com o número de pacientes.
 - **P7** preserva o invariante do M1 (Seção 6.2): C = 1 reproduz o baseline canônico (0,9762). A decisão vale
-  só para a regressão logística; os demais classificadores caem na P9.
-- **P9** existe porque o protocolo especifica apenas a regressão logística (Seção 6.1). O cartão do benchmark
-  vence em 03/11/2026 e depende de P3, P6, P7 e desta declaração prévia.
+  só para a regressão logística M0–M4 da S4; a configuração dos algoritmos do benchmark, inclusive da
+  regressão logística, é definida no pré-registro P9.
+- **P9** existe porque o protocolo especifica apenas a regressão logística (Seção 6.1) e põe outros algoritmos
+  e tuning fora do escopo (Seção 14). Por isso o benchmark é protocolo complementar, e nenhum hiperparâmetro
+  dele entra no protocolo da S4. O cartão do benchmark vence em 03/11/2026. O benchmark definitivo depende
+  do congelamento dos dois protocolos e do registro da Etapa 3 da S4 (E7); não depende de P3 nem de P7.
 
 ---
 
@@ -400,6 +505,10 @@ grupo. Fundamentação, alternativas e impactos de cada uma: `Proposta_Tecnica_D
 
 O **Experimento 28** (anel perinodular de 5 mm, pré-registro de 30/10/2026) é **exploratório**:
 não é análise confirmatória, não entra no congelamento e não toca o conjunto de teste.
+
+O **benchmark de classificadores da Sprint 6** é protocolo complementar, fora do escopo da Seção 14 do
+protocolo, regido pelo pré-registro P9 e pelas condições da E7. O pré-registro P9 não é condição de
+congelamento deste protocolo; seu congelamento é condição do benchmark definitivo.
 
 ---
 
@@ -417,8 +526,9 @@ O protocolo é considerado congelado quando:
 As duas verificações da E4 marcadas como pendência **não** condicionam o congelamento; têm prazo próprio,
 antes do relatório final.
 
-Até lá permanecem **bloqueados**: execução e seleção confirmatória de modelos, e qualquer relato
-do teste como evidência independente.
+Até lá permanecem **bloqueados**: execução e seleção confirmatória de modelos e qualquer relato
+do teste como evidência independente. O uso dos pacientes de validação pelo benchmark S6 continua
+bloqueado também depois do congelamento, até o registro da Etapa 3 (E7).
 
 ---
 
