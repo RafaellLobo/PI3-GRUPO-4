@@ -108,7 +108,7 @@ A AUC de uma dobra num desfecho é calculada se a avaliação tiver **pelo menos
 
 ### 7.4 Métricas descritivas
 
-Não entram em contrastes nem na seleção.
+Todas as métricas desta tabela se aplicam **só ao desfecho G**; no desfecho F (Seção 7.2) calcula-se apenas a AUC. Na configuração canônica (Seção 14.4), isso é o campo `desfecho_das_descritivas = "G"`. Não entram em contrastes nem na seleção.
 
 | Métrica | LR fixa | LR com ajuste | RF | XGB | SVM |
 |---|:-:|:-:|:-:|:-:|:-:|
@@ -228,7 +228,7 @@ Regras gerais:
 
 | Artefato | Conteúdo mínimo |
 |---|---|
-| `resumo_benchmark.md` (relatório científico) | 1. Identificação: commit, SHA-256 da configuração canônica, das entradas e das saídas, ambiente. 2. Desvios em relação a este pré-registro (adendos), ou "nenhum". 3. População e denominadores (G e F), com as contagens de DD, RI, NE, RD e IQ. 4. Tabela principal: θ̂ por modelo e desfecho, com IC de 95% descritivo. 5. Contrastes da família com os dois intervalos. 6. Sensibilidade à partição. 7. LR com ajuste contra LR fixa. 8. Hiperparâmetros escolhidos e bordas da grade. 9. Métricas descritivas (sem as de probabilidade do SVM). 10. Regra de seleção com C1 a C4 por desafiante e o resultado. 11. Otimismo da seleção (Seção 10.3). 12. A tabela "o que o intervalo não captura" (Seção 8.3). 13. Falhas técnicas e avisos. 14. Declaração de não uso do teste e de independência em relação à S4. 15. Lista de figuras |
+| `resumo_benchmark.md` (relatório científico) | 1. Identificação: commit, SHA-256 da configuração canônica, das entradas e das saídas, ambiente. 2. Desvios em relação a este pré-registro (adendos), ou "nenhum". 3. População e denominadores (G e F), com as contagens de DD, RI, NE, RD e IQ. 4. Tabela principal: θ̂ por modelo e desfecho, com IC de 95% descritivo. 5. Contrastes da família com os dois intervalos. 6. Sensibilidade à partição. 7. LR com ajuste contra LR fixa. 8. Hiperparâmetros escolhidos e bordas da grade. 9. Métricas descritivas, só no desfecho G (sem as de probabilidade do SVM). 10. Regra de seleção com C1 a C4 por desafiante e o resultado. 11. Otimismo da seleção (Seção 10.3). 12. A tabela "o que o intervalo não captura" (Seção 8.3). 13. Falhas técnicas e avisos. 14. Declaração de não uso do teste e de independência em relação à S4. 15. Lista de figuras |
 | `relatorio_benchmark.json` | Todos os números do resumo, em esquema versionado (`versao_esquema`), suficientes para recalcular a regra de seleção |
 | `relatorio_execucao.json` | Tempos por unidade e por modelo, número de processos, falhas, avisos e retomadas |
 | Verificação automática | O resumo passa na checagem de vocabulário (Seção 8.3) e na varredura `LIDC-IDRI-\d{4}` |
@@ -296,7 +296,7 @@ O ambiente é verificado pelo próprio benchmark, sem `rastreabilidade.ambiente(
 python -m src.benchmark_s6 --modo {configuracao|implementacao|definitivo|verificar} --checkpoints DIR_LOCAL --destino reports/sprint6/benchmark [--processos N]
 ```
 
-O modo `configuracao` só gera ou confere a configuração canônica (Seção 14.4); não lê dados nem ajusta modelos. Os demais modos executam os passos abaixo.
+O modo `configuracao` só gera ou confere a configuração canônica (Seção 14.4), com `python -m src.benchmark_s6 --modo configuracao [--gerar ARQUIVO | --conferir ARQUIVO]`; não lê dados nem ajusta modelos. Os demais modos executam os passos abaixo.
 
 | Passo | `implementacao` | `definitivo` | `verificar` |
 |---|:-:|:-:|:-:|
@@ -318,7 +318,9 @@ O modo `configuracao` só gera ou confere a configuração canônica (Seção 14
 
 **Nota sobre o modo `implementacao`.** O ajuste interno usa a AUC das dobras internas para escolher os hiperparâmetros, como no modo definitivo; essas pontuações internas ficam só no diretório local e **não são relatadas nem versionadas**. As predições sobre as dobras externas são geradas apenas para conferir formato e finitude e ficam só no diretório local. **Nenhuma métrica de desempenho externa** — AUC, Brier, log-loss, calibração, sensibilidade, especificidade ou contraste — é calculada, gravada ou divulgada neste modo.
 
-**Códigos de saída:** 0 concluído · 2 bloqueio de aprovação · 3 falha técnica · 4 integridade (hash, configuração, ambiente ou git) · 5 privacidade ou vocabulário.
+**Códigos de saída:** 0 concluído · 2 bloqueio de aprovação · 3 falha técnica · 4 integridade (hash, configuração, ambiente ou git) · 5 privacidade ou vocabulário · 64 erro de uso da linha de comando (argumentos inválidos ou modo ainda não implementado; `EX_USAGE` de `sysexits.h`).
+
+O código 2 fica reservado ao bloqueio de aprovação: o erro de argumentos **não** usa o código 2 padrão do `argparse`. O 64 é convenção do comando e não faz parte da configuração canônica (Seção 14.4).
 
 **Paralelismo:** entre unidades, por processos; dentro do estimador, `n_jobs=1`; BLAS limitado a uma thread por `threadpoolctl`. O resultado não depende de `--processos`.
 
@@ -442,8 +444,13 @@ Todas: **propostas, pendentes de aprovação** (Seção 19). D2 depende, além d
 
 ## 19. Registro de aprovação e adendos
 
-**Configuração canônica:** `docs/sprint6/config_benchmark_p9.json` — **ainda não gerada**.
-**SHA-256 da configuração canônica:** **a definir** (Seção 14.4).
+**Configuração canônica:** [`docs/sprint6/config_benchmark_p9.json`](config_benchmark_p9.json), versionada no commit `74c494a4fe632d11a330ed4028218a20bf8bd511`.
+**SHA-256 da configuração canônica:** `1cd08306786067c1e29229a93a3215e087b0db21da35bc05c595bd5c8a2117d5` (Seção 14.4).
+
+- **Commit gerador:** `db4f476e91ee0893900f2ac19c5caa58ddc5a370`, branch `feat/s6-benchmark-configuracao`, ainda não integrada ao `main`. O arquivo foi gerado pelo modo `configuracao` desse commit e copiado sem edição.
+- **O que o valor mede:** o SHA-256 do conteúdo canônico (`guardas.hash_valor_decisao`, igual a `rastreabilidade.sha256_canonico`). **Não** é o SHA-256 dos bytes do arquivo, que difere dele por causa do `\n` final e muda com o CRLF do checkout no Windows.
+- **Conferência:** com o código do commit gerador, `python -m src.benchmark_s6 --modo configuracao --conferir docs/sprint6/config_benchmark_p9.json`. Esperado: código 0 e o SHA-256 acima.
+- **Situação:** passos 2 e 3 da Seção 14.4 cumpridos. **Esta anotação não é aprovação.** D2 segue pendente de confirmação documental da responsável, e D1–D12 (Seção 17) seguem pendentes de aprovação. Se D2 alterar a variável da faixa, ou se qualquer parâmetro mudar antes da aprovação, a configuração, o arquivo e este SHA-256 são gerados de novo e anotados aqui antes do registro P9.
 
 O benchmark definitivo exige **dois** registros neste documento, cada um numa linha própria começando na coluna 0, fora de bloco de código, introduzida no commit da aprovação e com data igual ou anterior à desse commit (mesma regra das guardas da S4):
 
