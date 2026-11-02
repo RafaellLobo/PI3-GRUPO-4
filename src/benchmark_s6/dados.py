@@ -18,18 +18,23 @@ repositório do projeto. Fontes sintéticas existem só para testes, por
 que recusam qualquer arquivo em ``data/`` ou o split oficial e marcam o
 resultado com ``oficial=False``; nenhum outro módulo do pacote as chama.
 
-A partição ``test`` nunca é lida por nenhuma das duas. Ordem de cada carga:
+Nenhuma das duas carrega o alvo ou as características da partição ``test``
+para a matriz de modelagem. Do teste, só os identificadores (``nodulo_id`` e
+``patient_id``) são lidos, por dois pontos e apenas para verificações
+estruturais e para a exclusão das linhas: a S4 (passo 3) e a primeira fase
+da S6 (passo 5). Ordem de cada carga:
 
 1. a fonte é fixada sem ler nada;
 2. (definitivo) autorização das guardas;
-3. (fonte oficial) ``verificar_estrutura`` da S4: a ÚNICA leitura dos
-   identificadores do teste, que confere as contagens das três partições
-   sem ler alvo nem características (P9, Seção 3, e decisão D11);
+3. (fonte oficial) ``verificar_estrutura`` da S4: lê os identificadores das
+   três partições, inclusive do teste, e confere as contagens sem ler alvo
+   nem características (P9, Seção 3, e decisão D11);
 4. os bytes da tabela e do split são lidos UMA vez e conferidos contra o
    SHA-256 fixado; todo o resto usa esses bytes. Conteúdo com o hash oficial
    em outro caminho é recusado;
-5. primeira fase: só ``nodulo_id`` e ``patient_id``, para validar
-   identificadores, partições e contagens e localizar as linhas;
+5. primeira fase: só ``nodulo_id`` e ``patient_id`` de todas as linhas,
+   inclusive as do teste, para validar identificadores, partições e
+   contagens e localizar as linhas a excluir;
 6. segunda fase: só as linhas das partições lidas, e só os identificadores,
    o alvo e as três características. As demais linhas são puladas com
    ``skiprows`` e nunca chegam a um DataFrame (seguro só com uma linha
@@ -206,8 +211,10 @@ def _ler_verificado(arquivo: s4.ArquivoVerificado) -> bytes:
 def _verificacao_estrutural_s4() -> None:
     """``verificar_estrutura`` pública da S4, sobre a fonte oficial.
 
-    Única leitura dos identificadores de todas as partições, inclusive do
-    teste, sem alvo nem características (P9, Seção 3, e D11).
+    Lê os identificadores de todas as partições, inclusive do teste, sem
+    alvo nem características (P9, Seção 3, e D11). A primeira fase da S6
+    também lê esses identificadores, para localizar e excluir as linhas;
+    o alvo e as características do teste nunca entram na matriz.
     """
     s4.verificar_arquivos_s4()
     try:
