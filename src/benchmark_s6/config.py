@@ -992,18 +992,26 @@ def _constante_proibida(nome: str) -> Any:
     raise ConfiguracaoDivergente(f"JSON com constante não finita: {nome}")
 
 
-def ler_arquivo(caminho: Union[str, Path]) -> Dict[str, Any]:
-    """Lê o arquivo exigindo a forma canônica (só CRLF → LF é tolerado)."""
-    bruto = Path(caminho).read_bytes()
+def ler_conteudo(bruto: bytes, nome: str = "configuração") -> Dict[str, Any]:
+    """Conteúdo dos bytes do arquivo canônico, exigindo a forma canônica.
+
+    Só CRLF → LF é tolerado. Serve também a bytes lidos de objetos do git
+    (``aprovacoes``), sem passar pelo disco.
+    """
     normalizado = bruto.replace(b"\r\n", b"\n")
     try:
         conteudo = json.loads(normalizado.decode("utf-8"), object_pairs_hook=_sem_duplicatas,
                               parse_constant=_constante_proibida)
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise ConfiguracaoDivergente(f"{Path(caminho).name}: JSON ilegível: {exc}") from exc
+        raise ConfiguracaoDivergente(f"{nome}: JSON ilegível: {exc}") from exc
     if normalizado != (s4.json_canonico(conteudo) + "\n").encode("utf-8"):
-        raise ConfiguracaoDivergente(f"{Path(caminho).name}: arquivo fora da forma canônica")
+        raise ConfiguracaoDivergente(f"{nome}: arquivo fora da forma canônica")
     return conteudo
+
+
+def ler_arquivo(caminho: Union[str, Path]) -> Dict[str, Any]:
+    """Lê o arquivo exigindo a forma canônica (só CRLF → LF é tolerado)."""
+    return ler_conteudo(Path(caminho).read_bytes(), Path(caminho).name)
 
 
 def conferir_arquivo(caminho: Union[str, Path],
