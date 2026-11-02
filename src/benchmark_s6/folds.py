@@ -359,11 +359,74 @@ def plano_dos_dados(dados: DadosBenchmark) -> PlanoDobras:
     return gerar_plano(dados.amostra(), dados.modo)
 
 
+def validar_dobra(amostra: s4.Amostra, dobra: DobraExterna) -> DobraExterna:
+    """Revalida UMA dobra externa recebida, sem o plano.
+
+    Confere, com os mesmos validadores que geraram o plano:
+
+    * amostra: a dobra é desta ``Amostra``;
+    * metadados: ``r`` e ``k`` dentro do plano definitivo, níveis, índices e
+      sementes (``42 + r`` e ``1000 + 10r + k``) da configuração;
+    * divisão externa: índices válidos e somente leitura, treino e avaliação
+      disjuntos, nenhum paciente nos dois lados, as duas classes nos dois lados;
+    * internas: cinco divisões do treino externo, cada uma válida, cobrindo-o
+      com cada linha avaliada uma vez, sem nenhuma linha nem paciente da
+      avaliação externa;
+    * fingerprint da dobra recalculado.
+
+    A cobertura da REPETIÇÃO (cada linha avaliada uma vez entre as cinco
+    dobras externas) só é conferível com o plano: ``validar_plano``.
+    Violação: ``DobrasInvalidas``; fingerprint divergente: ``PlanoDivergente``.
+
+    Uma cópia por ``pickle`` volta com os índices graváveis (numpy 1.23) e é
+    RECUSADA: não há, por ora, caminho validado para enviar dobras a outro
+    processo.
+    """
+    _exigir_amostra(amostra)
+    if not isinstance(dobra, DobraExterna):
+        raise TypeError("dobra deve ser DobraExterna")
+    if dobra.sha256_amostra != amostra.sha256:
+        raise DobrasInvalidas("dobra de outra amostra")
+    espec = cfg.CONFIGURACAO.dobras
+    ext = dobra.externa
+    if not isinstance(ext, Divisao) or not isinstance(dobra.internas, tuple) or \
+            not all(isinstance(i, Divisao) for i in dobra.internas):
+        raise DobrasInvalidas("dobra com divisões malformadas")
+    r, k = ext.repeticao, ext.dobra_externa
+    if type(r) is not int or type(k) is not int or not 0 <= r < espec.n_repeticoes \
+            or not 0 <= k < espec.n_dobras_externas:
+        raise DobrasInvalidas(f"dobra fora do plano: r={r!r}, k={k!r}")
+    if (ext.nivel, ext.dobra_interna, ext.semente) != (NIVEL_EXTERNO, None, espec.sementes_externas()[r]):
+        raise DobrasInvalidas(f"r{r:02d}-k{k}: metadados ou semente externa inválidos")
+    if len(dobra.internas) != espec.n_dobras_internas or any(
+            (i.nivel, i.repeticao, i.dobra_externa, i.dobra_interna, i.semente) !=
+            (NIVEL_INTERNO, r, k, n, espec.semente_interna(r, k)) for n, i in enumerate(dobra.internas)):
+        raise DobrasInvalidas(f"r{r:02d}-k{k}: metadados ou semente interna inválidos")
+    onde = f"externo {ext.rotulo}"
+    for lado in (ext.treino, ext.avaliacao):
+        if not _indices_validos(amostra, lado):
+            raise DobrasInvalidas(f"{onde}: treino ou avaliação vazio ou com índices inválidos")
+    if np.intersect1d(ext.treino, ext.avaliacao).size:
+        raise DobrasInvalidas(f"{onde}: linha em treino e avaliação")
+    if set(amostra.grupos[ext.treino].tolist()) & set(amostra.grupos[ext.avaliacao].tolist()):
+        raise DobrasInvalidas(f"{onde}: paciente em treino e avaliação")
+    for nome, lado in (("treino", ext.treino), ("avaliação", ext.avaliacao)):
+        if set(amostra.y[lado].tolist()) != {0, 1}:
+            raise DobrasInvalidas(f"{onde}: {nome} sem as duas classes")
+    _validar_nivel(amostra, ext.treino, [(i.treino, i.avaliacao) for i in dobra.internas],
+                   espec.n_dobras_internas, f"interno {ext.rotulo}")
+    _exigir_sem_vazamento(amostra, ext, dobra.internas)
+    if dobra.fingerprint != _fingerprint_dobra(amostra, ext, dobra.internas):
+        raise PlanoDivergente(f"{ext.rotulo}: fingerprint da dobra não confere")
+    return dobra
+
+
 def validar_plano(amostra: s4.Amostra, plano: PlanoDobras) -> PlanoDobras:
     """Revalida um plano recebido sem regerá-lo: invariantes, sementes e fingerprints.
 
-    Um plano montado ou alterado à mão não passa: cada divisão é conferida
-    de novo, e os fingerprints são recalculados.
+    Um plano montado ou alterado à mão não passa: cada dobra passa por
+    ``validar_dobra``, cada repetição é conferida como um todo, e os
+    fingerprints são recalculados.
     """
     _exigir_amostra_do_plano(amostra, plano)
     espec = cfg.CONFIGURACAO.dobras
@@ -379,22 +442,12 @@ def validar_plano(amostra: s4.Amostra, plano: PlanoDobras) -> PlanoDobras:
         partes = []
         for k in range(espec.n_dobras_externas):
             d = plano.dobras[(r, k)]
-            if not isinstance(d, DobraExterna) or d.sha256_amostra != amostra.sha256:
-                raise DobrasInvalidas(f"r{r:02d}-k{k}: dobra de outra amostra")
-            ext = d.externa
-            if (ext.nivel, ext.repeticao, ext.dobra_externa, ext.dobra_interna, ext.semente) != \
-                    (NIVEL_EXTERNO, r, k, None, espec.sementes_externas()[r]):
-                raise DobrasInvalidas(f"r{r:02d}-k{k}: metadados ou semente externa inválidos")
-            if len(d.internas) != espec.n_dobras_internas or any(
-                    (i.nivel, i.repeticao, i.dobra_externa, i.dobra_interna, i.semente) !=
-                    (NIVEL_INTERNO, r, k, n, espec.semente_interna(r, k)) for n, i in enumerate(d.internas)):
-                raise DobrasInvalidas(f"r{r:02d}-k{k}: metadados ou semente interna inválidos")
-            _validar_nivel(amostra, ext.treino, [(i.treino, i.avaliacao) for i in d.internas],
-                           espec.n_dobras_internas, f"interno {ext.rotulo}")
-            _exigir_sem_vazamento(amostra, ext, d.internas)
-            if d.fingerprint != _fingerprint_dobra(amostra, ext, d.internas):
-                raise PlanoDivergente(f"{ext.rotulo}: fingerprint da dobra não confere")
-            partes.append((ext.treino, ext.avaliacao))
+            if not isinstance(d, DobraExterna):
+                raise DobrasInvalidas(f"r{r:02d}-k{k}: dobra malformada")
+            validar_dobra(amostra, d)
+            if (d.externa.repeticao, d.externa.dobra_externa) != (r, k):
+                raise DobrasInvalidas(f"r{r:02d}-k{k}: dobra registrada na posição de outra")
+            partes.append((d.externa.treino, d.externa.avaliacao))
         _validar_nivel(amostra, base, partes, espec.n_dobras_externas, f"externo r{r:02d}")
     if plano.fingerprint != _fingerprint_plano(plano.modo, plano.repeticoes, plano.dobras):
         raise PlanoDivergente("fingerprint do plano não confere")
@@ -427,5 +480,5 @@ def dobra_para_modelo(plano: PlanoDobras, r: int, k: int, modelo: str) -> DobraE
 __all__ = [
     "DobraExterna", "DobrasInvalidas", "Divisao", "MODOS", "NIVEL_EXTERNO", "NIVEL_INTERNO",
     "PlanoDivergente", "PlanoDobras", "dobra_para_modelo", "gerar_plano", "plano_dos_dados",
-    "repeticoes_do_modo", "validar_plano", "verificar_plano",
+    "repeticoes_do_modo", "validar_dobra", "validar_plano", "verificar_plano",
 ]
