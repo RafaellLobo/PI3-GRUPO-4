@@ -111,7 +111,7 @@ O teste **não é cego** para todos os modelos, e isso é declarado aqui antes d
 Consequências:
 
 - a comparação **M1 − M0** é descritiva e não cega: o nível de ambos já foi observado, inclusive no teste oficial;
-- os contrastes **M3 − M0** e **M4 − M1** são os únicos com termo radiômico ainda não observado, e por isso são os únicos tratados como avaliação pré-especificada;
+- os contrastes **M3 − M0** e **M4 − M1**, com a lista fixa de features ajustada só no treino oficial, são os únicos cujo desempenho no teste ainda não foi observado, e por isso são os únicos tratados como avaliação pré-especificada. O termo radiômico em si **já foi avaliado** por validação cruzada em base que contém os pacientes de teste (análises tipo B, Emenda 1, E1); o teste não é independente nem para ele;
 - a seleção das oito features calculou AUCs apenas em validação cruzada **interna ao treino**, durante o tuning do LASSO; nenhum desses valores toca validação ou teste.
 
 ## 5. Features
@@ -134,6 +134,8 @@ Lista declarada, em ordem fixa:
 As oito existem em `data/modeling_table_sprint3.csv`, são `float64` e têm **417/417 valores finitos** no treino oficial, sem `NaN`, sem `Inf` e sem coluna constante. Nas 417 linhas de treino, seus valores — e os das demais 99 radiômicas — são **idênticos** aos de `data/base_radiomica_oficial_422.csv`, a tabela sobre a qual a seleção foi feita (diferença máxima absoluta 0,0).
 
 **Esta lista é congelada.** Nenhum resultado obtido sob este protocolo — de CV, validação ou teste — pode adicionar, remover ou substituir uma feature.
+
+**Decisão P3 (Emenda 1, E11), de 31/10/2026, pendente de confirmação do revisor.** A reprodução fiel no ambiente oficial devolveu 6 destas 8 características, trocando `original_firstorder_Skewness` e `original_ngtdm_Coarseness` por `original_glcm_Imc1` e `original_glcm_ClusterShade`. A decisão é **manter esta lista** como conjunto fixo, pela regra da Seção 7.1, item 1, e avaliar a lista reproduzida **apenas como sensibilidade**, com os mesmos contrastes. Esta tabela permanece inalterada. Limitação declarada: a execução que produziu esta lista não tem saída, log nem versão registrada.
 
 ### 5.2 Declaração × reprodução independente
 
@@ -268,7 +270,7 @@ As etapas são sequenciais. Cada uma só começa depois que a anterior tiver sid
 
 1. **Reprodução fiel do procedimento original.** O procedimento da Seção 5.3 é reexecutado **sem alteração** sobre os 417 nódulos de treino, no ambiente do projeto, com versões registradas e warnings capturados, e a lista obtida é comparada à da Seção 5.1. Essa reprodução é **pré-requisito para avaliar M2, M3 e M4 na validação** (Etapa 3).
    - **Lista idêntica:** a declaração passa a ter reprodução documentada.
-   - **Lista diferente:** a lista da Seção 5.1 **permanece** como conjunto fixo — ela foi definida antes de qualquer resultado de desempenho, e trocá-la depois exigiria justificar a troca. A divergência é registrada como limitação, e a lista reproduzida é avaliada **apenas como sensibilidade**. A decisão de seguir adiante é registrada pelo grupo antes da Etapa 3.
+   - **Lista diferente:** a lista da Seção 5.1 **permanece** como conjunto fixo — ela foi definida antes de qualquer resultado de desempenho, e trocá-la depois exigiria justificar a troca. A divergência é registrada como limitação, e a lista reproduzida é avaliada **apenas como sensibilidade**. A decisão de seguir adiante é registrada pelo grupo antes da Etapa 3. **Decisão P3 (Emenda 1, E11), de 31/10/2026:** a reprodução divergiu em 2 das 8 características, e esta regra foi **confirmada sem alteração** — a lista declarada permanece fixa e a reproduzida é avaliada como sensibilidade. A recomendação em contrário do autor da seleção original fica registrada e não foi seguida; o motivo é que esta regra foi pré-especificada justamente para o caso de divergência.
 2. **Procedimento ajustado no treino completo.** O procedimento da Seção 5.4 é aplicado aos mesmos 417 nódulos, e a lista resultante é registrada **apenas de forma descritiva**, junto com sua diferença em relação à lista fixa. Ela não substitui a lista fixa e não é avaliada na validação nem no teste.
 3. **Invariantes estruturais:** 607 nódulos / 416 pacientes; composição das partições igual à Seção 4; zero pacientes compartilhados entre partições; listas de features da Seção 5.5; invariante do M1 (Seção 6.2).
 4. **Isolamento:** o código das Etapas 0 a 2 lê apenas linhas de treino. O código da Etapa 3 lê treino e validação. **Só o código da Etapa 5 lê linhas de teste.**
@@ -359,7 +361,7 @@ O hash desse commit é gravado no artefato da Etapa 5.
 - o teste é avaliado **uma única vez**, para M0–M4 e para a sensibilidade da Seção 10.1, com todos os contrastes da Seção 8 reportados;
 - qualquer reexecução — por exemplo, por falha técnica — é documentada com a causa, e nenhum resultado do teste é usado para alterar modelo, feature ou critério.
 
-Ressalva já declarada na Seção 4.1: o teste é cego apenas para os modelos com termo radiômico.
+Ressalva já declarada na Seção 4.1: o que não foi observado é o desempenho, no teste, dos modelos com a lista fixa ajustada só no treino; o termo radiômico já foi avaliado em validação cruzada que incluiu pacientes de teste (Emenda 1, E1).
 
 ## 8. Contrastes e inferência
 
@@ -518,20 +520,24 @@ Subgrupos com poucos nódulos ou uma única classe não têm AUC calculada.
 | Item | Valor |
 |---|---|
 | Seeds | 42 em ajuste, CV piloto e bootstrap; `42 + r` (r = 0…9) nas repetições da CV completa; `100 + fold` na CV interna da seleção, como no notebook de Juan, tanto no procedimento original quanto no ajustado; seeds de permutação fixadas junto com K (Seção 13, P1) |
-| Ambiente | `.venv` do projeto: Python 3.9.13, scikit-learn 1.3.2 (mesma versão do baseline), numpy 1.23.5, pandas 1.5.3, scipy 1.10.1. O ambiente conda `pi3-radiomics` não carrega o numpy nesta máquina por bloqueio do Controle de Aplicativo do Windows |
+| Ambiente | `.venv` do projeto: Python 3.9.13, scikit-learn 1.3.2 (mesma versão do baseline, que registra Python 3.9.23), numpy 1.23.5, pandas 1.5.3, scipy 1.10.1. O `environment.yml` passa a fixar `python=3.9.13` (Emenda 1, E4). O ambiente conda `pi3-radiomics` não carrega o numpy nesta máquina por bloqueio do Controle de Aplicativo do Windows |
 | Registro obrigatório por etapa | versões de bibliotecas, seeds, listas de features, composição das partições, warnings capturados, réplicas bootstrap descartadas e hash do commit |
-| Dados | `data/` não é versionado (dado derivado de imagem médica). Os artefatos em `reports/` não contêm valores de feature por nódulo |
+| Dados | `data/` não é versionado (dado derivado de imagem médica). Os artefatos em `reports/` não contêm valores de feature por nódulo, **com 10 exceções históricas da Sprint 2** (pilotos e descartes com `patient_id`), listadas na Emenda 1, E10, e sujeitas à decisão P8 |
 | Artefatos existentes | `reports/sprint3/baseline/*` e as tabelas em `data/` são lidos e nunca modificados |
 
 ## 13. Decisões pendentes antes da execução
 
 | # | Decisão | Prazo |
 |---|---|---|
-| P1 | Número de permutações K e esquema de permutação — por nódulo ou por paciente — do controle da Seção 7.2 | antes da Etapa 1 |
-| P2 | Confirmação dos parâmetros do spline da Seção 10.1 | antes da Etapa 1 |
-| P3 | Confirmação da regra para divergência na reprodução fiel (Seção 7.1, item 1) | antes da Etapa 3 |
+| P1 | Número de permutações K e esquema de permutação — por nódulo ou por paciente — do controle da Seção 7.2. **Proposta da Emenda 1 (E11), pendente de confirmação:** por paciente, em blocos; K = 100; seeds `10000 + k` | antes da Etapa 1 |
+| P2 | Confirmação dos parâmetros do spline da Seção 10.1. **Proposta da Emenda 1 (E11), pendente de confirmação:** manter os atuais | antes da Etapa 1 |
+| P3 | Confirmação da regra para divergência na reprodução fiel (Seção 7.1, item 1). **Decisão da Emenda 1 (E11), pendente de confirmação:** regra confirmada sem alteração — a lista declarada da Seção 5.1 permanece fixa e a reproduzida entra como sensibilidade. Nenhuma seção é reescrita | antes da Etapa 3 |
 | P4 | ~~Explicar a divergência entre M1 = 0,9778 e M1 = 0,9762~~ — **encerrada** pela Emenda 1 (E2): dois desvios do notebook, reproduzidos | encerrada |
-| P5 | Versionamento dos registros dos Experimentos 10 e 13 e do notebook de seleção de Juan, com suas saídas | antes da Etapa 4 |
+| P5 | Versionamento dos registros dos Experimentos 10 e 13 e do notebook de seleção de Juan, com suas saídas. **Proposta da Emenda 1 (E11), pendente de confirmação:** versionar com saídas removidas, manifesto de SHA-256 e números agregados | antes da Etapa 4 |
+| P6 | Base da evidência principal: 353 pacientes (treino + validação) ou 416. **Proposta da Emenda 1 (E11), pendente de confirmação:** 353 em todas as análises novas; a base de 416 não é executada, porque incluiria os pacientes de teste | antes da Etapa 2 |
+| P7 | Regularização única na comparação final. **Proposta da Emenda 1 (E11), pendente de confirmação:** C = 1 (L2) para M0–M4, com C = 0,1 como sensibilidade | antes da Etapa 2 |
+| P8 | Destino dos 10 arquivos históricos com dado individual em `reports/sprint2/` (Emenda 1, E10). **Decisão da Emenda 1:** declarados como exceção histórica em 31/10/2026; destino final em aberto | antes da entrega final |
+| P9 | Hiperparâmetros de Random Forest, XGBoost e SVM, ausentes deste protocolo. **Decisão da Emenda 1 (E11):** declarados em anexo datado antes de treinar, com grade, validação interna, sementes e ambiente, usando só treino e validação | antes do treinamento |
 
 Qualquer decisão tomada sobre esses pontos é registrada em revisão deste documento, com data, antes da etapa indicada.
 
