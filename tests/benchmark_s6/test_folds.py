@@ -587,6 +587,139 @@ class TestPlanoAdulterado(BaseFolds):
         with self.assertRaisesRegex(folds.PlanoDivergente, "regerado"):
             folds.verificar_plano(self.amostra, forjado)
 
+    def test_dobra_valida_registrada_na_posicao_de_outra(self):
+        """Cada dobra é válida isoladamente; só o plano detecta a troca de posição."""
+        dobras = dict(self.impl.dobras)
+        dobras[(0, 0)], dobras[(0, 1)] = dobras[(0, 1)], dobras[(0, 0)]
+        for d in dobras.values():
+            folds.validar_dobra(self.amostra, d)
+        with self.assertRaisesRegex(folds.DobrasInvalidas, "posição de outra"):
+            folds.validar_plano(self.amostra, com(self.impl, dobras=MappingProxyType(dobras)))
+
+    def test_repeticao_sem_cobertura_com_dobras_validas_isoladamente(self):
+        """A dobra 1 vira cópia coerente da 0 (metadados, sementes e fingerprint de k=1): só o plano pega."""
+        d0 = self.impl.dobra(0, 0)
+        internas = tuple(com(i, dobra_externa=1, semente=D.semente_interna(0, 1)) for i in d0.internas)
+        copia = com(d0, externa=com(d0.externa, dobra_externa=1), internas=internas)
+        copia = com(copia, fingerprint=folds._fingerprint_dobra(self.amostra, copia.externa, copia.internas))
+        folds.validar_dobra(self.amostra, copia)
+        with self.assertRaisesRegex(folds.DobrasInvalidas, "exatamente uma vez"):
+            folds.validar_plano(self.amostra, trocar_dobra(self.impl, (0, 1), copia))
+
+
+# --------------------------------------------------------------------------- #
+# Validação pública de uma dobra isolada
+# --------------------------------------------------------------------------- #
+
+
+def ro_array(valores) -> np.ndarray:
+    arr = np.array(valores, dtype=np.int64)
+    arr.setflags(write=False)
+    return arr
+
+
+class TestValidarDobra(BaseFolds):
+    def coerente(self, dobra: folds.DobraExterna) -> folds.DobraExterna:
+        """Recalcula o fingerprint: a adulteração só pode ser pega pelas regras estruturais."""
+        return com(dobra, fingerprint=folds._fingerprint_dobra(self.amostra, dobra.externa, dobra.internas))
+
+    def recusa(self, dobra, mensagem: str = "", tipo=folds.DobrasInvalidas):
+        with self.assertRaisesRegex(tipo, mensagem):
+            folds.validar_dobra(self.amostra, dobra)
+
+    def test_todas_as_dobras_geradas_passam_e_sao_devolvidas(self):
+        for plano in (self.impl, self.defin):
+            for d in plano.dobras.values():
+                self.assertIs(folds.validar_dobra(self.amostra, d), d)
+
+    def test_copia_por_pickle_perde_o_somente_leitura_e_e_recusada(self):
+        """Limitação registrada para os futuros workers: nenhuma dobra copiada entra sem validação."""
+        import pickle
+
+        d = self.defin.dobra(7, 3)
+        copia = pickle.loads(pickle.dumps(d))
+        self.assertEqual(copia.fingerprint, d.fingerprint)
+        self.assertTrue(copia.externa.treino.flags.writeable)
+        self.recusa(copia, "índices inválidos")
+
+    def test_tipos_invalidos(self):
+        d = self.impl.dobra(0, 0)
+        with self.assertRaises(TypeError):
+            folds.validar_dobra(self.amostra, self.impl)  # type: ignore[arg-type]
+        with self.assertRaises(TypeError):
+            folds.validar_dobra({"ids": self.amostra.ids}, d)  # type: ignore[arg-type]
+        self.recusa(com(d, externa=d.externa.treino), "malformadas")
+        self.recusa(com(d, internas=list(d.internas)), "malformadas")
+        self.recusa(com(d, internas=(*d.internas[:4], d.externa.treino)), "malformadas")
+
+    def test_outra_amostra(self):
+        outra = amostra_sintetica(semente=3)
+        with self.assertRaisesRegex(folds.DobrasInvalidas, "outra amostra"):
+            folds.validar_dobra(outra, self.impl.dobra(0, 0))
+
+    def test_metadados_e_sementes(self):
+        d = self.defin.dobra(4, 2)
+        casos = {
+            "r fora do plano": com(d, externa=com(d.externa, repeticao=10)),
+            "k fora do plano": com(d, externa=com(d.externa, dobra_externa=5)),
+            "r booleano": com(d, externa=com(d.externa, repeticao=True)),
+            "nível externo": com(d, externa=com(d.externa, nivel="interno")),
+            "externa com índice interno": com(d, externa=com(d.externa, dobra_interna=0)),
+            "semente externa": com(d, externa=com(d.externa, semente=42)),
+            "semente interna": com(d, internas=(com(d.internas[0], semente=1000 + 40 + 3), *d.internas[1:])),
+            "interna de outra dobra": com(d, internas=(com(d.internas[0], dobra_externa=1), *d.internas[1:])),
+            "internas fora de ordem": com(d, internas=(d.internas[1], d.internas[0], *d.internas[2:])),
+            "internas a menos": com(d, internas=d.internas[:4]),
+        }
+        for nome, adulterada in casos.items():
+            with self.subTest(nome):
+                self.recusa(self.coerente(adulterada) if nome != "r booleano" else adulterada)
+
+    def test_fingerprint_divergente(self):
+        d = self.impl.dobra(0, 3)
+        self.recusa(com(d, fingerprint="0" * 64), "fingerprint da dobra", folds.PlanoDivergente)
+
+    def test_externa_com_linha_nos_dois_lados(self):
+        d = self.impl.dobra(0, 1)
+        linha = int(d.externa.treino[0])
+        avaliacao = ro_array(sorted([*d.externa.avaliacao.tolist(), linha]))
+        self.recusa(self.coerente(com(d, externa=com(d.externa, avaliacao=avaliacao))), "linha em treino e avaliação")
+
+    def test_externa_com_paciente_nos_dois_lados(self):
+        a = self.amostra
+        d = self.impl.dobra(0, 2)
+        aval = d.externa.avaliacao.tolist()
+        paciente = next(g for g in a.grupos[d.externa.avaliacao] if (a.grupos[d.externa.avaliacao] == g).sum() > 1)
+        linha = next(i for i in aval if a.grupos[i] == paciente)
+        externa = com(d.externa, treino=ro_array(sorted([*d.externa.treino.tolist(), linha])),
+                      avaliacao=ro_array([i for i in aval if i != linha]))
+        self.recusa(self.coerente(com(d, externa=externa)), "paciente em treino e avaliação")
+
+    def test_externa_sem_as_duas_classes(self):
+        a = self.amostra
+        d = self.impl.dobra(0, 4)
+        so_positivos = ro_array([i for i in d.externa.avaliacao.tolist() if a.y[i] == 1])
+        self.recusa(self.coerente(com(d, externa=com(d.externa, avaliacao=so_positivos))),
+                    "avaliação sem as duas classes")
+
+    def test_indices_externos_gravaveis_ou_fora_de_ordem(self):
+        """Só a divisão externa adulterada (internas íntegras, fingerprint coerente)."""
+        d = self.impl.dobra(0, 3)
+        gravavel = com(d.externa, treino=np.array(d.externa.treino))
+        self.recusa(self.coerente(com(d, externa=gravavel)), "índices inválidos")
+        fora_de_ordem = com(d.externa, avaliacao=ro_array(d.externa.avaliacao.tolist()[::-1]))
+        self.recusa(self.coerente(com(d, externa=fora_de_ordem)), "índices inválidos")
+
+    def test_internas_com_vazamento_ou_sem_cobertura(self):
+        d = self.impl.dobra(0, 0)
+        intrusa = int(d.externa.avaliacao[0])
+        vazada = com(d.internas[0], avaliacao=ro_array(sorted([*d.internas[0].avaliacao.tolist(), intrusa])))
+        self.recusa(self.coerente(com(d, internas=(vazada, *d.internas[1:]))))
+        repetida = com(d.internas[0], dobra_interna=1)
+        self.recusa(self.coerente(com(d, internas=(d.internas[0], repetida, *d.internas[2:]))), "exatamente uma vez")
+        gravavel = com(d.internas[2], treino=np.array(d.internas[2].treino))
+        self.recusa(self.coerente(com(d, internas=(*d.internas[:2], gravavel, *d.internas[3:]))), "índices inválidos")
+
 
 # --------------------------------------------------------------------------- #
 # Isolamento do módulo
