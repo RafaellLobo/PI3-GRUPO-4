@@ -53,6 +53,9 @@ from .checkpoints import fingerprint_folds
 NIVEL_EXTERNO = "externo"
 NIVEL_ESTABILIDADE = "estabilidade"
 NIVEL_INTERNO = "interno"
+#: Marca de "treino oficial completo" em ``repeticao`` e ``fold_externo`` das divisões da
+#: Etapa 0, item 2 (Seção 7.1): não há fold externo, só a estabilidade sobre todas as linhas.
+TREINO_COMPLETO = -1
 
 
 class FoldsInvalidos(ValueError):
@@ -255,6 +258,25 @@ def folds_estabilidade(amostra: Amostra, externa: Divisao) -> Tuple[Divisao, ...
     partes = _dividir(amostra, externa.treino, espec.n_folds_estabilidade, espec.seed_estabilidade, contexto)
     _validar_nivel(amostra, externa.treino, partes, espec.n_folds_estabilidade, contexto)
     return tuple(Divisao(NIVEL_ESTABILIDADE, externa.repeticao, externa.fold_externo, j, None,
+                         espec.seed_estabilidade, tr, te, amostra.sha256)
+                 for j, (tr, te) in enumerate(partes))
+
+
+def folds_estabilidade_treino_completo(amostra: Amostra) -> Tuple[Divisao, ...]:
+    """Folds de estabilidade sobre TODAS as linhas da amostra (Etapa 0, item 2; Seção 7.1).
+
+    Mesma seed e mesmo número de folds de ``folds_estabilidade`` (``ESPEC_SELECAO``), mas a base é o
+    treino oficial inteiro, sem fold externo. ``repeticao`` e ``fold_externo`` valem ``TREINO_COMPLETO``.
+    Os folds internos saem de ``folds_internos`` sem alteração.
+    """
+    if not isinstance(amostra, Amostra):
+        raise TypeError("amostra deve ser Amostra")
+    espec = cfg.ESPEC_SELECAO
+    base = _somente_leitura(np.arange(amostra.n, dtype=np.int64))
+    contexto = "estabilidade do treino completo"
+    partes = _dividir(amostra, base, espec.n_folds_estabilidade, espec.seed_estabilidade, contexto)
+    _validar_nivel(amostra, base, partes, espec.n_folds_estabilidade, contexto)
+    return tuple(Divisao(NIVEL_ESTABILIDADE, TREINO_COMPLETO, TREINO_COMPLETO, j, None,
                          espec.seed_estabilidade, tr, te, amostra.sha256)
                  for j, (tr, te) in enumerate(partes))
 

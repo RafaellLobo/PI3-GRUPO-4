@@ -323,3 +323,42 @@ def selecionar_fold_externo(amostra: fl.Amostra, X: Any, features: Sequence[str]
         fingerprint_folds=fingerprint, hash_configuracao=cfg.hash_configuracao(), features=features,
         folds=tuple(resultados), frequencia=frequencia, s_k=s_k,
     )
+
+
+def selecionar_treino_completo(amostra: fl.Amostra, X: Any, features: Sequence[str]) -> SelecaoFold:
+    """Lista do procedimento ajustado aplicado UMA vez ao treino oficial inteiro (Etapa 0, item 2).
+
+    Seção 7.1, item 2: a mesma seleção da Seção 5.4 (5 folds de estabilidade, CV interna de 4 folds,
+    filtros e scaler ajustados em cada treino interno, regra de pelo menos 3 de 5), com o treino
+    completo no lugar do treino externo. O resultado é DESCRITIVO: não substitui a lista fixa da
+    Seção 5.1 e não é avaliado em validação nem em teste. ``repeticao`` e ``fold_externo`` do
+    resultado valem ``folds.TREINO_COMPLETO``.
+    """
+    if not isinstance(amostra, fl.Amostra):
+        raise TypeError("amostra deve ser folds.Amostra")
+    features = _validar_features(features)
+    matriz = _matriz(X, features, amostra.n)
+    if not np.isfinite(matriz).all():
+        raise SelecaoInvalida("valores não finitos no treino")
+    estabilidade = fl.folds_estabilidade_treino_completo(amostra)
+    composicao = {}
+    resultados = []
+    for est in estabilidade:
+        internas = fl.folds_internos(amostra, est)
+        for d in (est, *internas):
+            composicao[f"{d.rotulo}/treino"] = amostra.ids[d.treino].tolist()
+            composicao[f"{d.rotulo}/avaliacao"] = amostra.ids[d.avaliacao].tolist()
+        seeds = {d.seed for d in internas}
+        if len(seeds) != 1:
+            raise SelecaoInvalida(f"{est.rotulo}: seeds internas inconsistentes")
+        splits = [(posicoes_locais(est.treino, d.treino), posicoes_locais(est.treino, d.avaliacao))
+                  for d in internas]
+        resultados.append(_ajustar_fold_estabilidade(
+            matriz[est.treino], amostra.y[est.treino], len(set(amostra.grupos[est.treino].tolist())), splits,
+            features, est, seeds.pop()))
+    frequencia, s = consolidar(features, (r.selecionadas for r in resultados))
+    return SelecaoFold(
+        repeticao=fl.TREINO_COMPLETO, fold_externo=fl.TREINO_COMPLETO, sha256_amostra=amostra.sha256,
+        fingerprint_folds=fl.fingerprint_folds(composicao), hash_configuracao=cfg.hash_configuracao(),
+        features=features, folds=tuple(resultados), frequencia=frequencia, s_k=s,
+    )
