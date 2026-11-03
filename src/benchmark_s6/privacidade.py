@@ -112,29 +112,33 @@ def varrer_csv(texto: str, onde: str, ids: Iterable[str] = (), vocabulario: bool
     varrer_texto(texto, onde, ids, vocabulario)
 
 
-def varrer_arquivo(caminho: Path, ids: Iterable[str] = ()) -> None:
-    """Varre um arquivo versionável: texto, JSON, CSV, SVG ou binário (PNG: busca no conteúdo ASCII)."""
-    nome = caminho.name
-    bruto = caminho.read_bytes()
-    vocabulario = nome != ARQUIVO_COM_VOCABULARIO_VETADO
-    if caminho.suffix.lower() in EXTENSOES_TEXTO:
+def varrer_bytes(nome: str, bruto: bytes, ids: Iterable[str] = ()) -> None:
+    """Varre o conteúdo de um artefato ANTES de gravá-lo: texto, JSON, CSV, SVG ou binário (PNG)."""
+    caminho = Path(nome)
+    vocabulario = caminho.name != ARQUIVO_COM_VOCABULARIO_VETADO
+    sufixo = caminho.suffix.lower()
+    if sufixo in EXTENSOES_TEXTO:
         try:
             texto = bruto.decode("utf-8")
         except UnicodeDecodeError as exc:
             raise PrivacidadeViolada(f"{nome}: não é UTF-8") from exc
-        if caminho.suffix.lower() == ".json":
+        if sufixo == ".json":
             try:
                 valor = json.loads(texto)
             except ValueError as exc:
                 raise PrivacidadeViolada(f"{nome}: JSON inválido") from exc
             varrer_json(valor, nome, ids, vocabulario)
-        elif caminho.suffix.lower() == ".csv":
+        elif sufixo == ".csv":
             varrer_csv(texto, nome, ids, vocabulario)
         else:
             varrer_texto(texto, nome, ids, vocabulario)
     else:
-        ascii_ = bruto.decode("latin-1")
-        varrer_texto(ascii_, nome, ids, vocabulario=False)
+        varrer_texto(bruto.decode("latin-1"), nome, ids, vocabulario=False)
+
+
+def varrer_arquivo(caminho: Path, ids: Iterable[str] = ()) -> None:
+    """Varre um arquivo versionável já gravado."""
+    varrer_bytes(caminho.name, caminho.read_bytes(), ids)
 
 
 def varrer_diretorio(diretorio: Path, ids: Iterable[str] = ()) -> Tuple[str, ...]:
@@ -163,6 +167,6 @@ def resumo_de_regras() -> Dict[str, Any]:
 
 __all__ = [
     "ARQUIVO_COM_VOCABULARIO_VETADO", "CHAVES_INDIVIDUAIS", "PrivacidadeViolada", "caminhos_locais",
-    "identificadores_da_amostra", "resumo_de_regras", "varrer_arquivo", "varrer_csv", "varrer_diretorio",
-    "varrer_json", "varrer_texto",
+    "identificadores_da_amostra", "resumo_de_regras", "varrer_arquivo", "varrer_bytes", "varrer_csv",
+    "varrer_diretorio", "varrer_json", "varrer_texto",
 ]

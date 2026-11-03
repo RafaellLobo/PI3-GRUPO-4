@@ -148,10 +148,15 @@ def ler_manifesto(destino: Path) -> Dict[str, Any]:
     return manifesto
 
 
-def verificar_saidas(destino: Path, manifesto: Mapping[str, Any]) -> None:
-    """Cada saída listada existe e tem o SHA-256 registrado (bruto ou LF); nenhum arquivo extra."""
+def verificar_saidas(destino: Path, manifesto: Mapping[str, Any], ignorar: Sequence[str] = ("implementacao",)) -> None:
+    """Cada saída listada existe e tem o SHA-256 registrado (bruto ou LF); nenhum arquivo extra.
+
+    ``ignorar`` são subdiretórios de OUTRA execução que convivem com esta em ``reports/sprint6/benchmark``
+    (os artefatos exploratórios do modo ``implementacao``, com manifesto próprio).
+    """
     destino = Path(destino)
     presentes = {p.relative_to(destino).as_posix() for p in destino.rglob("*") if p.is_file()} - {ARQUIVO_MANIFESTO}
+    presentes = {n for n in presentes if n.split("/", 1)[0] not in set(ignorar) or "/" not in n}
     listados = set(manifesto["saidas"])
     if presentes != listados:
         raise ManifestoInvalido(f"arquivos diferentes dos listados: faltam {sorted(listados - presentes)}, "

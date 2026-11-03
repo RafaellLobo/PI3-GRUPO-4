@@ -53,6 +53,7 @@ from __future__ import annotations
 import multiprocessing
 import os
 import pickle
+import time
 from concurrent.futures import Future, ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
@@ -101,6 +102,10 @@ class RelatorioExecucao:
     #: Resultados de TODAS as unidades concluídas, lidos dos checkpoints, na ordem canônica.
     resultados: Tuple[un.ResultadoUnidade, ...]
     workers: Tuple[ProcessoWorker, ...] = ()
+    #: (rótulo, segundos) de relógio de cada unidade executada ou que falhou nesta chamada, na ordem canônica.
+    #: Só diagnóstico (relatorio_execucao.json): nunca entra em checkpoint, identidade nem resultado.
+    duracoes: Tuple[Tuple[str, float], ...] = ()
+    duracao_total_s: float = 0.0
 
     @property
     def concluida(self) -> bool:
@@ -136,15 +141,16 @@ def _inicializar_worker(carregador: Callable[[], DadosBenchmark]) -> None:
                            f"inicialização do worker: {exc}")
 
 
-def _executar_no_worker(tarefa: un.TarefaUnidade) -> Tuple[Any, int, int]:
-    """``(ResultadoUnidade | FalhaRegistrada, pid, inicializações deste worker)``."""
+def _executar_no_worker(tarefa: un.TarefaUnidade) -> Tuple[Any, int, int, float]:
+    """``(ResultadoUnidade | FalhaRegistrada, pid, inicializações deste worker, segundos)``."""
+    inicio = time.perf_counter()
     _WORKER["tarefas"] = _WORKER.get("tarefas", 0) + 1
     if _WORKER.get("erro") is not None:
         chave, categoria, mensagem = _WORKER["erro"]
         resultado: Any = un.FalhaRegistrada(tarefa.unidade, chave, categoria, f"{tarefa.unidade.rotulo}: {mensagem}")
     else:
         resultado = un.executar_tarefa(_WORKER["contexto"], tarefa)
-    return resultado, os.getpid(), _WORKER["inicializacoes"]
+    return resultado, os.getpid(), _WORKER["inicializacoes"], time.perf_counter() - inicio
 
 
 # --------------------------------------------------------------------------- #
@@ -233,6 +239,8 @@ def executar(sessao: SessaoCheckpoints, carregador: Optional[Callable[[], DadosB
     executadas: List[un.Unidade] = []
     falhas: Dict[un.Unidade, un.FalhaRegistrada] = {}
     workers: Dict[int, List[int]] = {}
+    duracoes: Dict[un.Unidade, float] = {}
+    inicio_total = time.perf_counter()
 
     def registrar(unidade: un.Unidade, retorno: Any) -> None:
         resultado = _conferir_retorno(sessao, tarefas[unidade], retorno)
@@ -245,10 +253,12 @@ def executar(sessao: SessaoCheckpoints, carregador: Optional[Callable[[], DadosB
 
     if pendentes and processos == 1:
         for unidade in pendentes:
+            inicio = time.perf_counter()
             try:
                 retorno: Any = un.executar_tarefa(sessao.contexto, tarefas[unidade])
             except Exception as exc:  # o mesmo tratamento de uma exceção no worker
                 retorno = _falha_de_execucao(unidade, exc)
+            duracoes[unidade] = time.perf_counter() - inicio
             registrar(unidade, retorno)
     elif pendentes:
         contexto_mp = multiprocessing.get_context(CONTEXTO_MULTIPROCESSAMENTO)
@@ -259,10 +269,11 @@ def executar(sessao: SessaoCheckpoints, carregador: Optional[Callable[[], DadosB
                 for futuro in as_completed(futuros):
                     unidade = futuros[futuro]
                     try:
-                        retorno, pid, inicializacoes = futuro.result()
+                        retorno, pid, inicializacoes, segundos = futuro.result()
                     except Exception as exc:  # exceção no worker, worker morto (BrokenProcessPool), pickle
                         retorno = _falha_de_execucao(unidade, exc)
                     else:
+                        duracoes[unidade] = segundos
                         contagem = workers.setdefault(pid, [inicializacoes, 0])
                         contagem[0] = max(contagem[0], inicializacoes)
                         contagem[1] += 1
@@ -279,7 +290,9 @@ def executar(sessao: SessaoCheckpoints, carregador: Optional[Callable[[], DadosB
         executadas=tuple(u.rotulo for u in pedidas if u in set(executadas)),
         falhas=tuple(falhas[u] for u in pedidas if u in falhas),
         resultados=tuple(sessao.carregar(u) for u in ordem),
-        workers=tuple(ProcessoWorker(pid, n[0], n[1]) for pid, n in sorted(workers.items())))
+        workers=tuple(ProcessoWorker(pid, n[0], n[1]) for pid, n in sorted(workers.items())),
+        duracoes=tuple((u.rotulo, duracoes[u]) for u in pedidas if u in duracoes),
+        duracao_total_s=time.perf_counter() - inicio_total)
 
 
 __all__ = ["CONTEXTO_MULTIPROCESSAMENTO", "ProcessoWorker", "RelatorioExecucao", "executar"]

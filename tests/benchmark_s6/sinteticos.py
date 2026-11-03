@@ -85,3 +85,46 @@ def resultados_sinteticos(ctx: un.ContextoExecucao, pontuador: Optional[Pontuado
         s = pontuador(u.modelo, u.repeticao, u.dobra, y, av, rng)
         saida.append(resultado(ctx, u, s, indice=u.repeticao + u.dobra, avisos=(avisos or {}).get(u.modelo, ())))
     return saida
+
+
+# --------------------------------------------------------------------------- #
+# Grades reduzidas (SÓ testes) e carregadores serializáveis para workers ``spawn``
+# --------------------------------------------------------------------------- #
+
+import dataclasses  # noqa: E402
+import functools  # noqa: E402
+
+_ESPECIFICACAO_ORIGINAL = modelos.especificacao
+_REDUCOES = {"svm": {"C": 2}, "rf": {"min_samples_leaf": 2}, "xgb": {"max_depth": 2}}
+
+
+@functools.lru_cache(maxsize=None)
+def especificacao_reduzida(codigo: str):
+    """Especificação com grade reduzida (só nos testes): 2 configurações para ``svm``, ``rf`` e ``xgb``."""
+    espec = _ESPECIFICACAO_ORIGINAL(codigo)
+    if codigo not in _REDUCOES:
+        return espec
+    grade = tuple(dataclasses.replace(p, valores=tuple(p.materializar())[:_REDUCOES[codigo].get(p.nome, 1)])
+                  for p in espec.grade)
+    return dataclasses.replace(espec, grade=grade)
+
+
+def usar_grades_reduzidas() -> None:
+    """Troca ``modelos.especificacao`` NESTE processo (workers a chamam no carregador). Só testes."""
+    modelos.especificacao = especificacao_reduzida
+
+
+def carregar_implementacao_sintetica() -> dados.DadosBenchmark:
+    """Carregador de worker: grades reduzidas + base sintética do modo ``implementacao`` (90 pacientes)."""
+    usar_grades_reduzidas()
+    return carga_definitiva(n_pacientes=90, modo="implementacao")
+
+
+def carregar_implementacao_sintetica_x_alterado() -> dados.DadosBenchmark:
+    """Como ``carregar_implementacao_sintetica``, mas com UM valor de X alterado em 1e-9: o hash de X diverge."""
+    usar_grades_reduzidas()
+    carga = carga_definitiva(n_pacientes=90, modo="implementacao")
+    frame = carga.frame()
+    coluna = cfg.CONFIGURACAO.caracteristicas[0]
+    frame.loc[frame.index[0], coluna] += 1e-9
+    return dataclasses.replace(carga, _frame=frame)
