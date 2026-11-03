@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import ast
 import dataclasses
+from types import MappingProxyType
 import hashlib
 import inspect
 import os
@@ -40,7 +41,14 @@ from src.incremental import guardas as g  # noqa: E402
 #: b43381f773b18d687981c07170324584c62e8237e2c6055cb0aef0e41e973fb9.
 #: Atual: inclui também a atividade ``cv_repetida_exploratoria`` (sem decisões
 #: próprias, somente exploratória).
-HASH_CONFIG_INCREMENTO_1 = "c36335c1696b99f5d2344e80f14884721007da5810f6be6c8b892de60f4c5885"
+#: Registro de 03/11/2026: P1–P4 aprovadas em ``config.DECISOES`` (commit de aprovação
+#: ``COMMIT_REGISTRO_P1_P4``). Antes disso o valor era
+#: c36335c1696b99f5d2344e80f14884721007da5810f6be6c8b892de60f4c5885.
+HASH_CONFIG_INCREMENTO_1 = "8b257d3720a6587b248da2b9d49a8e74d596aaee2a5625cd9db799835ddf062f"
+#: Hash da configuração com todas as decisões pendentes (``DECISOES_PENDENTES``).
+HASH_CONFIG_PENDENTES = "c36335c1696b99f5d2344e80f14884721007da5810f6be6c8b892de60f4c5885"
+#: Commit que introduziu as linhas APROVACAO-DECISAO de P1, P2, P3 e P4 no protocolo.
+COMMIT_REGISTRO_P1_P4 = "d04198702d57f8b6088235a62f32ce8616a0f677"
 PILOTO = cfg.ATIVIDADE_PILOTO_EXPLORATORIO
 CV_REPETIDA = cfg.ATIVIDADE_CV_REPETIDA_EXPLORATORIA
 EXPLORATORIAS = (PILOTO, CV_REPETIDA)
@@ -50,6 +58,50 @@ TEXTO_BASE = "# Protocolo fictício de teste\n\nTexto sem registros.\n"
 VALOR_P2 = cfg.SPLINE_PROPOSTO
 VALOR_P3 = cfg.PAINEL_DECLARADO
 OUTRO_PAINEL = cfg.PAINEL_REPRODUZIDO
+
+#: Decisões sem nenhum registro: o estado de ``config.DECISOES`` antes de 03/11/2026. Os testes
+#: de bloqueio e de repositórios temporários partem dele, não do estado real do projeto.
+DECISOES_PENDENTES = MappingProxyType({
+    codigo: dataclasses.replace(d, status=cfg.StatusDecisao.PENDENTE,
+                                commit_revisao_protocolo=None, valor=None)
+    for codigo, d in cfg.DECISOES.items()
+})
+assert cfg.hash_configuracao(DECISOES_PENDENTES) == HASH_CONFIG_PENDENTES
+
+
+def _funcoes_com_decisoes_padrao():
+    """(função, defaults novos) das funções de ``src.incremental`` cujo padrão de ``decisoes`` é o real."""
+    achadas = []
+    for nome, modulo in list(sys.modules.items()):
+        if not (nome.startswith("src.incremental") and modulo is not None) or nome.endswith(".config"):
+            continue
+        candidatas = []
+        for valor in vars(modulo).values():
+            if inspect.isfunction(valor):
+                candidatas.append(valor)
+            elif inspect.isclass(valor) and valor.__module__ == nome:
+                candidatas.extend(v for v in vars(valor).values() if inspect.isfunction(v))
+        for funcao in candidatas:
+            padroes = funcao.__defaults__ or ()
+            if any(d is cfg.DECISOES for d in padroes):
+                achadas.append((funcao, tuple(DECISOES_PENDENTES if d is cfg.DECISOES else d
+                                              for d in padroes)))
+    return achadas
+
+
+def com_decisoes_pendentes(classe):
+    """Decorador de classe de teste: o argumento ``decisoes`` omitido vale ``DECISOES_PENDENTES``."""
+    original = classe.setUp
+
+    def setUp(self):
+        for funcao, novos in _funcoes_com_decisoes_padrao():
+            patcher = mock.patch.object(funcao, "__defaults__", novos)
+            patcher.start()
+            self.addCleanup(patcher.stop)
+        original(self)
+
+    classe.setUp = setUp
+    return classe
 
 
 # --------------------------------------------------------------------------- #
@@ -109,10 +161,10 @@ def protocolo(*linhas: str) -> dict:
 
 def aprovar(decisoes: dict = None, **aprovadas) -> dict:
     """Cópia das decisões com as indicadas aprovadas: codigo=(commit, valor)."""
-    novas = dict(decisoes if decisoes is not None else cfg.DECISOES)
+    novas = dict(decisoes if decisoes is not None else DECISOES_PENDENTES)
     for codigo, (commit, valor) in aprovadas.items():
         novas[codigo] = dataclasses.replace(
-            cfg.DECISOES[codigo], status=cfg.StatusDecisao.APROVADA,
+            DECISOES_PENDENTES[codigo], status=cfg.StatusDecisao.APROVADA,
             commit_revisao_protocolo=commit, valor=valor)
     return novas
 
@@ -171,31 +223,54 @@ class ComRepoCompartilhado(unittest.TestCase):
 
 
 class TestEstadoReal(unittest.TestCase):
-    def test_todas_as_decisoes_continuam_pendentes(self):
+    def test_decisoes_registradas_e_pendentes(self):
         self.assertEqual(set(cfg.DECISOES), {"P1", "P2", "P3", "P4", "P5", "REVISAO_PROTOCOLO"})
-        for codigo, decisao in cfg.DECISOES.items():
+        valores = {"P1": None, "P2": cfg.SPLINE_PROPOSTO, "P3": cfg.PAINEL_DECLARADO, "P4": 0.9762}
+        for codigo, valor in valores.items():
             with self.subTest(decisao=codigo):
+                decisao = cfg.DECISOES[codigo]
+                self.assertTrue(decisao.aprovada)
+                self.assertEqual(decisao.commit_revisao_protocolo, COMMIT_REGISTRO_P1_P4)
+                self.assertEqual(decisao.valor, valor)
+        for codigo in ("P5", "REVISAO_PROTOCOLO"):
+            with self.subTest(decisao=codigo):
+                decisao = cfg.DECISOES[codigo]
                 self.assertFalse(decisao.aprovada)
                 self.assertIsNone(decisao.commit_revisao_protocolo)
                 self.assertIsNone(decisao.valor)
 
+    def test_registros_do_protocolo_conferem_com_o_git(self):
+        for codigo in ("P1", "P2", "P3", "P4"):
+            with self.subTest(decisao=codigo):
+                verificacao = g.verificar_aprovacao(codigo)
+                self.assertEqual(verificacao.commit, COMMIT_REGISTRO_P1_P4)
+                self.assertEqual(verificacao.valor_sha256, g.hash_valor_decisao(cfg.DECISOES[codigo].valor))
+
     def test_configuracao_inalterada(self):
         self.assertEqual(cfg.hash_configuracao(), HASH_CONFIG_INCREMENTO_1)
 
-    def test_atividades_com_decisoes_bloqueadas_no_repositorio_real(self):
+    def test_etapas_1_a_3_autorizadas_e_4_e_5_bloqueadas_no_repositorio_real(self):
         for atividade, exigidas in cfg.DECISOES_POR_ETAPA.items():
             if not exigidas:
                 continue
             with self.subTest(atividade=atividade):
-                with self.assertRaises(cfg.BloqueioDecisao):
-                    g.exigir_autorizacao(atividade)
+                if all(cfg.DECISOES[c].aprovada for c in exigidas):
+                    self.assertEqual(g.exigir_autorizacao(atividade).decisoes_exigidas, exigidas)
+                else:
+                    with self.assertRaises(cfg.BloqueioDecisao):
+                        g.exigir_autorizacao(atividade)
+        for etapa in (cfg.Etapa.E4, cfg.Etapa.E5):
+            with self.subTest(etapa=etapa):
+                with self.assertRaisesRegex(cfg.BloqueioDecisao, "P5"):
+                    g.exigir_autorizacao(etapa)
 
     def test_commit_existente_e_ancestral_sem_registro_nao_autoriza(self):
-        # O próprio HEAD do projeto existe e é ancestral de si mesmo, mas o
-        # protocolo versionado não tem registro de aprovação: falha conservadora.
-        head = subprocess.run(["git", "-C", str(REPO_ROOT), "rev-parse", "HEAD"], check=True,
-                              capture_output=True, text=True, env=_ambiente_git()).stdout.strip()
-        decisoes = aprovar(P1=(head, None), P2=(head, VALOR_P2))
+        # O pai do commit de registro existe e é ancestral do HEAD, mas o protocolo
+        # naquele commit não tem a linha de aprovação: falha conservadora.
+        pai = subprocess.run(["git", "-C", str(REPO_ROOT), "rev-parse", COMMIT_REGISTRO_P1_P4 + "^"],
+                             check=True, capture_output=True, text=True,
+                             env=_ambiente_git()).stdout.strip()
+        decisoes = aprovar(P1=(pai, None), P2=(pai, VALOR_P2))
         with self.assertRaisesRegex(g.AprovacaoNaoVerificada, "não contém registro explícito"):
             g.exigir_autorizacao(cfg.Etapa.E1, decisoes)
         self.assertEqual(cfg.hash_configuracao(), HASH_CONFIG_INCREMENTO_1)
@@ -206,6 +281,7 @@ class TestEstadoReal(unittest.TestCase):
 # --------------------------------------------------------------------------- #
 
 
+@com_decisoes_pendentes
 class TestSemGit(unittest.TestCase):
     def test_estruturais_e_etapa0_liberadas_sem_consultar_git(self):
         for atividade in (cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS, cfg.Etapa.E0, *EXPLORATORIAS):
@@ -214,7 +290,7 @@ class TestSemGit(unittest.TestCase):
                 self.assertEqual(autorizacao.decisoes_exigidas, ())
                 self.assertEqual(autorizacao.verificacoes, ())
                 self.assertIsNone(autorizacao.head)
-                self.assertEqual(autorizacao.hash_configuracao, HASH_CONFIG_INCREMENTO_1)
+                self.assertEqual(autorizacao.hash_configuracao, HASH_CONFIG_PENDENTES)
 
     def test_estruturais_liberadas_fora_de_repositorio(self):
         with tempfile.TemporaryDirectory() as vazio:
@@ -370,23 +446,23 @@ class TestConsistencia(unittest.TestCase):
                                          "hash de commit inválido")
 
     def test_pendente_com_commit_ou_valor(self):
-        self.assertInconsistente(adulterar(dict(cfg.DECISOES), "P4", commit_revisao_protocolo="1" * 40))
-        self.assertInconsistente(adulterar(dict(cfg.DECISOES), "P5", valor=("x",)))
+        self.assertInconsistente(adulterar(dict(DECISOES_PENDENTES), "P4", commit_revisao_protocolo="1" * 40))
+        self.assertInconsistente(adulterar(dict(DECISOES_PENDENTES), "P5", valor=("x",)))
 
     def test_mapa_com_decisao_faltando_ou_sobrando(self):
-        faltando = dict(cfg.DECISOES)
+        faltando = dict(DECISOES_PENDENTES)
         del faltando["P4"]
         self.assertInconsistente(faltando, "faltam")
-        sobrando = {**cfg.DECISOES, "P6": cfg.DECISOES["P5"]}
+        sobrando = {**DECISOES_PENDENTES, "P6": DECISOES_PENDENTES["P5"]}
         self.assertInconsistente(sobrando, "sobram")
-        self.assertInconsistente(list(cfg.DECISOES.values()))
+        self.assertInconsistente(list(DECISOES_PENDENTES.values()))
 
     def test_definicao_divergente(self):
         for atributo, valor in (("codigo", "P9"), ("descricao", "outra"), ("prazo", "nunca"),
                                 ("etapa_limite", cfg.Etapa.E5), ("status", "aprovada")):
             with self.subTest(atributo=atributo):
-                self.assertInconsistente(adulterar(dict(cfg.DECISOES), "P1", **{atributo: valor}))
-        self.assertInconsistente({**cfg.DECISOES, "P1": object()})
+                self.assertInconsistente(adulterar(dict(DECISOES_PENDENTES), "P1", **{atributo: valor}))
+        self.assertInconsistente({**DECISOES_PENDENTES, "P1": object()})
 
     def test_conteudo_aprovado_invalido(self):
         # P2 exige EspecSpline; P3 exige tupla de 8 nomes válidos.
@@ -510,7 +586,7 @@ class TestBloqueadoPorEvidencia(ComRepoCompartilhado):
 
     def test_verificar_aprovacao_recusa_pendente_e_desconhecida(self):
         with self.assertRaises(cfg.BloqueioDecisao):
-            g.verificar_aprovacao("P1", cfg.DECISOES, self.repo.raiz)
+            g.verificar_aprovacao("P1", DECISOES_PENDENTES, self.repo.raiz)
         with self.assertRaises(g.DecisaoInconsistente):
             g.verificar_aprovacao("P9", self.decisoes_e1(), self.repo.raiz)
 
@@ -735,7 +811,7 @@ class TestAutorizarModelo(ComRepoCompartilhado):
         with self.assertRaisesRegex(cfg.BloqueioDecisao, "P3"):
             g.autorizar_modelo(espec, cfg.Etapa.E1, self.decisoes_e1(), self.repo.raiz)
         with self.assertRaisesRegex(cfg.BloqueioDecisao, "P3"):
-            g.autorizar_modelo(espec, cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS, cfg.DECISOES,
+            g.autorizar_modelo(espec, cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS, DECISOES_PENDENTES,
                                self.repo.raiz)
 
     def test_modelo_montado_com_p3_sem_evidencia(self):

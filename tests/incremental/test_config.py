@@ -15,6 +15,7 @@ from __future__ import annotations
 import ast
 import csv
 import dataclasses
+from types import MappingProxyType
 import hashlib
 import json
 import os
@@ -31,14 +32,24 @@ if str(REPO_ROOT) not in sys.path:
 from src.incremental import config as cfg  # noqa: E402
 
 COMMIT_FICTICIO = "0" * 40  # usado só para montar decisões aprovadas de teste
+#: Commit que introduziu as linhas APROVACAO-DECISAO de P1–P4 (03/11/2026).
+COMMIT_REGISTRO_P1_P4 = "d04198702d57f8b6088235a62f32ce8616a0f677"
+
+#: Decisões sem nenhum registro: o estado de ``config.DECISOES`` antes de 03/11/2026. Os testes
+#: de bloqueio partem dele, não do estado real do projeto.
+DECISOES_PENDENTES = MappingProxyType({
+    codigo: dataclasses.replace(d, status=cfg.StatusDecisao.PENDENTE,
+                                commit_revisao_protocolo=None, valor=None)
+    for codigo, d in cfg.DECISOES.items()
+})
 SHA_CSV_REPRODUZIDO = "d45c68824548443be72443c8e2acdf4605cd3952e60906b861bacf82f073db34"
 
 
 def decisoes_com(**aprovadas) -> dict:
     """Cópia das decisões com as indicadas aprovadas — somente para teste."""
-    novas = dict(cfg.DECISOES)
+    novas = dict(DECISOES_PENDENTES)
     for codigo, valor in aprovadas.items():
-        base = cfg.DECISOES[codigo]
+        base = DECISOES_PENDENTES[codigo]
         novas[codigo] = dataclasses.replace(
             base, status=cfg.StatusDecisao.APROVADA,
             commit_revisao_protocolo=COMMIT_FICTICIO, valor=valor,
@@ -79,7 +90,7 @@ class TestPaineis(unittest.TestCase):
         self.assertEqual(paineis, {"PAINEL_DECLARADO", "PAINEL_REPRODUZIDO"})
         self.assertEqual(set(cfg.PAINEIS_CANDIDATOS), {"declarado", "reproduzido"})
         with self.assertRaises(cfg.BloqueioDecisao):
-            cfg.painel_fixo()
+            cfg.painel_fixo(DECISOES_PENDENTES)
 
     def test_painel_declarado_igual_a_secao_5_1_do_protocolo(self):
         texto = (REPO_ROOT / cfg.PROTOCOLO).read_text(encoding="utf-8")
@@ -143,7 +154,7 @@ class TestModelosFixos(unittest.TestCase):
     def test_m2_m3_m4_bloqueados_com_p3_pendente(self):
         for nome in cfg.MODELOS_COM_PAINEL:
             with self.subTest(modelo=nome), self.assertRaises(cfg.BloqueioDecisao):
-                cfg.modelo_fixo(nome)
+                cfg.modelo_fixo(nome, DECISOES_PENDENTES)
 
     def test_composicao_com_p3_aprovada_para_cada_candidato(self):
         for rotulo, painel in cfg.PAINEIS_CANDIDATOS.items():
@@ -221,13 +232,27 @@ class TestModelosVariaveis(unittest.TestCase):
 
 
 class TestDecisoes(unittest.TestCase):
-    def test_todas_pendentes(self):
-        self.assertEqual(set(cfg.DECISOES), {"P1", "P2", "P3", "P4", "P5", "REVISAO_PROTOCOLO"})
-        for codigo, d in cfg.DECISOES.items():
+    def test_sem_registros_todas_pendentes(self):
+        self.assertEqual(set(DECISOES_PENDENTES), {"P1", "P2", "P3", "P4", "P5", "REVISAO_PROTOCOLO"})
+        for codigo, d in DECISOES_PENDENTES.items():
             with self.subTest(decisao=codigo):
                 self.assertIs(d.status, cfg.StatusDecisao.PENDENTE)
                 self.assertIsNone(d.commit_revisao_protocolo)
                 self.assertIsNone(d.valor)
+                with self.assertRaises(cfg.BloqueioDecisao):
+                    cfg.exigir_aprovada(codigo, DECISOES_PENDENTES)
+
+    def test_estado_real_p1_a_p4_registradas_e_demais_pendentes(self):
+        # Registros de 03/11/2026 (Adendo 1 e Seção 13 do protocolo); P4 é a decisão encerrada.
+        valores = {"P1": None, "P2": cfg.SPLINE_PROPOSTO, "P3": cfg.PAINEL_DECLARADO, "P4": 0.9762}
+        for codigo, valor in valores.items():
+            with self.subTest(decisao=codigo):
+                d = cfg.exigir_aprovada(codigo)
+                self.assertEqual(d.commit_revisao_protocolo, COMMIT_REGISTRO_P1_P4)
+                self.assertEqual(d.valor, valor)
+        for codigo in ("P5", "REVISAO_PROTOCOLO"):
+            with self.subTest(decisao=codigo):
+                self.assertIs(cfg.DECISOES[codigo].status, cfg.StatusDecisao.PENDENTE)
                 with self.assertRaises(cfg.BloqueioDecisao):
                     cfg.exigir_aprovada(codigo)
 
@@ -244,7 +269,7 @@ class TestDecisoes(unittest.TestCase):
 
     def test_spline_bloqueado_com_p2_pendente(self):
         with self.assertRaises(cfg.BloqueioDecisao):
-            cfg.spline_confirmado()
+            cfg.spline_confirmado(DECISOES_PENDENTES)
         self.assertEqual(cfg.spline_confirmado(decisoes_com(P2=cfg.SPLINE_PROPOSTO)), cfg.SPLINE_PROPOSTO)
 
     def test_cv_com_lista_fixa_exige_p3(self):
@@ -364,9 +389,9 @@ class TestMapaDecisoes(unittest.TestCase):
         self.assertNotEqual(piloto, cfg.Etapa.E1.value)
         self.assertEqual(cfg.DECISOES_POR_ETAPA[piloto], ())
         self.assertIn(piloto, cfg.ATIVIDADES_SOMENTE_EXPLORATORIAS)
-        # Sem partições nem etapa próprias; nenhuma decisão aprovada.
+        # Sem partições nem etapa próprias; P5 e REVISAO_PROTOCOLO seguem pendentes.
         self.assertEqual(set(cfg.PARTICOES_POR_ETAPA), set(cfg.Etapa))
-        self.assertTrue(all(not d.aprovada for d in cfg.DECISOES.values()))
+        self.assertEqual({c for c, d in cfg.DECISOES.items() if not d.aprovada}, {"P5", "REVISAO_PROTOCOLO"})
 
     def test_cv_repetida_exploratoria_e_atividade_propria_e_somente_exploratoria(self):
         cv = cfg.ATIVIDADE_CV_REPETIDA_EXPLORATORIA
@@ -378,7 +403,7 @@ class TestMapaDecisoes(unittest.TestCase):
         self.assertEqual(cfg.DECISOES_POR_ETAPA[cfg.Etapa.E2.value], ("P1", "P2"))
         self.assertEqual(cfg.DECISOES_POR_ETAPA[cfg.ATIVIDADE_CV_LISTA_FIXA], ("P1", "P2", "P3"))
         self.assertEqual(set(cfg.PARTICOES_POR_ETAPA), set(cfg.Etapa))
-        self.assertTrue(all(not d.aprovada for d in cfg.DECISOES.values()))
+        self.assertEqual({c for c, d in cfg.DECISOES.items() if not d.aprovada}, {"P5", "REVISAO_PROTOCOLO"})
 
     def test_atividades_somente_exploratorias(self):
         self.assertEqual(cfg.ATIVIDADES_SOMENTE_EXPLORATORIAS, self.EXPLORATORIAS)

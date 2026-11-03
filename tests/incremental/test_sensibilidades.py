@@ -37,7 +37,7 @@ from src.incremental import guardas as g  # noqa: E402
 from src.incremental import modelos as md  # noqa: E402
 from src.incremental import sensibilidades as sens  # noqa: E402
 from src.incremental import validacao  # noqa: E402
-from test_guardas import VALOR_P3  # noqa: E402
+from test_guardas import DECISOES_PENDENTES, VALOR_P3  # noqa: E402
 from test_validacao import (ESPEC_PEQUENA, EXPLORATORIA, AmbienteE3, features_dos_modelos,  # noqa: E402
                             linhas_de)
 
@@ -125,7 +125,7 @@ class TestEspecificacao(unittest.TestCase):
 
     def test_pendencia_de_p2_ou_p3_bloqueia_a_definicao(self):
         with self.assertRaises(cfg.BloqueioDecisao):
-            sens.definir_modelos(dict(cfg.DECISOES))
+            sens.definir_modelos(dict(DECISOES_PENDENTES))
 
 
 class TestNumericoEIntegridade(unittest.TestCase):
@@ -208,7 +208,7 @@ class TestAutorizacao(unittest.TestCase):
 
     def test_decisoes_pendentes_bloqueiam_mesmo_com_autorizacao_valida(self):
         with self.assertRaises(cfg.BloqueioDecisao):
-            self.chamar(self.autorizacao, decisoes=dict(cfg.DECISOES))
+            self.chamar(self.autorizacao, decisoes=dict(DECISOES_PENDENTES))
 
 
 class TestIntegracaoNaEtapa3(unittest.TestCase):

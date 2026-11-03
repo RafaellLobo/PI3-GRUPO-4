@@ -43,7 +43,9 @@ from src.incremental import guardas as g  # noqa: E402
 from src.incremental import modelos as md  # noqa: E402
 from src.incremental import rastreabilidade as rst  # noqa: E402
 from src.incremental import validacao  # noqa: E402
-from test_guardas import PROTOCOLO, VALOR_P2, VALOR_P3, RepoTemporario, aprovar, protocolo, registro  # noqa: E402
+from test_guardas import (  # noqa: E402
+    DECISOES_PENDENTES, PROTOCOLO, VALOR_P2, VALOR_P3, RepoTemporario, aprovar, protocolo, registro,
+)
 from test_piloto import POOL  # noqa: E402
 
 ORDEM_CABECALHO = tuple(random.Random(3).sample(POOL, len(POOL)))
@@ -150,7 +152,7 @@ class AmbienteE3:
         arquivos.update(protocolo(*registros) if com_aprovacoes else protocolo())
         self.commit = self.repo.commit(arquivos, "2026-10-12")
         self.decisoes = (aprovar(P1=(self.commit, None), P2=(self.commit, VALOR_P2),
-                                 P3=(self.commit, VALOR_P3)) if com_aprovacoes else dict(cfg.DECISOES))
+                                 P3=(self.commit, VALOR_P3)) if com_aprovacoes else dict(DECISOES_PENDENTES))
         (self.raiz / "checkpoints").mkdir()
         self.fonte = dados.FonteDados(
             tabela=self._verificado(self.raiz / "entradas" / "tabela.csv"),

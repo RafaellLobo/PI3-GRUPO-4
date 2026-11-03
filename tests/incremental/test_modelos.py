@@ -39,7 +39,8 @@ from src.incremental import guardas as g  # noqa: E402
 from src.incremental import modelos as md  # noqa: E402
 from src.incremental import selecao as sel  # noqa: E402
 from test_guardas import (  # noqa: E402
-    HASH_CONFIG_INCREMENTO_1, VALOR_P2, VALOR_P3, RepoTemporario, aprovar, protocolo, registro,
+    HASH_CONFIG_INCREMENTO_1, VALOR_P2, VALOR_P3, RepoTemporario, aprovar, com_decisoes_pendentes,
+    protocolo, registro,
 )
 
 E0, E1, E3 = cfg.Etapa.E0.value, cfg.Etapa.E1.value, cfg.Etapa.E3.value
@@ -297,6 +298,7 @@ class TestColunasERotulos(unittest.TestCase):
 # --------------------------------------------------------------------------- #
 
 
+@com_decisoes_pendentes
 class TestBloqueiosP3(unittest.TestCase):
     def setUp(self):
         self.repo = RepoTemporario()
@@ -360,7 +362,7 @@ class TestBloqueiosP3(unittest.TestCase):
         for nome in ("M0", "M1"):
             with self.subTest(modelo=nome):
                 with self.assertRaises(cfg.BloqueioDecisao):
-                    md.construir_fixo(nome, E1)  # P1 e P2 pendentes no estado real
+                    md.construir_fixo(nome, E1)  # sem registros (padrão da classe: DECISOES_PENDENTES)
         with self.assertRaises(cfg.BloqueioDecisao):
             md.modelos_do_fold(selecao_com(S_K), E1)
         self.assertEqual(md.construir_fixo("M1", E1, self.e1, self.repo.raiz).autorizacao.decisoes_exigidas,
