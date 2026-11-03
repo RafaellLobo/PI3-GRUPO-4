@@ -116,9 +116,9 @@ Observação de nomenclatura: a **P9 da S4** (hiperparâmetros em anexo datado) 
 
 **Pendências observadas:**
 
-- A aprovação datada do revisor **não existe**. O comentário de 31/10 é uma revisão técnica com seis pontos, todos reconhecidos como procedentes na revisão 2; ele própria diz "a proposta permanece em revisão". O merge sozinho **não** é aprovação.
-- O texto da Emenda diz que o congelamento depende só da confirmação com data do revisor.
-- O PR descreve o patch de revisão 2, e a revisão 3 (02/11) está no HEAD `573bc17`, que o P9 cita. Convém que a aprovação identifique **qual commit** está aprovando.
+- A aprovação datada do revisor **não existe**. O comentário de 31/10 é uma revisão técnica com seis pontos, todos reconhecidos como procedentes na revisão 2; o texto encerra com "a proposta permanece em revisão". O merge sozinho **não** é aprovação.
+- Na resposta de 31/10, a responsável afirma que, pelo critério da revisão, falta só a confirmação com data do revisor.
+- O corpo do PR descreve a proposta original; a revisão 3 (02/11) está no HEAD `573bc17`, que o P9 cita. Convém que a aprovação identifique **qual commit** está aprovando.
 - Duas verificações da E4 (rodadas fora do ambiente oficial) viraram pendência com prazo "antes do relatório final"; não condicionam o congelamento.
 - A E7 mantém o uso da validação pelo benchmark S6 **bloqueado mesmo após o congelamento**, até o registro da Etapa 3.
 
@@ -154,7 +154,7 @@ Observação de nomenclatura: a **P9 da S4** (hiperparâmetros em anexo datado) 
 
 **Consequência prática:** os registros precisam estar num documento que exista no HEAD da execução. Hoje o pré-registro só existe na branch do PR #11. A execução definitiva só será possível numa branch cujo histórico contenha, nesta ordem, o pré-registro com a configuração (PR #11), o registro `P9` e o registro `S4_E3_REGISTRADA`, todos ancestrais do HEAD.
 
-**Achado a corrigir na documentação (não é do código):** o PR #11 e o P9 dizem que o código gerador `db4f476` "existe só localmente, em `feat/s6-benchmark-configuracao`", mas o PR #12 dessa branch foi **integrado** ao `main`. A Seção 19 vale como registro histórico e só precisa de adendo se a equipe quiser corrigir.
+**Achado documental (não afeta o código):** o corpo do PR #11 e a Seção 19 do P9 dizem que o commit gerador `db4f476` está "ainda não integrada ao `main`" / "existe só localmente". Conferido hoje: `db4f476` **é ancestral do `main`** (PR #12 integrado). A Seção 19 é registro histórico; só precisa de adendo se a equipe quiser corrigir a frase.
 
 ---
 
@@ -187,8 +187,8 @@ Observação de nomenclatura: a **P9 da S4** (hiperparâmetros em anexo datado) 
 | H4 | Registrar `APROVACAO-DECISAO codigo=P9` com `valor_sha256 = 1cd08306…17d5` na Seção 19, em commit posterior ao da configuração | Responsável e revisor | H1, H2, H3 | P9, Seção 14.4 e 19 |
 | H5 | Registrar as aprovações P1, P2 e P3 da S4 no protocolo (linhas `APROVACAO-DECISAO`), incluindo o painel de P3 e a decisão de seguir adiante com a lista declarada | Responsável e revisor | H1 | Protocolo S4, Seções 7.1 e 13; `guardas.py` |
 | H6 | Decidir **onde e por quem** será desenvolvida a Etapa 3 da S4 (Seção 3.3) e autorizar a alteração de `src/incremental` | Equipe | — | Seção 3 deste relatório |
-| H7 | Autorizar a execução da Etapa 3 definitiva e do item 2 da Etapa 0 | Responsável e revisor | H5, D6 abaixo | Protocolo S4, Seção 7.1 |
-| H8 | Registrar `APROVACAO-DECISAO codigo=S4_E3_REGISTRADA` com o SHA-256 canônico do manifesto da Etapa 3, versionado | Responsável e revisor | D3 e H7 | P9, Seção 19; `aprovacoes.py` |
+| H7 | Autorizar a execução da Etapa 3 definitiva e do item 2 da Etapa 0 | Responsável e revisor | H5 e D1–D4 prontos | Protocolo S4, Seção 7.1 |
+| H8 | Registrar `APROVACAO-DECISAO codigo=S4_E3_REGISTRADA` com o SHA-256 canônico do manifesto da Etapa 3, versionado | Responsável e revisor | H7 e Etapa 3 concluída (D3) | P9, Seção 19; `aprovacoes.py` |
 | H9 | (Opcional) Decidir o adendo da Seção 6 sobre `--manifesto-s4` | Revisor | — | Seção 6 |
 | H10 | Autorizar o PR do código S6 (8 commits locais) e a ordem de integração | Equipe | — | Seção 1 |
 
