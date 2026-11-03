@@ -215,6 +215,16 @@ def _ambiente() -> Dict[str, Any]:
     }
 
 
+def hashes_do_codigo() -> Dict[str, str]:
+    """SHA-256 (LF) do código do benchmark e dos arquivos da S4 fixados: a parte "código" da identidade."""
+    return _codigo()
+
+
+def descricao_do_ambiente() -> Dict[str, Any]:
+    """Python, plataforma e versões das bibliotecas: a parte "ambiente" da identidade."""
+    return _ambiente()
+
+
 def _entradas(dados: DadosBenchmark, contexto: un.ContextoExecucao) -> Dict[str, Any]:
     X = np.ascontiguousarray(contexto.X, dtype="<f8")
     return {"arquivos": {str(k): str(v) for k, v in dados.sha256_entradas.items()},
@@ -893,6 +903,7 @@ __all__ = [
     "ARQUIVO_CONCLUIDA", "ARQUIVO_PREDICOES", "ARQUIVO_RECUPERACAO", "ARQUIVO_REGISTRO", "ARQUIVO_SESSAO",
     "CheckpointAusente", "CheckpointCorrompido", "CheckpointIncompativel", "CheckpointNaoConcluido",
     "DadosIndividuaisNoRegistro", "DiretorioInvalido", "DiretorioNaoLocal", "ErroCheckpoint", "ESTADO_AUSENTE",
-    "ESTADO_CONCLUIDA", "ESTADO_FALHOU", "ESTADO_INCOMPLETA", "exigir_diretorio_local", "obter_unidade",
+    "ESTADO_CONCLUIDA", "ESTADO_FALHOU", "ESTADO_INCOMPLETA", "descricao_do_ambiente", "exigir_diretorio_local",
+    "hashes_do_codigo", "obter_unidade",
     "QUARENTENA", "RelatorioRetomada", "SessaoCheckpoints", "SobrescritaRecusada",
 ]
