@@ -477,6 +477,10 @@ APROVACAO-DECISAO codigo=S4_E3_REGISTRADA status=aprovada data=AAAA-MM-DD valor_
 
 APROVACAO-DECISAO codigo=P9 status=aprovada data=2026-11-03 valor_sha256=a0d096a5415244f17f40360a2a5a8901bc8af1da5cf8687b891f920e1ee122b3
 
+**Registro S4_E3_REGISTRADA (03/11/2026)**, lavrado a pedido do revisor: o valor é o SHA-256 canônico do manifesto definitivo, elegível e concluído da Etapa 3 da S4 (`reports/sprint4/etapa3_validacao/manifesto_etapa3_validacao.json`, execução em `ac8102fc69e44b27565cf66618b761ec734270de`), validado por `aprovacoes.validar_manifesto_s4`:
+
+APROVACAO-DECISAO codigo=S4_E3_REGISTRADA status=aprovada data=2026-11-03 valor_sha256=1ad800ea62a85be1a38ddcd6b1c68566e573cf2ac55e8ae73f2770aa21ff5705
+
 **Adendos:** nenhum.
 
 ## Referências
