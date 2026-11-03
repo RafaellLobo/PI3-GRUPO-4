@@ -1,0 +1,1177 @@
+{
+  "amostra": {
+    "classe_0": 209,
+    "classe_1": 208,
+    "n_nodulos": 417,
+    "n_pacientes": 291
+  },
+  "atividade": "etapa0_prerequisitos",
+  "aviso": "Registro DESCRITIVO da Etapa 0, item 2 (protocolo, Seção 7.1): lista do procedimento ajustado aplicado uma vez ao treino oficial completo. Não substitui a lista fixa da Seção 5.1, não é avaliada na validação nem no teste e não calcula nenhuma métrica de desempenho.",
+  "comparacao_com_lista_declarada": {
+    "em_comum": [
+      "original_glcm_Imc2",
+      "original_shape_Sphericity",
+      "original_shape_SurfaceVolumeRatio",
+      "original_firstorder_90Percentile",
+      "original_firstorder_RootMeanSquared",
+      "original_shape_Elongation"
+    ],
+    "jaccard": 0.6,
+    "lista_ajustada": [
+      "original_shape_Elongation",
+      "original_shape_Sphericity",
+      "original_shape_SurfaceVolumeRatio",
+      "original_firstorder_90Percentile",
+      "original_firstorder_RootMeanSquared",
+      "original_glcm_ClusterShade",
+      "original_glcm_Imc1",
+      "original_glcm_Imc2"
+    ],
+    "lista_declarada": [
+      "original_glcm_Imc2",
+      "original_shape_Sphericity",
+      "original_shape_SurfaceVolumeRatio",
+      "original_firstorder_90Percentile",
+      "original_firstorder_RootMeanSquared",
+      "original_shape_Elongation",
+      "original_firstorder_Skewness",
+      "original_ngtdm_Coarseness"
+    ],
+    "n_em_comum": 6,
+    "referencia": "config.PAINEL_DECLARADO (Seção 5.1); não é a aprovação de P3",
+    "so_na_ajustada": [
+      "original_glcm_ClusterShade",
+      "original_glcm_Imc1"
+    ],
+    "so_na_declarada": [
+      "original_firstorder_Skewness",
+      "original_ngtdm_Coarseness"
+    ]
+  },
+  "convergencia": {
+    "folds_nao_convergidos": []
+  },
+  "fora_desta_modalidade": {
+    "metricas_de_desempenho": false,
+    "modelos_ajustados": false,
+    "particoes_nao_lidas": [
+      "validation",
+      "test"
+    ]
+  },
+  "formato": "relatorio-etapa0-item2-cartao4",
+  "hash_configuracao": "8b257d3720a6587b248da2b9d49a8e74d596aaee2a5625cd9db799835ddf062f",
+  "particoes_lidas": [
+    "train"
+  ],
+  "rotulo": "descritivo_etapa0_item2",
+  "seeds": {
+    "estabilidade": 42,
+    "interna_base": 100,
+    "logistica_selecao": 42
+  },
+  "selecao": {
+    "features": [
+      "original_shape_Elongation",
+      "original_shape_Flatness",
+      "original_shape_LeastAxisLength",
+      "original_shape_MajorAxisLength",
+      "original_shape_Maximum2DDiameterColumn",
+      "original_shape_Maximum2DDiameterRow",
+      "original_shape_Maximum2DDiameterSlice",
+      "original_shape_Maximum3DDiameter",
+      "original_shape_MeshVolume",
+      "original_shape_MinorAxisLength",
+      "original_shape_Sphericity",
+      "original_shape_SurfaceArea",
+      "original_shape_SurfaceVolumeRatio",
+      "original_shape_VoxelVolume",
+      "original_firstorder_10Percentile",
+      "original_firstorder_90Percentile",
+      "original_firstorder_Energy",
+      "original_firstorder_Entropy",
+      "original_firstorder_InterquartileRange",
+      "original_firstorder_Kurtosis",
+      "original_firstorder_Maximum",
+      "original_firstorder_MeanAbsoluteDeviation",
+      "original_firstorder_Mean",
+      "original_firstorder_Median",
+      "original_firstorder_Minimum",
+      "original_firstorder_Range",
+      "original_firstorder_RobustMeanAbsoluteDeviation",
+      "original_firstorder_RootMeanSquared",
+      "original_firstorder_Skewness",
+      "original_firstorder_TotalEnergy",
+      "original_firstorder_Uniformity",
+      "original_firstorder_Variance",
+      "original_glcm_Autocorrelation",
+      "original_glcm_ClusterProminence",
+      "original_glcm_ClusterShade",
+      "original_glcm_ClusterTendency",
+      "original_glcm_Contrast",
+      "original_glcm_Correlation",
+      "original_glcm_DifferenceAverage",
+      "original_glcm_DifferenceEntropy",
+      "original_glcm_DifferenceVariance",
+      "original_glcm_Id",
+      "original_glcm_Idm",
+      "original_glcm_Idmn",
+      "original_glcm_Idn",
+      "original_glcm_Imc1",
+      "original_glcm_Imc2",
+      "original_glcm_InverseVariance",
+      "original_glcm_JointAverage",
+      "original_glcm_JointEnergy",
+      "original_glcm_JointEntropy",
+      "original_glcm_MCC",
+      "original_glcm_MaximumProbability",
+      "original_glcm_SumAverage",
+      "original_glcm_SumEntropy",
+      "original_glcm_SumSquares",
+      "original_glrlm_GrayLevelNonUniformity",
+      "original_glrlm_GrayLevelNonUniformityNormalized",
+      "original_glrlm_GrayLevelVariance",
+      "original_glrlm_HighGrayLevelRunEmphasis",
+      "original_glrlm_LongRunEmphasis",
+      "original_glrlm_LongRunHighGrayLevelEmphasis",
+      "original_glrlm_LongRunLowGrayLevelEmphasis",
+      "original_glrlm_LowGrayLevelRunEmphasis",
+      "original_glrlm_RunEntropy",
+      "original_glrlm_RunLengthNonUniformity",
+      "original_glrlm_RunLengthNonUniformityNormalized",
+      "original_glrlm_RunPercentage",
+      "original_glrlm_RunVariance",
+      "original_glrlm_ShortRunEmphasis",
+      "original_glrlm_ShortRunHighGrayLevelEmphasis",
+      "original_glrlm_ShortRunLowGrayLevelEmphasis",
+      "original_glszm_GrayLevelNonUniformity",
+      "original_glszm_GrayLevelNonUniformityNormalized",
+      "original_glszm_GrayLevelVariance",
+      "original_glszm_HighGrayLevelZoneEmphasis",
+      "original_glszm_LargeAreaEmphasis",
+      "original_glszm_LargeAreaHighGrayLevelEmphasis",
+      "original_glszm_LargeAreaLowGrayLevelEmphasis",
+      "original_glszm_LowGrayLevelZoneEmphasis",
+      "original_glszm_SizeZoneNonUniformity",
+      "original_glszm_SizeZoneNonUniformityNormalized",
+      "original_glszm_SmallAreaEmphasis",
+      "original_glszm_SmallAreaHighGrayLevelEmphasis",
+      "original_glszm_SmallAreaLowGrayLevelEmphasis",
+      "original_glszm_ZoneEntropy",
+      "original_glszm_ZonePercentage",
+      "original_glszm_ZoneVariance",
+      "original_gldm_DependenceEntropy",
+      "original_gldm_DependenceNonUniformity",
+      "original_gldm_DependenceNonUniformityNormalized",
+      "original_gldm_DependenceVariance",
+      "original_gldm_GrayLevelNonUniformity",
+      "original_gldm_GrayLevelVariance",
+      "original_gldm_HighGrayLevelEmphasis",
+      "original_gldm_LargeDependenceEmphasis",
+      "original_gldm_LargeDependenceHighGrayLevelEmphasis",
+      "original_gldm_LargeDependenceLowGrayLevelEmphasis",
+      "original_gldm_LowGrayLevelEmphasis",
+      "original_gldm_SmallDependenceEmphasis",
+      "original_gldm_SmallDependenceHighGrayLevelEmphasis",
+      "original_gldm_SmallDependenceLowGrayLevelEmphasis",
+      "original_ngtdm_Busyness",
+      "original_ngtdm_Coarseness",
+      "original_ngtdm_Complexity",
+      "original_ngtdm_Contrast",
+      "original_ngtdm_Strength"
+    ],
+    "fingerprint_folds": "044c2185920f4134957839f7f1c7f8a66bf387c74effb43fc89429f628129d2a",
+    "fold_externo": -1,
+    "folds_estabilidade": [
+      {
+        "C": 0.31622776601683794,
+        "coeficientes": [
+          [
+            "original_shape_Elongation",
+            0.15514763681762314
+          ],
+          [
+            "original_shape_Flatness",
+            0.0
+          ],
+          [
+            "original_shape_LeastAxisLength",
+            0.0
+          ],
+          [
+            "original_shape_MajorAxisLength",
+            0.0
+          ],
+          [
+            "original_shape_MeshVolume",
+            0.0
+          ],
+          [
+            "original_shape_Sphericity",
+            -1.172246226626196
+          ],
+          [
+            "original_shape_SurfaceVolumeRatio",
+            -2.0103769916210252
+          ],
+          [
+            "original_firstorder_10Percentile",
+            0.0
+          ],
+          [
+            "original_firstorder_90Percentile",
+            -1.3022023099794144
+          ],
+          [
+            "original_firstorder_Energy",
+            0.0
+          ],
+          [
+            "original_firstorder_Entropy",
+            0.0
+          ],
+          [
+            "original_firstorder_Kurtosis",
+            0.0
+          ],
+          [
+            "original_firstorder_Minimum",
+            0.0
+          ],
+          [
+            "original_firstorder_RootMeanSquared",
+            0.0
+          ],
+          [
+            "original_firstorder_Skewness",
+            -0.2833980193746706
+          ],
+          [
+            "original_firstorder_Uniformity",
+            0.0
+          ],
+          [
+            "original_glcm_ClusterShade",
+            0.0
+          ],
+          [
+            "original_glcm_Contrast",
+            0.0
+          ],
+          [
+            "original_glcm_Correlation",
+            0.0
+          ],
+          [
+            "original_glcm_Id",
+            0.0
+          ],
+          [
+            "original_glcm_Idmn",
+            0.0
+          ],
+          [
+            "original_glcm_Imc1",
+            0.0
+          ],
+          [
+            "original_glcm_Imc2",
+            -0.6224216530554174
+          ],
+          [
+            "original_glcm_JointEnergy",
+            0.0
+          ],
+          [
+            "original_glcm_JointEntropy",
+            0.0
+          ],
+          [
+            "original_glrlm_GrayLevelNonUniformity",
+            0.0
+          ],
+          [
+            "original_glrlm_LongRunEmphasis",
+            0.0
+          ],
+          [
+            "original_glrlm_LongRunLowGrayLevelEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_LargeAreaEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_LargeAreaLowGrayLevelEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_SizeZoneNonUniformityNormalized",
+            0.0
+          ],
+          [
+            "original_glszm_ZoneEntropy",
+            0.0
+          ],
+          [
+            "original_glszm_ZonePercentage",
+            0.0
+          ],
+          [
+            "original_gldm_LargeDependenceLowGrayLevelEmphasis",
+            0.0
+          ],
+          [
+            "original_ngtdm_Busyness",
+            0.0
+          ],
+          [
+            "original_ngtdm_Coarseness",
+            -0.00854943426258854
+          ],
+          [
+            "original_ngtdm_Contrast",
+            0.0
+          ]
+        ],
+        "convergiu": true,
+        "fold_estabilidade": 0,
+        "n_iter": 10,
+        "n_nodulos": 331,
+        "n_pacientes": 232,
+        "n_pos_correlacao": 37,
+        "n_pos_variancia": 107,
+        "seed_interna": 101,
+        "selecionadas": [
+          "original_shape_Elongation",
+          "original_shape_Sphericity",
+          "original_shape_SurfaceVolumeRatio",
+          "original_firstorder_90Percentile",
+          "original_firstorder_Skewness",
+          "original_glcm_Imc2",
+          "original_ngtdm_Coarseness"
+        ],
+        "warnings": []
+      },
+      {
+        "C": 0.31622776601683794,
+        "coeficientes": [
+          [
+            "original_shape_Elongation",
+            0.17118754520115953
+          ],
+          [
+            "original_shape_Flatness",
+            0.0
+          ],
+          [
+            "original_shape_LeastAxisLength",
+            0.0
+          ],
+          [
+            "original_shape_MajorAxisLength",
+            0.0
+          ],
+          [
+            "original_shape_MeshVolume",
+            0.0
+          ],
+          [
+            "original_shape_Sphericity",
+            -1.2922650793875272
+          ],
+          [
+            "original_shape_SurfaceVolumeRatio",
+            -1.5490575105569075
+          ],
+          [
+            "original_firstorder_10Percentile",
+            0.0
+          ],
+          [
+            "original_firstorder_90Percentile",
+            -1.1919594162207714
+          ],
+          [
+            "original_firstorder_Energy",
+            0.0
+          ],
+          [
+            "original_firstorder_Entropy",
+            0.0
+          ],
+          [
+            "original_firstorder_Kurtosis",
+            0.0
+          ],
+          [
+            "original_firstorder_Minimum",
+            0.0
+          ],
+          [
+            "original_firstorder_RootMeanSquared",
+            -0.1864219482990358
+          ],
+          [
+            "original_firstorder_Skewness",
+            0.0
+          ],
+          [
+            "original_firstorder_Uniformity",
+            0.0
+          ],
+          [
+            "original_glcm_ClusterShade",
+            0.0
+          ],
+          [
+            "original_glcm_Contrast",
+            0.0
+          ],
+          [
+            "original_glcm_Correlation",
+            0.0
+          ],
+          [
+            "original_glcm_Id",
+            0.13013594393952727
+          ],
+          [
+            "original_glcm_Idmn",
+            0.07649315444462562
+          ],
+          [
+            "original_glcm_Imc1",
+            0.32728373446918135
+          ],
+          [
+            "original_glcm_Imc2",
+            -0.6038230678260557
+          ],
+          [
+            "original_glcm_JointEnergy",
+            0.0
+          ],
+          [
+            "original_glcm_JointEntropy",
+            0.0
+          ],
+          [
+            "original_glrlm_GrayLevelNonUniformity",
+            0.0
+          ],
+          [
+            "original_glrlm_LongRunEmphasis",
+            0.0
+          ],
+          [
+            "original_glrlm_LongRunLowGrayLevelEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_LargeAreaEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_SizeZoneNonUniformityNormalized",
+            0.0
+          ],
+          [
+            "original_glszm_ZoneEntropy",
+            0.0
+          ],
+          [
+            "original_glszm_ZonePercentage",
+            0.0
+          ],
+          [
+            "original_gldm_LargeDependenceLowGrayLevelEmphasis",
+            -0.02806601909473243
+          ],
+          [
+            "original_ngtdm_Busyness",
+            0.0
+          ],
+          [
+            "original_ngtdm_Coarseness",
+            0.0
+          ],
+          [
+            "original_ngtdm_Contrast",
+            0.0
+          ]
+        ],
+        "convergiu": true,
+        "fold_estabilidade": 1,
+        "n_iter": 10,
+        "n_nodulos": 339,
+        "n_pacientes": 231,
+        "n_pos_correlacao": 36,
+        "n_pos_variancia": 107,
+        "seed_interna": 102,
+        "selecionadas": [
+          "original_shape_Elongation",
+          "original_shape_Sphericity",
+          "original_shape_SurfaceVolumeRatio",
+          "original_firstorder_90Percentile",
+          "original_firstorder_RootMeanSquared",
+          "original_glcm_Id",
+          "original_glcm_Idmn",
+          "original_glcm_Imc1",
+          "original_glcm_Imc2",
+          "original_gldm_LargeDependenceLowGrayLevelEmphasis"
+        ],
+        "warnings": []
+      },
+      {
+        "C": 0.31622776601683794,
+        "coeficientes": [
+          [
+            "original_shape_Elongation",
+            0.18201927432880385
+          ],
+          [
+            "original_shape_Flatness",
+            -0.18849870294916282
+          ],
+          [
+            "original_shape_LeastAxisLength",
+            0.0
+          ],
+          [
+            "original_shape_MajorAxisLength",
+            0.0
+          ],
+          [
+            "original_shape_MeshVolume",
+            0.0
+          ],
+          [
+            "original_shape_Sphericity",
+            -1.4107799265826428
+          ],
+          [
+            "original_shape_SurfaceVolumeRatio",
+            -1.8923046715880913
+          ],
+          [
+            "original_firstorder_10Percentile",
+            0.0
+          ],
+          [
+            "original_firstorder_90Percentile",
+            -0.649387800445381
+          ],
+          [
+            "original_firstorder_Energy",
+            0.0
+          ],
+          [
+            "original_firstorder_Entropy",
+            0.0
+          ],
+          [
+            "original_firstorder_Kurtosis",
+            0.0
+          ],
+          [
+            "original_firstorder_Minimum",
+            0.0
+          ],
+          [
+            "original_firstorder_RootMeanSquared",
+            -0.8291993803824018
+          ],
+          [
+            "original_firstorder_Skewness",
+            0.0
+          ],
+          [
+            "original_firstorder_Uniformity",
+            0.0
+          ],
+          [
+            "original_glcm_ClusterShade",
+            -0.18151631012495598
+          ],
+          [
+            "original_glcm_Contrast",
+            0.0
+          ],
+          [
+            "original_glcm_Correlation",
+            0.0
+          ],
+          [
+            "original_glcm_Id",
+            0.06710608889981315
+          ],
+          [
+            "original_glcm_Idmn",
+            0.0
+          ],
+          [
+            "original_glcm_Imc1",
+            0.2658548656880937
+          ],
+          [
+            "original_glcm_Imc2",
+            0.0
+          ],
+          [
+            "original_glcm_JointEnergy",
+            0.0
+          ],
+          [
+            "original_glcm_JointEntropy",
+            0.0
+          ],
+          [
+            "original_glrlm_GrayLevelNonUniformity",
+            0.0
+          ],
+          [
+            "original_glrlm_LongRunEmphasis",
+            0.0
+          ],
+          [
+            "original_glrlm_LongRunLowGrayLevelEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_LargeAreaEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_LargeAreaLowGrayLevelEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_SizeZoneNonUniformityNormalized",
+            0.0
+          ],
+          [
+            "original_glszm_ZoneEntropy",
+            0.0
+          ],
+          [
+            "original_gldm_LargeDependenceLowGrayLevelEmphasis",
+            0.0
+          ],
+          [
+            "original_ngtdm_Busyness",
+            0.18930739767950328
+          ],
+          [
+            "original_ngtdm_Coarseness",
+            0.0
+          ],
+          [
+            "original_ngtdm_Contrast",
+            0.0
+          ]
+        ],
+        "convergiu": true,
+        "fold_estabilidade": 2,
+        "n_iter": 11,
+        "n_nodulos": 328,
+        "n_pacientes": 237,
+        "n_pos_correlacao": 36,
+        "n_pos_variancia": 107,
+        "seed_interna": 103,
+        "selecionadas": [
+          "original_shape_Elongation",
+          "original_shape_Flatness",
+          "original_shape_Sphericity",
+          "original_shape_SurfaceVolumeRatio",
+          "original_firstorder_90Percentile",
+          "original_firstorder_RootMeanSquared",
+          "original_glcm_ClusterShade",
+          "original_glcm_Id",
+          "original_glcm_Imc1",
+          "original_ngtdm_Busyness"
+        ],
+        "warnings": []
+      },
+      {
+        "C": 0.31622776601683794,
+        "coeficientes": [
+          [
+            "original_shape_Elongation",
+            0.14668825646046801
+          ],
+          [
+            "original_shape_Flatness",
+            0.0
+          ],
+          [
+            "original_shape_LeastAxisLength",
+            0.0
+          ],
+          [
+            "original_shape_MajorAxisLength",
+            0.0
+          ],
+          [
+            "original_shape_MeshVolume",
+            0.0
+          ],
+          [
+            "original_shape_Sphericity",
+            -1.5284475513084712
+          ],
+          [
+            "original_shape_SurfaceVolumeRatio",
+            -1.796275465529416
+          ],
+          [
+            "original_firstorder_10Percentile",
+            0.0
+          ],
+          [
+            "original_firstorder_90Percentile",
+            -1.0790424148353976
+          ],
+          [
+            "original_firstorder_Energy",
+            0.0
+          ],
+          [
+            "original_firstorder_Entropy",
+            0.0
+          ],
+          [
+            "original_firstorder_Kurtosis",
+            0.0
+          ],
+          [
+            "original_firstorder_Minimum",
+            0.0
+          ],
+          [
+            "original_firstorder_RootMeanSquared",
+            -0.4841436639152589
+          ],
+          [
+            "original_firstorder_Skewness",
+            0.0
+          ],
+          [
+            "original_firstorder_Uniformity",
+            0.0
+          ],
+          [
+            "original_glcm_ClusterShade",
+            -0.015066045292433702
+          ],
+          [
+            "original_glcm_Contrast",
+            0.0
+          ],
+          [
+            "original_glcm_Correlation",
+            0.0
+          ],
+          [
+            "original_glcm_Id",
+            0.0
+          ],
+          [
+            "original_glcm_Idmn",
+            0.0
+          ],
+          [
+            "original_glcm_Imc1",
+            0.18601073940031038
+          ],
+          [
+            "original_glcm_Imc2",
+            -0.5435595794061628
+          ],
+          [
+            "original_glcm_JointEnergy",
+            0.0
+          ],
+          [
+            "original_glcm_JointEntropy",
+            0.0
+          ],
+          [
+            "original_glrlm_LongRunEmphasis",
+            0.0
+          ],
+          [
+            "original_glrlm_LongRunLowGrayLevelEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_LargeAreaEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_LargeAreaLowGrayLevelEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_SizeZoneNonUniformityNormalized",
+            0.0
+          ],
+          [
+            "original_glszm_ZoneEntropy",
+            0.0
+          ],
+          [
+            "original_gldm_LargeDependenceLowGrayLevelEmphasis",
+            0.0
+          ],
+          [
+            "original_ngtdm_Busyness",
+            0.0
+          ],
+          [
+            "original_ngtdm_Coarseness",
+            0.0
+          ],
+          [
+            "original_ngtdm_Contrast",
+            0.0
+          ]
+        ],
+        "convergiu": true,
+        "fold_estabilidade": 3,
+        "n_iter": 10,
+        "n_nodulos": 337,
+        "n_pacientes": 231,
+        "n_pos_correlacao": 35,
+        "n_pos_variancia": 107,
+        "seed_interna": 104,
+        "selecionadas": [
+          "original_shape_Elongation",
+          "original_shape_Sphericity",
+          "original_shape_SurfaceVolumeRatio",
+          "original_firstorder_90Percentile",
+          "original_firstorder_RootMeanSquared",
+          "original_glcm_ClusterShade",
+          "original_glcm_Imc1",
+          "original_glcm_Imc2"
+        ],
+        "warnings": [
+          {
+            "categoria": "ConvergenceWarning",
+            "contagem": 1,
+            "mensagem": "Liblinear failed to converge, increase the number of iterations."
+          }
+        ]
+      },
+      {
+        "C": 0.1,
+        "coeficientes": [
+          [
+            "original_shape_Elongation",
+            0.0
+          ],
+          [
+            "original_shape_Flatness",
+            0.0
+          ],
+          [
+            "original_shape_LeastAxisLength",
+            0.0
+          ],
+          [
+            "original_shape_MajorAxisLength",
+            0.12431014979399688
+          ],
+          [
+            "original_shape_MeshVolume",
+            0.0
+          ],
+          [
+            "original_shape_Sphericity",
+            -0.6652359166307142
+          ],
+          [
+            "original_shape_SurfaceVolumeRatio",
+            -0.36887477474765845
+          ],
+          [
+            "original_firstorder_10Percentile",
+            0.0
+          ],
+          [
+            "original_firstorder_90Percentile",
+            0.0
+          ],
+          [
+            "original_firstorder_Energy",
+            0.0
+          ],
+          [
+            "original_firstorder_Entropy",
+            0.0
+          ],
+          [
+            "original_firstorder_Kurtosis",
+            0.0
+          ],
+          [
+            "original_firstorder_Minimum",
+            0.0
+          ],
+          [
+            "original_firstorder_RootMeanSquared",
+            -0.2927852799653907
+          ],
+          [
+            "original_firstorder_Skewness",
+            0.0
+          ],
+          [
+            "original_firstorder_Uniformity",
+            0.0
+          ],
+          [
+            "original_glcm_ClusterShade",
+            -0.01388792120732554
+          ],
+          [
+            "original_glcm_Contrast",
+            0.0
+          ],
+          [
+            "original_glcm_Correlation",
+            0.0
+          ],
+          [
+            "original_glcm_Id",
+            0.0
+          ],
+          [
+            "original_glcm_Idmn",
+            0.0
+          ],
+          [
+            "original_glcm_Imc1",
+            1.0915758845068386
+          ],
+          [
+            "original_glcm_Imc2",
+            -0.9022124160150007
+          ],
+          [
+            "original_glcm_JointEnergy",
+            0.0
+          ],
+          [
+            "original_glcm_JointEntropy",
+            0.0
+          ],
+          [
+            "original_glrlm_GrayLevelNonUniformity",
+            0.0
+          ],
+          [
+            "original_glrlm_LongRunEmphasis",
+            0.0
+          ],
+          [
+            "original_glrlm_LongRunLowGrayLevelEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_LargeAreaEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_LargeAreaLowGrayLevelEmphasis",
+            0.0
+          ],
+          [
+            "original_glszm_SizeZoneNonUniformityNormalized",
+            0.0
+          ],
+          [
+            "original_glszm_ZoneEntropy",
+            0.0
+          ],
+          [
+            "original_gldm_LargeDependenceLowGrayLevelEmphasis",
+            0.0
+          ],
+          [
+            "original_ngtdm_Busyness",
+            0.0
+          ],
+          [
+            "original_ngtdm_Coarseness",
+            0.0
+          ],
+          [
+            "original_ngtdm_Contrast",
+            0.0
+          ]
+        ],
+        "convergiu": true,
+        "fold_estabilidade": 4,
+        "n_iter": 13,
+        "n_nodulos": 333,
+        "n_pacientes": 233,
+        "n_pos_correlacao": 36,
+        "n_pos_variancia": 107,
+        "seed_interna": 105,
+        "selecionadas": [
+          "original_shape_MajorAxisLength",
+          "original_shape_Sphericity",
+          "original_shape_SurfaceVolumeRatio",
+          "original_firstorder_RootMeanSquared",
+          "original_glcm_ClusterShade",
+          "original_glcm_Imc1",
+          "original_glcm_Imc2"
+        ],
+        "warnings": [
+          {
+            "categoria": "ConvergenceWarning",
+            "contagem": 1,
+            "mensagem": "Liblinear failed to converge, increase the number of iterations."
+          }
+        ]
+      }
+    ],
+    "frequencia": {
+      "original_firstorder_10Percentile": 0,
+      "original_firstorder_90Percentile": 4,
+      "original_firstorder_Energy": 0,
+      "original_firstorder_Entropy": 0,
+      "original_firstorder_InterquartileRange": 0,
+      "original_firstorder_Kurtosis": 0,
+      "original_firstorder_Maximum": 0,
+      "original_firstorder_Mean": 0,
+      "original_firstorder_MeanAbsoluteDeviation": 0,
+      "original_firstorder_Median": 0,
+      "original_firstorder_Minimum": 0,
+      "original_firstorder_Range": 0,
+      "original_firstorder_RobustMeanAbsoluteDeviation": 0,
+      "original_firstorder_RootMeanSquared": 4,
+      "original_firstorder_Skewness": 1,
+      "original_firstorder_TotalEnergy": 0,
+      "original_firstorder_Uniformity": 0,
+      "original_firstorder_Variance": 0,
+      "original_glcm_Autocorrelation": 0,
+      "original_glcm_ClusterProminence": 0,
+      "original_glcm_ClusterShade": 3,
+      "original_glcm_ClusterTendency": 0,
+      "original_glcm_Contrast": 0,
+      "original_glcm_Correlation": 0,
+      "original_glcm_DifferenceAverage": 0,
+      "original_glcm_DifferenceEntropy": 0,
+      "original_glcm_DifferenceVariance": 0,
+      "original_glcm_Id": 2,
+      "original_glcm_Idm": 0,
+      "original_glcm_Idmn": 1,
+      "original_glcm_Idn": 0,
+      "original_glcm_Imc1": 4,
+      "original_glcm_Imc2": 4,
+      "original_glcm_InverseVariance": 0,
+      "original_glcm_JointAverage": 0,
+      "original_glcm_JointEnergy": 0,
+      "original_glcm_JointEntropy": 0,
+      "original_glcm_MCC": 0,
+      "original_glcm_MaximumProbability": 0,
+      "original_glcm_SumAverage": 0,
+      "original_glcm_SumEntropy": 0,
+      "original_glcm_SumSquares": 0,
+      "original_gldm_DependenceEntropy": 0,
+      "original_gldm_DependenceNonUniformity": 0,
+      "original_gldm_DependenceNonUniformityNormalized": 0,
+      "original_gldm_DependenceVariance": 0,
+      "original_gldm_GrayLevelNonUniformity": 0,
+      "original_gldm_GrayLevelVariance": 0,
+      "original_gldm_HighGrayLevelEmphasis": 0,
+      "original_gldm_LargeDependenceEmphasis": 0,
+      "original_gldm_LargeDependenceHighGrayLevelEmphasis": 0,
+      "original_gldm_LargeDependenceLowGrayLevelEmphasis": 1,
+      "original_gldm_LowGrayLevelEmphasis": 0,
+      "original_gldm_SmallDependenceEmphasis": 0,
+      "original_gldm_SmallDependenceHighGrayLevelEmphasis": 0,
+      "original_gldm_SmallDependenceLowGrayLevelEmphasis": 0,
+      "original_glrlm_GrayLevelNonUniformity": 0,
+      "original_glrlm_GrayLevelNonUniformityNormalized": 0,
+      "original_glrlm_GrayLevelVariance": 0,
+      "original_glrlm_HighGrayLevelRunEmphasis": 0,
+      "original_glrlm_LongRunEmphasis": 0,
+      "original_glrlm_LongRunHighGrayLevelEmphasis": 0,
+      "original_glrlm_LongRunLowGrayLevelEmphasis": 0,
+      "original_glrlm_LowGrayLevelRunEmphasis": 0,
+      "original_glrlm_RunEntropy": 0,
+      "original_glrlm_RunLengthNonUniformity": 0,
+      "original_glrlm_RunLengthNonUniformityNormalized": 0,
+      "original_glrlm_RunPercentage": 0,
+      "original_glrlm_RunVariance": 0,
+      "original_glrlm_ShortRunEmphasis": 0,
+      "original_glrlm_ShortRunHighGrayLevelEmphasis": 0,
+      "original_glrlm_ShortRunLowGrayLevelEmphasis": 0,
+      "original_glszm_GrayLevelNonUniformity": 0,
+      "original_glszm_GrayLevelNonUniformityNormalized": 0,
+      "original_glszm_GrayLevelVariance": 0,
+      "original_glszm_HighGrayLevelZoneEmphasis": 0,
+      "original_glszm_LargeAreaEmphasis": 0,
+      "original_glszm_LargeAreaHighGrayLevelEmphasis": 0,
+      "original_glszm_LargeAreaLowGrayLevelEmphasis": 0,
+      "original_glszm_LowGrayLevelZoneEmphasis": 0,
+      "original_glszm_SizeZoneNonUniformity": 0,
+      "original_glszm_SizeZoneNonUniformityNormalized": 0,
+      "original_glszm_SmallAreaEmphasis": 0,
+      "original_glszm_SmallAreaHighGrayLevelEmphasis": 0,
+      "original_glszm_SmallAreaLowGrayLevelEmphasis": 0,
+      "original_glszm_ZoneEntropy": 0,
+      "original_glszm_ZonePercentage": 0,
+      "original_glszm_ZoneVariance": 0,
+      "original_ngtdm_Busyness": 1,
+      "original_ngtdm_Coarseness": 1,
+      "original_ngtdm_Complexity": 0,
+      "original_ngtdm_Contrast": 0,
+      "original_ngtdm_Strength": 0,
+      "original_shape_Elongation": 4,
+      "original_shape_Flatness": 1,
+      "original_shape_LeastAxisLength": 0,
+      "original_shape_MajorAxisLength": 1,
+      "original_shape_Maximum2DDiameterColumn": 0,
+      "original_shape_Maximum2DDiameterRow": 0,
+      "original_shape_Maximum2DDiameterSlice": 0,
+      "original_shape_Maximum3DDiameter": 0,
+      "original_shape_MeshVolume": 0,
+      "original_shape_MinorAxisLength": 0,
+      "original_shape_Sphericity": 5,
+      "original_shape_SurfaceArea": 0,
+      "original_shape_SurfaceVolumeRatio": 5,
+      "original_shape_VoxelVolume": 0
+    },
+    "hash_configuracao": "8b257d3720a6587b248da2b9d49a8e74d596aaee2a5625cd9db799835ddf062f",
+    "repeticao": -1,
+    "s_k": [
+      "original_shape_Elongation",
+      "original_shape_Sphericity",
+      "original_shape_SurfaceVolumeRatio",
+      "original_firstorder_90Percentile",
+      "original_firstorder_RootMeanSquared",
+      "original_glcm_ClusterShade",
+      "original_glcm_Imc1",
+      "original_glcm_Imc2"
+    ],
+    "s_k_vazio": false,
+    "sha256_amostra": "1f2dadaed85bc037bfb8458fd0ffccb8a152b7e2a8a60d99dd0dad9ec9180ca5"
+  },
+  "sha256_dados": {
+    "split": "ed120c2b5c0f308d41c11cfc32dae0e897a179c71d6ea803588720ba1ba4f65f",
+    "tabela": "5e92e7e860ad8edd327570c929cd263cd780be98902e57017551ad0080da60ab"
+  },
+  "versao_formato": 1,
+  "warnings": [
+    {
+      "categoria": "ConvergenceWarning",
+      "contagem": 2,
+      "mensagem": "Liblinear failed to converge, increase the number of iterations."
+    }
+  ]
+}
