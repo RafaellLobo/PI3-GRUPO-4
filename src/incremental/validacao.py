@@ -22,10 +22,11 @@ Sequência (nada ocorre antes da anterior):
 7. relatório agregado (sem identificadores, predições, p-valor ou significância), saída registrada na
    ``Execucao`` e manifesto gravado ao lado. Execução DEFINITIVA exige git limpo e ambiente esperado.
 
-Fora desta etapa e NÃO implementado aqui: sensibilidade com spline (M0s/M3s, Seção 10.1),
-circularidade (10.3), máscaras reduzidas e faixas de diâmetro (10.4), sensibilidades da lista
-reproduzida (P3) e de ``C = 0,1`` (P7). O relatório declara a omissão; nenhuma delas muda a leitura da
-Seção 9. A Etapa 3 não ajusta seleção: a lista é a fixa.
+As três sensibilidades (spline M0s/M3s da Seção 10.1, lista reproduzida de P3 e ``C = 0,1`` de P7) vêm
+de ``sensibilidades.py``, cada uma alterando um único fator, com o mesmo bootstrap pareado. Fora desta
+etapa e NÃO implementado aqui: circularidade (10.3) e máscaras reduzidas e faixas de diâmetro (10.4).
+O relatório declara a omissão; nenhuma delas muda a leitura da Seção 9. A Etapa 3 não ajusta seleção:
+a lista é a fixa.
 
 Ponto de entrada: ``executar_etapa3`` ou
 ``python -m src.incremental.validacao --checkpoints DIR --destino DIR --confirmo-etapa3-oficial``.
@@ -54,6 +55,7 @@ from . import guardas
 from . import modelos
 from . import piloto
 from . import rastreabilidade as rst
+from . import sensibilidades as sens
 
 ATIVIDADE = cfg.Etapa.E3.value
 PARTICOES: Tuple[str, ...] = ("train", "validation")
@@ -81,10 +83,8 @@ AVISO = ("Etapa 3 do protocolo (validação oficial), lista fixa da Seção 5.1.
          "condicionais, lidos exclusivamente pelo IC95% (Seções 8.3 e 9); nenhum resultado altera "
          "modelo, features, especificação ou critérios.")
 LIMITACOES_DECLARADAS: Tuple[str, ...] = (
-    "Sensibilidade com spline do diâmetro (Seção 10.1, M0s e M3s) não calculada nesta execução.",
     "Circularidade e dependência do tamanho (Seção 10.3) e máscaras reduzidas/faixas (Seção 10.4) "
     "não calculadas nesta execução.",
-    "Sensibilidades da lista reproduzida (P3) e de C = 0,1 (P7) não calculadas nesta execução.",
     "A leitura da Seção 9 exige a comparação com a CV aninhada (Etapa 2) e, só como descrição, o teste "
     "(Etapa 5); ambas ficam fora deste relatório.",
 )
@@ -347,7 +347,7 @@ def _executar(sessao: ck.SessaoCheckpoints, autorizacao: guardas.Autorizacao,
               especificacoes: Mapping[str, cfg.EspecModelo], decisoes: Mapping[str, cfg.Decisao], repo: Path,
               fonte: dados.FonteDados, baseline: Path, espec_bootstrap: cfg.EspecBootstrap,
               finalidade: rst.Finalidade) -> dict:
-    features = cfg.uniao_ordenada(*(especificacoes[m].features for m in MODELOS))
+    features = cfg.uniao_ordenada(*(especificacoes[m].features for m in MODELOS), sens.features_necessarias())
     carga = dados.carregar(ATIVIDADE, PARTICOES, features, decisoes, repo, fonte)
     if (carga.atividade, carga.particoes, carga.autorizacao) != (ATIVIDADE, PARTICOES, autorizacao):
         raise ValidacaoInvalida("carga com atividade, partições ou autorização inesperadas")
@@ -380,6 +380,10 @@ def _executar(sessao: ck.SessaoCheckpoints, autorizacao: guardas.Autorizacao,
 
     y = validacao[cfg.COLUNA_ALVO].to_numpy(dtype=np.int64)
     resultado, partes = _consolidar(payloads, y, validacao[cfg.COLUNA_PACIENTE].to_numpy(), espec_bootstrap)
+    sensibilidades = sens.avaliar_sensibilidades(
+        autorizacao=autorizacao, decisoes=decisoes, treino=treino, validacao=validacao,
+        probas_principais={m: np.asarray(payloads[m]["proba"], dtype=np.float64) for m in MODELOS},
+        contrastes_principais=partes["contrastes"], espec_bootstrap=espec_bootstrap)
     return {
         "formato": FORMATO_RELATORIO, "versao_formato": VERSAO, "rotulo": ROTULO, "aviso": AVISO,
         "atividade": ATIVIDADE, "finalidade": finalidade.value,
@@ -395,12 +399,13 @@ def _executar(sessao: ck.SessaoCheckpoints, autorizacao: guardas.Autorizacao,
                           "classe_0": int((y == 0).sum()), "classe_1": int((y == 1).sum())},
         },
         "fora_desta_modalidade": {"particoes_nao_lidas": ["test"], "selecao_de_features": False,
-                                  "permutacoes": False, "spline": False, "teste_de_hipotese": False},
+                                  "permutacoes": False, "spline_na_analise_principal": False, "teste_de_hipotese": False},
         "unidades": {"total": len(MODELOS), "modelos": list(MODELOS)},
         "invariante_m1": invariante,
         "bootstrap": resultado.como_dict(),
         "modelos": partes["modelos"],
         "contrastes": partes["contrastes"],
+        "sensibilidades": sensibilidades,
         "limitacoes_declaradas": list(LIMITACOES_DECLARADAS),
     }
 
