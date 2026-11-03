@@ -52,10 +52,11 @@ SIMBOLOS_S4: Mapping[str, Tuple[str, ...]] = MappingProxyType({
                                            "sha256_canonico"),
 })
 
-#: SHA-256 (CRLF → LF) dos arquivos da S4 acima, no ``origin/main`` 7f3e1c2.
+#: SHA-256 (CRLF → LF) dos arquivos da S4 acima, no ``origin/main`` 7f3e1c2, exceto ``config.py``:
+#: atualizado em 03/11/2026 para o commit 7112548 da S4 (``config.DECISOES`` com P1–P4 registradas).
 ARQUIVOS_S4: Mapping[str, str] = MappingProxyType({
     "src/incremental/checkpoints.py": "6a19bb410b59b93a861980f43374eed6425923f77e584d047fdead24b3741b17",
-    "src/incremental/config.py": "cedb0f557fe6dbbd48545267980c9fdbbf6a72fb7e5e7cba5f85f99679168b26",
+    "src/incremental/config.py": "dbb102b465a9fb0ae7a8ca79fa133b00f46162a91e335656ab2be31cd89c92e9",
     "src/incremental/dados.py": "a12a6a9c9750bb4f5ca3648c26158c1bdc78a29dbc164d09469e68c3745782b7",
     "src/incremental/folds.py": "95ab321f90e14996329a150da9eb225482e06f858d99318fb3d4e40cbbd6cb09",
     "src/incremental/guardas.py": "34fbc1294548aa3ecd8c404fa76b6014a5ef5f84b3940884aacf05eef544ba25",

@@ -27,17 +27,19 @@ com ``pickle`` e com JSON (``como_dict``), sem depender de ``PlanoDobras``,
 
 **Desenho para workers (multiprocessing com ``spawn`` no Windows).** Nada do
 plano atravessa processos. O processo principal monta ``TarefaUnidade``
-(só primitivos: modo, ``r``, ``k``, modelo e fingerprints do plano e da
-dobra). Cada worker monta o PRÓPRIO ``ContextoExecucao`` uma vez, a partir
-da mesma carga (``ContextoExecucao.de_dados``), regerando o plano de forma
-determinística, e roda ``executar_tarefa``: o fingerprint do plano e o da
-dobra precisam coincidir com os da tarefa, senão a tarefa falha por
-integridade. O resultado volta como ``ResultadoUnidade`` ou ``FalhaRegistrada``,
-ambos de tipos primitivos. O executor paralelo não é implementado aqui.
+(só primitivos: modo, ``r``, ``k``, modelo, configuração, fingerprints do
+plano e da dobra e SHA-256 da amostra e de ``X``). Cada worker monta o PRÓPRIO
+``ContextoExecucao`` uma vez, a partir da mesma carga
+(``ContextoExecucao.de_dados``), regerando o plano de forma determinística, e
+roda ``executar_tarefa``: amostra, ``X``, plano e dobra precisam coincidir com
+os da tarefa ANTES do treinamento, senão a tarefa falha por integridade. O
+resultado volta como ``ResultadoUnidade`` ou ``FalhaRegistrada``, ambos de
+tipos primitivos. O executor paralelo fica em ``executor.py``.
 """
 
 from __future__ import annotations
 
+import hashlib
 import warnings
 from collections import Counter
 from dataclasses import dataclass, field
@@ -110,6 +112,10 @@ class TarefaUnidade:
     fingerprint_plano: str
     fingerprint_dobra: str
     sha256_configuracao: str
+    #: ``Amostra.sha256`` (ids, rótulos e grupos) e ``sha256_caracteristicas(X)`` da carga do processo
+    #: principal; o worker confere os dois antes do treinamento.
+    sha256_amostra: str
+    sha256_caracteristicas: str
 
     @property
     def unidade(self) -> Unidade:
@@ -234,6 +240,11 @@ class FalhaRegistrada:
 # --------------------------------------------------------------------------- #
 
 
+def sha256_caracteristicas(X: np.ndarray) -> str:
+    """SHA-256 da matriz ``X`` em ``float64`` little-endian, contígua (mesma forma da identidade dos checkpoints)."""
+    return hashlib.sha256(np.ascontiguousarray(X, dtype="<f8").tobytes()).hexdigest()
+
+
 @dataclass(frozen=True, eq=False)
 class ContextoExecucao:
     """Dados e plano de UM processo. Nunca atravessa processos: cada worker monta o seu."""
@@ -244,6 +255,7 @@ class ContextoExecucao:
     amostra: s4.Amostra = field(repr=False)
     plano: folds.PlanoDobras = field(repr=False)
     sha256_configuracao: str
+    sha256_caracteristicas: str
 
     @classmethod
     def de_dados(cls, dados: DadosBenchmark) -> "ContextoExecucao":
@@ -254,7 +266,8 @@ class ContextoExecucao:
         X.setflags(write=False)
         amostra = dados.amostra()
         plano = folds.gerar_plano(amostra, dados.modo)
-        return cls(dados.modo, bool(dados.oficial), X, amostra, plano, cfg.sha256_configuracao(cfg.CONFIGURACAO))
+        return cls(dados.modo, bool(dados.oficial), X, amostra, plano, cfg.sha256_configuracao(cfg.CONFIGURACAO),
+                   sha256_caracteristicas(X))
 
     def unidades(self) -> Tuple[Unidade, ...]:
         return unidades_do_modo(self.modo)
@@ -262,7 +275,8 @@ class ContextoExecucao:
     def tarefa(self, unidade: Unidade) -> TarefaUnidade:
         dobra = self._dobra(unidade)
         return TarefaUnidade(self.modo, unidade.repeticao, unidade.dobra, unidade.modelo, self.plano.fingerprint,
-                             dobra.fingerprint, self.sha256_configuracao)
+                             dobra.fingerprint, self.sha256_configuracao, self.amostra.sha256,
+                             self.sha256_caracteristicas)
 
     def tarefas(self) -> Tuple[TarefaUnidade, ...]:
         return tuple(self.tarefa(u) for u in self.unidades())
@@ -362,7 +376,7 @@ def executar_unidade(contexto: ContextoExecucao, unidade: Unidade) -> ResultadoU
 
 
 def executar_tarefa(contexto: ContextoExecucao, tarefa: TarefaUnidade) -> Union[ResultadoUnidade, FalhaRegistrada]:
-    """Ponto de entrada do futuro worker: confere a tarefa contra o contexto local e executa.
+    """Ponto de entrada do worker: confere a tarefa contra o contexto local e só então executa.
 
     Nunca deixa uma falha da unidade escapar: devolve ``FalhaRegistrada``.
     Tipos errados (erro de programação) ainda levantam ``TypeError``.
@@ -380,6 +394,11 @@ def executar_tarefa(contexto: ContextoExecucao, tarefa: TarefaUnidade) -> Union[
             raise FalhaUnidade(unidade, f"tarefa do modo {tarefa.modo}; contexto {contexto.modo}", "integridade")
         if tarefa.sha256_configuracao != contexto.sha256_configuracao:
             raise FalhaUnidade(unidade, "configuração da tarefa difere da do processo", "integridade")
+        if tarefa.sha256_amostra != contexto.amostra.sha256:
+            raise FalhaUnidade(unidade, "amostra (ids, rótulos ou grupos) da tarefa difere da deste processo",
+                               "integridade")
+        if tarefa.sha256_caracteristicas != contexto.sha256_caracteristicas:
+            raise FalhaUnidade(unidade, "características (X) da tarefa diferem das deste processo", "integridade")
         if tarefa.fingerprint_plano != contexto.plano.fingerprint:
             raise FalhaUnidade(unidade, "plano da tarefa difere do regerado neste processo", "integridade")
         if tarefa.fingerprint_dobra != contexto._dobra(unidade).fingerprint:
@@ -394,5 +413,5 @@ def executar_tarefa(contexto: ContextoExecucao, tarefa: TarefaUnidade) -> Union[
 __all__ = [
     "ContextoExecucao", "ESTADO_CONCLUIDA", "ESTADO_FALHA", "FalhaRegistrada", "FalhaUnidade",
     "PredicoesPrivadas", "RegistroUnidade", "ResultadoUnidade", "TarefaUnidade", "Unidade", "executar_tarefa",
-    "executar_unidade", "unidades_do_modo",
+    "executar_unidade", "sha256_caracteristicas", "unidades_do_modo",
 ]
