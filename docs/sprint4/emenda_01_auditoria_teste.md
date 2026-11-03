@@ -6,7 +6,7 @@
 **Responsável:** Samara Ruiz · **Revisor:** Rafael Lazarin Lobo de Almeida
 **Registro:** 30/10/2026 (revisão 1) · **Revisão 2:** 31/10/2026, após o comentário de revisão do PR #10 · **Revisão 3:** 02/11/2026, reconciliação com o benchmark da Sprint 6
 **Prazo do card:** 31/10/2026, 23h59 (janela original 27–28/10, prorrogada no cartão)
-**Situação:** proposta — **não aprovada e não congelada**. Decisões P1 a P9 registradas na Seção E11, com os estados definidos na legenda dessa seção; aguardam a aprovação do revisor.
+**Situação:** Emenda 1, revisão 3, **aprovada pelo revisor em 03/11/2026** (conteúdo do commit `573bc1729f7dec33c73675ccc9c48c97d5e50c5a`; registro no PR #10, comentário `6603471577`). Congelamento documental condicionado à identificação do commit aprovado e ao registro do silêncio do grupo, ambos explicitados abaixo. **Esta aprovação não substitui os registros `APROVACAO-DECISAO` exigidos pelas guardas da S4.**
 
 Registro de auditoria completo: `DoD_S6_P0_Auditoria_do_Teste_e_Protocolo_v1.docx` (Drive).
 Fundamentação das decisões: `Proposta_Tecnica_Decisoes_P1_P7.docx` (Drive, versão 1.0 de 31/10/2026, que cobre
@@ -76,8 +76,9 @@ acordada entre a responsável e o revisor. Pontos confirmados pela responsável:
    decisão.
 
 **Governança.** Os pontos acima foram confirmados pela responsável em 02/11/2026. A confirmação da
-responsável **não equivale** à aprovação formal do grupo nem à aprovação desta emenda pelo revisor, que
-continua pendente (ver Congelamento).
+responsável **não equivale** à aprovação formal do grupo. A aprovação do revisor foi registrada em
+03/11/2026 no PR #10 (comentário `6603471577`), sobre a revisão 3 no commit `573bc17`.
+As decisões P1–P3 ainda exigem os registros formais separados das guardas da S4 (ver Congelamento).
 
 | Conflito | Correção | Onde |
 |---|---|---|
@@ -439,16 +440,16 @@ do `main` quebra duas rotinas de validação que os leem (`scripts/validate_nodu
 
 **Como as decisões foram tomadas.** Em 31/10/2026, pela responsável, item a item, com as alternativas e os
 impactos à vista. Os demais integrantes do grupo foram consultados havia duas ou três semanas e não
-responderam. As decisões abaixo foram tomadas pela responsável (Samara) e estão **aguardando
-a confirmação do revisor** (Rafael). O silêncio do grupo fica registrado; **não equivale a aprovação** do
-grupo. Fundamentação, alternativas e impactos de cada uma: `Proposta_Tecnica_Decisoes_P1_P7.docx`.
+responderam. As decisões abaixo foram tomadas pela responsável (Samara) e **ratificadas pelo revisor (Rafael) em
+03/11/2026, para fins desta Emenda**. Os registros formais P1–P3 exigidos pelo código da S4 continuam
+pendentes. O silêncio do grupo fica registrado; **não equivale a aprovação** do grupo. Fundamentação, alternativas e impactos de cada uma: `Proposta_Tecnica_Decisoes_P1_P7.docx`.
 Na revisão 3 (02/11/2026), P6 e P9 foram delimitadas ao benchmark S6, em acordo entre responsável e
 revisor; o conteúdo das demais decisões não mudou.
 
 **Estados usados nesta emenda e na Seção 13 do protocolo:**
 
-- **decidida** — registrada pela responsável, com data, e **pendente de aprovação do revisor**; não equivale a
-  aprovação do grupo;
+- **decidida** — registrada pela responsável, com data, e ratificada pelo revisor em 03/11/2026 para fins desta
+  Emenda; ainda exige registros formais separados quando previstos pelas guardas; não equivale a aprovação do grupo;
 - **encerrada** — resolvida por evidência reproduzida;
 - **transferida (S6)** — fora do escopo do protocolo da S4; definida no pré-registro do protocolo
   complementar da Sprint 6, antes de qualquer experimento definitivo;
@@ -509,6 +510,16 @@ não é análise confirmatória, não entra no congelamento e não toca o conjun
 O **benchmark de classificadores da Sprint 6** é protocolo complementar, fora do escopo da Seção 14 do
 protocolo, regido pelo pré-registro P9 e pelas condições da E7. O pré-registro P9 não é condição de
 congelamento deste protocolo; seu congelamento é condição do benchmark definitivo.
+
+---
+
+## Registro de aprovação da revisão 3 — 03/11/2026
+
+- **Responsável científica:** Samara Ruiz; decisões e justificativas documentadas em E11.
+- **Revisor:** Rafael Lazarin Lobo de Almeida; aprovação técnica datada em 03/11/2026 no [comentário do PR #10](https://github.com/RafaellLobo/PI3-GRUPO-4/pull/10#issuecomment-6603471577).
+- **Commit com o conteúdo revisado e aprovado:** `573bc1729f7dec33c73675ccc9c48c97d5e50c5a` (revisão 3, 02/11/2026). Este registro posterior identifica o conteúdo aprovado sem alterar as decisões científicas.
+- **Governança:** ausência de resposta dos demais integrantes registrada em E11; **não** é aprovação formal do grupo. A aprovação por responsável e revisor é uma limitação de governança declarada, conforme os critérios de Congelamento.
+- **Escopo:** aprovação da Emenda 1, **não** aprovação automática de P1–P3 nas guardas de execução, nem aprovação do pré-registro P9 da S6, nem conclusão da Etapa 3 da S4.
 
 ---
 
