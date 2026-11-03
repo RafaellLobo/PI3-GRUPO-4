@@ -2,11 +2,11 @@
 
 **Projeto:** PI3-GRUPO-4 — Radiômica de Nódulos Pulmonares (LIDC-IDRI)
 **Natureza:** protocolo complementar, comparativo-descritivo, **fora do escopo** da Seção 14 do protocolo da Sprint 4 (S4)
-**Base normativa:** Emenda 1 ao protocolo da S4, revisão 3 — `docs/sprint4/emenda_01_auditoria_teste.md` no commit `573bc17` (PR #10, ainda não integrado ao `main`), Seções E3, E5, E6, E7, E10, E11 (P6 e P9) e E12
-**Protocolo relacionado:** [`docs/sprint4/protocolo_valor_incremental.md`](../sprint4/protocolo_valor_incremental.md) — a versão do `main` ainda não traz as anotações da Emenda 1, que estão no commit `573bc17`
+**Base normativa:** Emenda 1 ao protocolo da S4, revisão 3 — `docs/sprint4/emenda_01_auditoria_teste.md` no commit `573bc17` (PR #10, integrado ao `main` em `a0dcae9`), Seções E3, E5, E6, E7, E10, E11 (P6 e P9) e E12
+**Protocolo relacionado:** [`docs/sprint4/protocolo_valor_incremental.md`](../sprint4/protocolo_valor_incremental.md) — a versão do `main` (`a0dcae9`) já traz as anotações da Emenda 1
 **Responsável:** Samara Ruiz · **Revisor e redator desta especificação:** Rafael Lazarin Lobo de Almeida
 **Versão:** 1.0 — 02/11/2026
-**Situação:** **PROPOSTA — não aprovada.** Nenhuma execução definitiva está autorizada. A confirmação da responsável e do revisor não equivale à aprovação formal do grupo. A decisão D2 depende de confirmação documental da responsável (Seção 17).
+**Situação:** D1–D12 confirmadas pela equipe em 03/11/2026 (confirmação relatada pelo revisor; D2 também pela responsável do Exp. 26.0.1, Seção 19). A aprovação formal é o registro `P9` da Seção 19, e a execução definitiva exige ainda `S4_E3_REGISTRADA`; sem os dois, nenhuma execução definitiva está autorizada. A confirmação não equivale à aprovação formal do grupo.
 
 ---
 
@@ -100,7 +100,7 @@ LR fixa, LR com ajuste, RF e XGBoost usam `predict_proba[:, 1]`. O SVM usa `deci
 - **F — AUC na faixa de 12 a 30 mm:** AUC-ROC dentro de cada dobra externa, só sobre os nódulos avaliados com **12 ≤ D < 30 mm**, em que D = `original_shape_Maximum3DDiameter`.
   - Os modelos são treinados e ajustados com **todos** os nódulos; a faixa só recorta a avaliação.
   - **Contagem esperada na base de 353:** 226 nódulos, 187 pacientes, 135 malignos (91 benignos) — Emenda 1, E1 (commit `573bc17`).
-  - O intervalo é o registrado na E1 ("12 a <30 mm"). A **variável** ainda depende de confirmação documental da responsável no DoD do Exp. 26.0.1 (D2, Seção 17), porque nenhum documento versionado a registra.
+  - O intervalo é o registrado na E1 ("12 a <30 mm"). A **variável** (`original_shape_Maximum3DDiameter`) foi confirmada pela responsável do Exp. 26.0.1 (D2, Seções 17 e 19). O experimento usa o intervalo fechado [12, 30]; este pré-registro mantém [12, 30), e a diferença está documentada na Seção 19.
 
 ### 7.3 Regra de validade por dobra
 
@@ -369,12 +369,12 @@ O código 2 fica reservado ao bloqueio de aprovação: o erro de argumentos **n�
 
 ## 17. Matriz de decisões D1–D12
 
-Todas: **propostas, pendentes de aprovação** (Seção 19). D2 depende, além disso, de confirmação documental da responsável.
+Todas: confirmadas pela equipe em 03/11/2026; a aprovação formal é o registro `P9` da Seção 19. D2 foi confirmada, além disso, pela responsável do Exp. 26.0.1 (Seção 19).
 
 | # | Decisão | Resolução | Observação | Justificativa |
 |---|---|---|---|---|
 | D1 | Reuso da S4 | Só APIs públicas, num único adaptador; nenhuma dependência privada; reimplementação documentada; teste de hash dos arquivos importados | — | As APIs públicas de alto nível da S4 estão presas à configuração dela; usar símbolos privados criaria acoplamento frágil |
-| D2 | Faixa | `original_shape_Maximum3DDiameter` ∈ [12, 30) mm; conferência 226/187/135 no modo definitivo, antes de qualquer ajuste | **Pendente de confirmação documental da responsável** | O intervalo está registrado na E1. A variável usada no Exp. 26.0.1 não está em nenhum documento versionado (o `docs/indice_experimentos.md` registra os Exp. 18–26 como não localizados) |
+| D2 | Faixa | `original_shape_Maximum3DDiameter` ∈ [12, 30) mm; conferência 226/187/135 no modo definitivo, antes de qualquer ajuste | **Confirmada pela responsável do Exp. 26.0.1** (03/11/2026; evidências citadas: `piso_26_0_1.py` e `26_0_1_resumo.json`, não versionadas). O experimento usa [12, 30] e este pré-registro [12, 30); ver Seção 19 | O intervalo está registrado na E1. A variável usada no Exp. 26.0.1 não constava de nenhum documento versionado (o `docs/indice_experimentos.md` registra os Exp. 18–26 como não localizados) |
 | D3 | Validade | ≥ 5 positivos e ≥ 5 negativos distintos por dobra; ≥ 4 de 5 dobras; ≥ 8 de 10 repetições; descarte > 1% → IQ, sem efeito na elegibilidade | — | Separa a qualidade do intervalo da decisão |
 | D4 | Multiplicidade | Família de 6 contrastes com Bonferroni; B = 10.000; IC de 95% descritivo para cada θ̂ | B = 10.000 em vez de 2000 | Caudas de 0,417%: cerca de 42 réplicas por cauda, contra cerca de 8 com B = 2000 |
 | D5 | Seleção | C1 a C4; δ = 0,02 operacional; 80%; Δ na faixa ≥ 0; desempate 0,005; LR < SVM < RF < XGB | Taxa de descarte fora do C4 | Multicritério, sem depender de significância |
@@ -444,13 +444,14 @@ Todas: **propostas, pendentes de aprovação** (Seção 19). D2 depende, além d
 
 ## 19. Registro de aprovação e adendos
 
-**Configuração canônica:** [`docs/sprint6/config_benchmark_p9.json`](config_benchmark_p9.json), versionada no commit `74c494a4fe632d11a330ed4028218a20bf8bd511`.
-**SHA-256 da configuração canônica:** `1cd08306786067c1e29229a93a3215e087b0db21da35bc05c595bd5c8a2117d5` (Seção 14.4).
+**Configuração canônica:** [`docs/sprint6/config_benchmark_p9.json`](config_benchmark_p9.json), versionada no commit `001d715a9f2aa2b01660ae91238c96890aeb3d8d`.
+**SHA-256 da configuração canônica:** `a0d096a5415244f17f40360a2a5a8901bc8af1da5cf8687b891f920e1ee122b3` (Seção 14.4).
 
-- **Commit gerador:** `db4f476e91ee0893900f2ac19c5caa58ddc5a370`, branch `feat/s6-benchmark-configuracao`, ainda não integrada ao `main`. O arquivo foi gerado pelo modo `configuracao` desse commit e copiado sem edição.
+- **Commit gerador:** `e4c95e6249ef50614e8e9bd1272bd4af2bbc42db`, branch `feat/s6-benchmark-executor`. O arquivo foi gerado pelo modo `configuracao` desse commit, fora do repositório, e copiado sem edição para o commit acima.
 - **O que o valor mede:** o SHA-256 do conteúdo canônico (`guardas.hash_valor_decisao`, igual a `rastreabilidade.sha256_canonico`). **Não** é o SHA-256 dos bytes do arquivo, que difere dele por causa do `\n` final e muda com o CRLF do checkout no Windows.
 - **Conferência:** com o código do commit gerador, `python -m src.benchmark_s6 --modo configuracao --conferir docs/sprint6/config_benchmark_p9.json`. Esperado: código 0 e o SHA-256 acima.
-- **Situação:** passos 2 e 3 da Seção 14.4 cumpridos. **Esta anotação não é aprovação.** D2 segue pendente de confirmação documental da responsável, e D1–D12 (Seção 17) seguem pendentes de aprovação. Se D2 alterar a variável da faixa, ou se qualquer parâmetro mudar antes da aprovação, a configuração, o arquivo e este SHA-256 são gerados de novo e anotados aqui antes do registro P9.
+- **Regeneração de 03/11/2026.** A configuração anterior (SHA-256 `1cd08306…17d5`, commit gerador `db4f476`) fixava o SHA-256 de `src/incremental/config.py` (`cedb0f55…`). Ao registrar P1–P4 em `config.DECISOES` (S4, commit `7112548`), esse arquivo mudou (`dbb102b4…`), como a Seção 14.4 e o procedimento de configuração canônica previam. O **único** campo diferente entre os dois arquivos JSON é `referencias.arquivos_s4["src/incremental/config.py"]`; nenhum parâmetro do benchmark mudou, e os outros cinco arquivos da S4 fixados continuam idênticos. A substituição do arquivo foi feita por commit explícito, antes de qualquer registro P9.
+- **Situação:** passos 2 e 3 da Seção 14.4 cumpridos para o novo SHA-256. **Esta anotação não é aprovação.**
 
 O benchmark definitivo exige **dois** registros neste documento, cada um numa linha própria começando na coluna 0, fora de bloco de código, introduzida no commit da aprovação e com data igual ou anterior à desse commit (mesma regra das guardas da S4):
 
@@ -464,9 +465,13 @@ APROVACAO-DECISAO codigo=P9 status=aprovada data=AAAA-MM-DD valor_sha256=<64 hex
 APROVACAO-DECISAO codigo=S4_E3_REGISTRADA status=aprovada data=AAAA-MM-DD valor_sha256=<64 hex>
 ```
 
-**Registros de aprovação:** nenhum.
+**Confirmações da equipe (03/11/2026).** O revisor relatou que a equipe confirmou: (1) que a Etapa 3 da S4 pode preceder as Etapas 1 e 2, formalizado no Adendo 1 da S4 (`docs/sprint4/adendo_01_ordem_das_etapas.md`); (2) P1, P2 e P3, registradas na S4; (3) concordância com **D1–D12**; (4) que a P4 está encerrada. Esse relato é a fonte; **o repositório não contém mensagem, ata ou assinatura individual dos membros**. A confirmação não equivale à aprovação formal do grupo.
 
-**Ratificação do grupo:** solicitada; a ausência de resposta é registrada aqui, com data, e não equivale a aprovação.
+**D2 — variável e limites da faixa.** A responsável pelo Exp. 26.0.1 confirmou, segundo o relato do revisor, que o experimento usou `original_shape_Maximum3DDiameter`, com evidências em `piso_26_0_1.py` e `26_0_1_resumo.json`. **Esses arquivos não estão neste repositório e não foram inspecionados por quem redigiu este registro.** O experimento usa o intervalo **fechado [12, 30]**; este pré-registro usa **[12, 30)** (Seção 7.2, desfecho F; Emenda 1, E1: "12 a <30 mm"), e os dois diferem apenas para nódulos com diâmetro exatamente igual a 30 mm. As contagens observadas coincidem (226 nódulos, 187 pacientes, 135 malignos). O intervalo do P9 **não foi alterado**; a equivalência observada será conferida de novo pelo modo definitivo, que aborta antes de qualquer ajuste se as contagens divergirem (Seção 14.3, passo 7).
+
+**Ratificação sobre o SHA-256 regenerado.** A confirmação de D1–D12 refere-se aos parâmetros, que não mudaram; o SHA-256 da configuração mudou depois, apenas pelo pin de `config.py` descrito acima. O registro `P9` abaixo, lavrado a pedido do revisor, usa o novo SHA-256.
+
+**Registros de aprovação:** somente as linhas `APROVACAO-DECISAO` na coluna 0 deste documento valem; o texto acima não é registro.
 
 **Adendos:** nenhum.
 
