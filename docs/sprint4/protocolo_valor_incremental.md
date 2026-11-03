@@ -6,8 +6,9 @@
 **Política de alvo:** definida em [`docs/protocolo_coorte_target_sprint2.md`](../protocolo_coorte_target_sprint2.md) — este documento **não** redefine a regra
 **Baseline de referência:** [`docs/sprint3/baseline_regressao_logistica.md`](../sprint3/baseline_regressao_logistica.md)
 **Identificação de nódulos:** [`docs/sprint3/convencao_identificacao_nodulos.md`](../sprint3/convencao_identificacao_nodulos.md)
-**Status:** proposta — aguardando revisão do grupo e do professor; **não é protocolo congelado**; nenhum modelo deste protocolo foi treinado
+**Status:** protocolo **congelado nos termos da seção *Congelamento* da Emenda 1** (revisão 3, aprovada pelo revisor em 03/11/2026); **sem aprovação formal do grupo** — a ausência de resposta está registrada na Emenda (E11) — e sem registro de revisão do professor neste documento. Este congelamento documental **não** é a Etapa 4 (Seção 7.4), **não** registra P1–P3 nas guardas de execução da S4 e **não** libera nenhuma etapa. Nenhuma etapa oficial (1 a 5) foi executada, e M2, M3 e M4 com a lista fixa não foram ajustados
 **Data:** 10/10/2026
+**Emenda 1 (aprovada pelo revisor):** [Emenda 1 — auditoria do teste](emenda_01_auditoria_teste.md), revisão 3 de 02/11/2026, aprovada pelo revisor em 03/11/2026 sobre o conteúdo do commit `573bc1729f7dec33c73675ccc9c48c97d5e50c5a` ([comentário do PR #10](https://github.com/RafaellLobo/PI3-GRUPO-4/pull/10#issuecomment-6603471577)); aprovação formal do grupo **não** existe. As anotações "Emenda 1" neste documento registram decisões com o estado definido na Seção E11 da emenda
 
 ---
 
@@ -31,7 +32,7 @@ Nenhum resultado obtido sob este protocolo deve ser apresentado como desempenho 
 A pergunta é motivada por três evidências já registradas no projeto:
 
 - o baseline da Sprint 3 obteve AUC-ROC de 0,9762 no teste com apenas três atributos de forma, dois deles de tamanho;
-- o estudo de máscaras reduzidas (Samara) observou que um modelo com **somente o diâmetro** atinge AUC-ROC de 0,9641, contra 0,9644 do modelo de três features — em um split **reconstruído**, não no split canônico; a revalidação no split oficial (Experimento 13) obteve AUC-ROC de 0,9772 para o diâmetro isolado e de 0,9778 para a reprodução do baseline (Seção 4.1);
+- o estudo de máscaras reduzidas (Samara) observou que um modelo com **somente o diâmetro** atinge AUC-ROC de 0,9641, contra 0,9644 do modelo de três features — em um split **reconstruído**, não no split canônico; a revalidação no split oficial (Experimento 10 revalidado; citado antes como Experimento 13) obteve AUC-ROC de 0,9772 para o diâmetro isolado e de 0,9778 para um notebook que difere do baseline em dois pontos (Seção 4.1 e Emenda 1, E2);
 - o feedback da Sprint 3 pediu explicitamente que o grupo testasse se o resultado é dominado pelo tamanho e se a radiômica acrescenta algo além dele.
 
 ### 1.1 Hipóteses do contraste primário
@@ -43,6 +44,8 @@ Com Δ = AUC(M3) − AUC(M0):
 
 A leitura de H0/H1 é feita por intervalo de confiança, conforme a Seção 9. Nenhum p-valor é calculado (Seção 8.3).
 
+**Etapa que sustenta a leitura (Emenda 1, E3, revisão 3).** O IC que sustenta a leitura de H0/H1 é o de Δ na **validação oficial (Etapa 3)**, com as oito features fixas. A CV aninhada (Etapa 2) avalia o **procedimento de seleção** (M3v − M0) e não substitui essa leitura. O teste oficial (Etapa 5) já foi usado em análises anteriores do projeto e é **apenas descritivo**: não constitui evidência independente e não orienta nenhuma decisão. Na redação original de 10/10/2026, a leitura era feita no teste (Seção 9); a mudança foi registrada antes de qualquer resultado de M2, M3 ou M4.
+
 ## 2. Coorte
 
 A coorte é a **base modelável oficial**, preservada sem alteração:
@@ -51,7 +54,7 @@ A coorte é a **base modelável oficial**, preservada sem alteração:
 |---|---:|---:|---:|---:|
 | Base modelável (`data/modeling_table_sprint3.csv`) | 607 | 416 | 310 | 297 |
 
-Nenhum nódulo é adicionado ou removido por este protocolo — **inclusive os de máscara reduzida** (Seção 11.2). A diferença em relação à coorte teórica de 616 nódulos / 422 pacientes (2 pacientes não extraídos e 19 linhas ausentes não explicadas) é herdada e está documentada no baseline, Seção 2.1.
+Nenhum nódulo é adicionado ou removido por este protocolo — **inclusive os de máscara reduzida** (Seção 11.2). A diferença em relação à coorte teórica de 616 nódulos / 422 pacientes é herdada e está documentada no baseline, Seção 2.1. Ela soma duas causas distintas (Emenda 1, E9): 616 → 610 nódulos por cobertura de scans (dois pacientes nunca extraídos e escolha de série) e 610 → 607 por extração parcial — 19 linhas ausentes, de qualquer classe, em 14 scans, das quais só 3 eram modeláveis. A causa dessas 19 linhas continua não determinada.
 
 ## 3. Variável-alvo
 
@@ -92,7 +95,9 @@ Papéis:
 
 - **train** — único conjunto usado para seleção, ajuste de transformações e treinamento de qualquer modelo;
 - **validation** — avaliação independente das oito features fixas (Etapa 3);
-- **test** — avaliação final pré-especificada, executada uma única vez após o congelamento (Etapas 4 e 5).
+- **test** — avaliação final pré-especificada, executada uma única vez após o congelamento (Etapas 4 e 5); **apenas descritiva** (Emenda 1, E3).
+
+**Uso destas partições pelo benchmark da Sprint 6 (Emenda 1, E7).** O benchmark de classificadores da Sprint 6 é protocolo complementar, fora do escopo deste documento (Seção 14). Ele usa os 353 pacientes de treino e validação e **nunca** o teste. Para preservar a avaliação oficial da Etapa 3, o benchmark definitivo só usa os pacientes de validação **depois de a Etapa 3 deste protocolo estar concluída e registrada**. Nenhum resultado do benchmark altera modelo, característica, critério ou etapa deste protocolo.
 
 ### 4.1 O que já é conhecido antes deste protocolo
 
@@ -101,17 +106,17 @@ O teste **não é cego** para todos os modelos, e isso é declarado aqui antes d
 | Modelo | Resultado já conhecido | Onde |
 |---|---|---|
 | M1 — baseline canônico | AUC-ROC 0,9440 (validação) e **0,9762** [0,9477 – 0,9946] (teste), com matrizes de confusão | `reports/sprint3/baseline/baseline_metrics.json` — artefato versionado |
-| M1 — reprodução da Samara | AUC-ROC 0,9778, **no teste oficial** | Experimento 13 (Samara) — revalidação com o split oficial: ajuste no treino oficial, avaliação no teste oficial, sem uso da validação |
-| M0 | AUC-ROC 0,9772 com diâmetro isolado, **no teste oficial** | Experimento 13 (Samara) — mesmo desenho |
+| M1 — notebook do Experimento 10 revalidado (Samara) | AUC-ROC 0,9778, **no teste oficial**. **Não é o baseline:** o notebook usa `original_shape_VoxelVolume` no lugar de `original_shape_MeshVolume` e ajusta a regressão sem `StandardScaler` (Emenda 1, E2) | revalidação com o split oficial: ajuste no treino oficial, avaliação no teste oficial, sem uso da validação |
+| M0 | AUC-ROC 0,9772 com diâmetro isolado, **no teste oficial** | Experimento 10 revalidado (Samara) — mesmo desenho; valor reproduzido na auditoria de 30/10/2026 |
 | M0 e M1 (histórico) | AUC-ROC 0,9641 (diâmetro isolado) e 0,9644 (três features), **em split reconstruído**, não no canônico | estudo de máscaras reduzidas (Samara) |
 | M2, M3, M4 | **Nenhum.** Nenhum artefato do projeto registra desempenho desses modelos em validação ou teste | — |
 
-**O valor canônico do M1 continua sendo 0,9762**, porque é o que está no artefato versionado e reprodutível do baseline. Os valores do Experimento 13 são uma revalidação independente e não o substituem. Segundo o DoD do Experimento 13, a revalidação usou treino e teste oficiais e não usou a validação; os valores de M0 e M1 acima são, portanto, **AUCs no teste oficial**. A reprodução da Samara (0,9778) **não coincide** com o baseline canônico (0,9762) na mesma partição de teste. A causa dessa diferença não está documentada neste protocolo; possíveis origens — ambiente, versão de bibliotecas, tabela de entrada, pré-processamento — não foram verificadas. Os registros dos Experimentos 10 e 13 **não estão versionados** no repositório.
+**O valor canônico do M1 continua sendo 0,9762**, porque é o que está no artefato versionado e reprodutível do baseline. Os valores do Experimento 10 revalidado não o substituem. Segundo o DoD do Experimento 13, a revalidação usou treino e teste oficiais e não usou a validação; os valores de M0 e M1 acima são, portanto, **AUCs no teste oficial**. O valor 0,9778 **não coincide** com o baseline canônico (0,9762) na mesma partição de teste. **Causa explicada em 30/10/2026 (Emenda 1, E2):** o notebook tem dois desvios em relação a `scripts/run_baseline.py` — volume por voxels em vez de volume por malha, e ausência de `StandardScaler` —, e reexecutado com ambos devolve exatamente 0,9778. O baseline canônico foi reproduzido por terceiro (scikit-learn 1.9.1) com AUC de teste de 0,9761705686, igual em dez casas ao artefato gerado em 1.3.2. Os registros dos Experimentos 10 e 13 **não estão versionados** no repositório (pendência P5). O histórico completo de uso do teste está na Emenda 1, E1.
 
 Consequências:
 
 - a comparação **M1 − M0** é descritiva e não cega: o nível de ambos já foi observado, inclusive no teste oficial;
-- os contrastes **M3 − M0** e **M4 − M1** são os únicos com termo radiômico ainda não observado, e por isso são os únicos tratados como avaliação pré-especificada;
+- os contrastes **M3 − M0** e **M4 − M1**, com a lista fixa de features ajustada só no treino oficial, são os únicos cujo desempenho no teste ainda não foi observado, e por isso são os únicos tratados como avaliação pré-especificada. O termo radiômico em si **já foi avaliado** por validação cruzada em base que contém os pacientes de teste (análises tipo B, Emenda 1, E1); o teste não é independente nem para ele;
 - a seleção das oito features calculou AUCs apenas em validação cruzada **interna ao treino**, durante o tuning do LASSO; nenhum desses valores toca validação ou teste.
 
 ## 5. Features
@@ -135,6 +140,8 @@ As oito existem em `data/modeling_table_sprint3.csv`, são `float64` e têm **41
 
 **Esta lista é congelada.** Nenhum resultado obtido sob este protocolo — de CV, validação ou teste — pode adicionar, remover ou substituir uma feature.
 
+**Decisão P3 (Emenda 1, E11) — decidida pela responsável em 31/10/2026 e ratificada pelo revisor em 03/11/2026 para fins da Emenda 1; o registro formal `APROVACAO-DECISAO` exigido pelas guardas da S4 permanece pendente.** A reprodução fiel no ambiente oficial devolveu 6 destas 8 características, trocando `original_firstorder_Skewness` e `original_ngtdm_Coarseness` por `original_glcm_Imc1` e `original_glcm_ClusterShade`. A decisão é **manter esta lista** como conjunto fixo, pela regra da Seção 7.1, item 1, e avaliar a lista reproduzida **apenas como sensibilidade**, com os mesmos contrastes. Esta tabela permanece inalterada. Limitação declarada: a execução que produziu esta lista não tem saída, log nem versão registrada.
+
 ### 5.2 Declaração × reprodução independente
 
 O estado de evidência das oito features precisa ser lido com precisão:
@@ -144,7 +151,7 @@ O estado de evidência das oito features precisa ser lido com precisão:
 | **Declarada** | As oito aparecem na conclusão em markdown do notebook de seleção de Juan (`S4 — Revisão e execução da seleção de features radiômicas`), como as features selecionadas pelo LASSO em ≥ 3 de 5 folds. |
 | **Procedimento legível** | O código do notebook descreve o procedimento por completo (Seção 5.3) e restringe a seleção ao treino oficial — há `assert` exigindo 291 pacientes e disjunção com validação e teste. |
 | **Não comprovado por saída** | O notebook disponível **não contém saídas de execução** (nenhuma célula tem `execution_count`; origem Colab). Os números citados na conclusão — 35–39 features após o filtro de correlação, 7–13 selecionadas pelo LASSO por fold, 16 estáveis no Random Forest, Jaccard 0,263 — **não têm saída nem CSV exportado** que os comprove. O notebook e seus CSVs de saída **não estão versionados** no repositório. |
-| **Reprodução independente** | **Ainda não documentada.** A reprodução fiel do procedimento original (Seção 5.3) é pré-requisito da Etapa 3 (Seção 7.1). |
+| **Reprodução independente** | **Documentada e divergente.** A reprodução fiel do procedimento original (Seção 5.3), no ambiente oficial, devolveu 6 das 8 características declaradas (`reports/sprint4/feature_selection/`; Emenda 1, E8). Pela decisão P3, a lista declarada permanece fixa e a reproduzida entra como sensibilidade. A reprodução continua sendo pré-requisito da Etapa 3 (Seção 7.1). |
 
 ### 5.3 Procedimento original de seleção, como lido no notebook
 
@@ -262,13 +269,13 @@ As etapas são sequenciais. Cada uma só começa depois que a anterior tiver sid
 | 2 — CV aninhada completa | treino | avaliar o **procedimento ajustado** de seleção + modelagem (M2v–M4v) |
 | 3 — Validação oficial | treino → validação | avaliar as **oito features fixas** em dados independentes |
 | 4 — Congelamento | — | fixar protocolo, código e relatório antes do teste |
-| 5 — Teste oficial | treino → teste | avaliação final pré-especificada, executada uma vez |
+| 5 — Teste oficial | treino → teste | avaliação final pré-especificada, executada uma vez; apenas descritiva (Emenda 1, E3) |
 
 ### 7.1 Etapa 0 — pré-requisitos
 
 1. **Reprodução fiel do procedimento original.** O procedimento da Seção 5.3 é reexecutado **sem alteração** sobre os 417 nódulos de treino, no ambiente do projeto, com versões registradas e warnings capturados, e a lista obtida é comparada à da Seção 5.1. Essa reprodução é **pré-requisito para avaliar M2, M3 e M4 na validação** (Etapa 3).
    - **Lista idêntica:** a declaração passa a ter reprodução documentada.
-   - **Lista diferente:** a lista da Seção 5.1 **permanece** como conjunto fixo — ela foi definida antes de qualquer resultado de desempenho, e trocá-la depois exigiria justificar a troca. A divergência é registrada como limitação, e a lista reproduzida é avaliada **apenas como sensibilidade**. A decisão de seguir adiante é registrada pelo grupo antes da Etapa 3.
+   - **Lista diferente:** a lista da Seção 5.1 **permanece** como conjunto fixo — ela foi definida antes de qualquer resultado de desempenho, e trocá-la depois exigiria justificar a troca. A divergência é registrada como limitação, e a lista reproduzida é avaliada **apenas como sensibilidade**. A decisão de seguir adiante é registrada pelo grupo antes da Etapa 3. **Decisão P3 (Emenda 1, E11) — decidida pela responsável em 31/10/2026; ratificada pelo revisor em 03/11/2026:** a reprodução divergiu em 2 das 8 características, e esta regra foi **confirmada sem alteração** — a lista declarada permanece fixa e a reproduzida é avaliada como sensibilidade. A recomendação em contrário do autor da seleção original fica registrada e não foi seguida; o motivo é que esta regra foi pré-especificada justamente para o caso de divergência. Como o grupo, consultado, não respondeu, o registro previsto acima é feito pela responsável e pelo revisor, e a ausência de resposta fica registrada (Emenda 1, E11).
 2. **Procedimento ajustado no treino completo.** O procedimento da Seção 5.4 é aplicado aos mesmos 417 nódulos, e a lista resultante é registrada **apenas de forma descritiva**, junto com sua diferença em relação à lista fixa. Ela não substitui a lista fixa e não é avaliada na validação nem no teste.
 3. **Invariantes estruturais:** 607 nódulos / 416 pacientes; composição das partições igual à Seção 4; zero pacientes compartilhados entre partições; listas de features da Seção 5.5; invariante do M1 (Seção 6.2).
 4. **Isolamento:** o código das Etapas 0 a 2 lê apenas linhas de treino. O código da Etapa 3 lê treino e validação. **Só o código da Etapa 5 lê linhas de teste.**
@@ -328,6 +335,8 @@ Saídas adicionais da Etapa 2:
 
 Não há leakage de seleção: a lista foi escolhida sem acesso à validação.
 
+Pela Emenda 1 (E3, revisão 3), a Etapa 3 **sustenta** a leitura de H0/H1 (Seção 1.1) e dos contrastes dos modelos com features fixas (Seção 9).
+
 A Etapa 2 e a Etapa 3 respondem a perguntas diferentes e **nenhuma substitui a outra**:
 
 | | CV aninhada (Etapa 2) | Validação oficial (Etapa 3) |
@@ -356,10 +365,11 @@ O hash desse commit é gravado no artefato da Etapa 5.
 ### 7.5 Etapa 5 — teste oficial: avaliação final pré-especificada
 
 - os modelos são os da Etapa 3, ajustados nos 417 nódulos de treino — sem reajuste com validação;
-- o teste é avaliado **uma única vez**, para M0–M4 e para a sensibilidade da Seção 10.1, com todos os contrastes da Seção 8 reportados;
+- o teste é avaliado **uma única vez**, para M0–M4, para a sensibilidade da Seção 10.1 e para as duas sensibilidades registradas na Emenda 1 (E11) — lista reproduzida (P3) e `C = 0,1` (P7) —, com todos os contrastes da Seção 8 reportados. As três sensibilidades — spline, lista reproduzida e `C = 0,1` — são avaliadas **separadamente**, cada uma alterando um único fator em relação à análise principal; nenhuma combinação entre elas é calculada (Emenda 1, E7). A mesma regra vale na Etapa 3;
+- os resultados do teste são **apenas descritivos** (Emenda 1, E3): o conjunto já foi avaliado em análises anteriores, não constitui evidência independente e não orienta nenhuma decisão;
 - qualquer reexecução — por exemplo, por falha técnica — é documentada com a causa, e nenhum resultado do teste é usado para alterar modelo, feature ou critério.
 
-Ressalva já declarada na Seção 4.1: o teste é cego apenas para os modelos com termo radiômico.
+Ressalva já declarada na Seção 4.1: o que não foi observado é o desempenho, no teste, dos modelos com a lista fixa ajustada só no treino; o termo radiômico já foi avaliado em validação cruzada que incluiu pacientes de teste (Emenda 1, E1).
 
 ## 8. Contrastes e inferência
 
@@ -398,7 +408,9 @@ Nenhum p-valor é reportado. O protocolo não define um teste de hipótese forma
 
 ## 9. Critérios de interpretação — definidos antes dos resultados
 
-Seja [L, U] o IC95% bootstrap de Δ no **teste**.
+**Papel de cada etapa (Emenda 1, E3, revisão 3).** A **validação oficial (Etapa 3)** sustenta a leitura dos contrastes dos modelos com features fixas. A **CV aninhada (Etapa 2)** avalia o procedimento de seleção. O **teste (Etapa 5)** já foi usado em análises anteriores do projeto (Emenda 1, E1), não constitui evidência independente e é **apenas descritivo**: seus Δ e IC são calculados e relatados, sem leitura confirmatória, e nenhum resultado dele orienta decisão.
+
+Seja [L, U] o IC95% bootstrap de Δ na **validação oficial (Etapa 3)**. Na redação original de 10/10/2026, [L, U] era o IC no **teste**; a mudança foi registrada pela Emenda 1 (E3) antes de qualquer resultado de M2, M3 ou M4.
 
 | Condição | Leitura |
 |---|---|
@@ -408,12 +420,12 @@ Seja [L, U] o IC95% bootstrap de Δ no **teste**.
 
 A mesma régua vale para M4 − M1, lida como resultado secundário.
 
-**Coerência com as etapas anteriores.** A conclusão do teste é sempre reportada junto com:
+**Coerência entre as etapas.** A conclusão da validação (Etapa 3) é sempre reportada junto com:
 
-- o sinal e o IC de Δ na validação (Etapa 3), que avalia o mesmo objeto do teste — as oito features fixas;
-- a média e o intervalo mínimo–máximo do contraste correspondente na CV aninhada (M3v − M0 ou M4v − M1, Etapa 2), que avalia **outro objeto**: o procedimento ajustado.
+- a média e o intervalo mínimo–máximo do contraste correspondente na CV aninhada (M3v − M0 ou M4v − M1, Etapa 2), que avalia **outro objeto**: o procedimento ajustado;
+- o sinal e o IC de Δ no teste (Etapa 5), que avalia o mesmo objeto da validação — as oito features fixas —, **apenas como descrição**.
 
-Discordância de sinal entre teste e validação é declarada explicitamente e qualifica a conclusão como **instável**, mesmo quando L > 0 no teste. Discordância em relação à CV aninhada também é declarada e discutida, mas é lida como diferença entre o desempenho do procedimento e o do conjunto fixo, e não como contradição direta.
+Discordância em relação à CV aninhada é declarada e discutida, mas é lida como diferença entre o desempenho do procedimento e o do conjunto fixo, e não como contradição direta. Discordância de sinal entre validação e teste é declarada explicitamente e registrada como limitação; por ser o teste apenas descritivo, ela não altera a leitura da Etapa 3 nem orienta decisão. Na redação original de 10/10/2026, essa discordância qualificava a conclusão do teste como **instável**.
 
 **Referência exploratória ΔAUC = 0,02.** Reporta-se se a estimativa pontual e os limites do IC ficam acima ou abaixo de 0,02, **apenas como referência descritiva de magnitude**. Esse valor não foi derivado de critério clínico, não define relevância clínica e não altera a leitura da tabela acima.
 
@@ -493,7 +505,7 @@ Subgrupos com poucos nódulos ou uma única classe não têm AUC calculada.
 
 ### 11.3 Da seleção de features
 
-8. **Reprodução fiel ainda não documentada** (Seção 5.2) — pré-requisito da Etapa 3. Além disso, a CV aninhada avalia o procedimento **ajustado** (Seção 5.4), e não exatamente o procedimento original que produziu as oito features.
+8. **Reprodução fiel documentada e divergente:** no ambiente oficial, devolveu 6 das 8 características declaradas (Seção 5.1; Emenda 1, E8). Pela decisão P3, a lista declarada permanece fixa, sem saída, log nem versão registrada da execução que a produziu, e a reproduzida é avaliada como sensibilidade. Além disso, a CV aninhada avalia o procedimento **ajustado** (Seção 5.4), e não exatamente o procedimento original que produziu as oito features.
 9. **Filtro de correlação dependente da ordem das colunas:** a representante mantida em cada grupo redundante é arbitrária.
 10. **Estabilidade entre anotadores não avaliada:** não se sabe se as oito features são estáveis quando outro radiologista desenha o contorno. O estudo correspondente está em aberto, e seu cruzamento com as oito features deve ser feito quando ele for concluído.
 11. **Sem transformação de features:** a análise exploratória do grupo indicou assimetria relevante em boa parte das radiômicas. Este protocolo mantém só a padronização, por coerência com o baseline e com a seleção; transformações não são avaliadas aqui.
@@ -503,14 +515,14 @@ Subgrupos com poucos nódulos ou uma única classe não têm AUC calculada.
 12. **Partições pequenas:** a validação tem 43 positivos em 62 pacientes, e o teste, 46 positivos em 63 pacientes. ICs de Δ largos e resultado inconclusivo são desfechos plausíveis.
 13. **IC sem variabilidade de treino:** o bootstrap reamostra a avaliação, não o ajuste.
 14. **CV aninhada sem IC formal:** a dispersão entre repetições descreve sensibilidade à partição, não incerteza amostral (Seção 7.2).
-15. **Teste parcialmente não cego:** M0 e M1 já tiveram desempenho observado, inclusive no split oficial (Seção 4.1).
+15. **Teste não independente:** M0 e M1 já tiveram desempenho observado no teste oficial, e o termo radiômico já foi avaliado em validação cruzada que incluiu os pacientes de teste (Seção 4.1; Emenda 1, E1). Os resultados do teste são apenas descritivos; a leitura dos contrastes com features fixas é sustentada pela Etapa 3 (Seções 1.1 e 9).
 16. **Sem p-valor e sem teste formal** (Seção 8.3).
 17. **Coeficientes não interpretáveis:** features correlacionadas dividem a contribuição no ajuste, e os coeficientes estão no espaço padronizado. Nenhum ranking de importância é derivado deles.
 
 ### 11.5 Herdadas
 
 18. Discretização de intensidade herdada da extração oficial; a escolha entre `binCount` e `binWidth` não é reavaliada.
-19. Cobertura de extração: 607 de 616 nódulos, com 19 linhas ausentes não explicadas.
+19. Cobertura de extração: 607 de 616 nódulos — 6 a menos por cobertura de scans e 3 por extração parcial; as 19 linhas ausentes da extração parcial, de qualquer classe, têm causa não determinada (Seção 2; Emenda 1, E9).
 20. Generalização externa não avaliada: todos os dados vêm do LIDC-IDRI.
 
 ## 12. Reprodutibilidade
@@ -518,29 +530,37 @@ Subgrupos com poucos nódulos ou uma única classe não têm AUC calculada.
 | Item | Valor |
 |---|---|
 | Seeds | 42 em ajuste, CV piloto e bootstrap; `42 + r` (r = 0…9) nas repetições da CV completa; `100 + fold` na CV interna da seleção, como no notebook de Juan, tanto no procedimento original quanto no ajustado; seeds de permutação fixadas junto com K (Seção 13, P1) |
-| Ambiente | `.venv` do projeto: Python 3.9.13, scikit-learn 1.3.2 (mesma versão do baseline), numpy 1.23.5, pandas 1.5.3, scipy 1.10.1. O ambiente conda `pi3-radiomics` não carrega o numpy nesta máquina por bloqueio do Controle de Aplicativo do Windows |
+| Ambiente | `.venv` do projeto: Python 3.9.13, scikit-learn 1.3.2 (mesma versão do baseline, que registra Python 3.9.23), numpy 1.23.5, pandas 1.5.3, scipy 1.10.1. A Emenda 1 (E4) determina fixar `python=3.9.13` no `environment.yml`, condicionado à disponibilidade desse patch no canal conda; até essa alteração, feita em commit próprio, o `environment.yml` declara `python=3.9` e vale o patch registrado em cada artefato. O ambiente conda `pi3-radiomics` não carrega o numpy nesta máquina por bloqueio do Controle de Aplicativo do Windows |
 | Registro obrigatório por etapa | versões de bibliotecas, seeds, listas de features, composição das partições, warnings capturados, réplicas bootstrap descartadas e hash do commit |
-| Dados | `data/` não é versionado (dado derivado de imagem médica). Os artefatos em `reports/` não contêm valores de feature por nódulo |
+| Dados | `data/` não é versionado (dado derivado de imagem médica). Os artefatos em `reports/` não contêm valores de feature por nódulo, **com 10 exceções históricas da Sprint 2** (pilotos e descartes com `patient_id`), listadas na Emenda 1, E10, e sujeitas à decisão P8 |
 | Artefatos existentes | `reports/sprint3/baseline/*` e as tabelas em `data/` são lidos e nunca modificados |
 
 ## 13. Decisões pendentes antes da execução
 
+Estados conforme a legenda da Emenda 1, E11: **decidida** (registrada pela responsável, com data, e ratificada pelo revisor em 03/11/2026 para fins da Emenda 1; ainda exige os registros formais `APROVACAO-DECISAO` quando previstos pelas guardas da S4; não equivale a aprovação do grupo), **encerrada**, **transferida (S6)** e **em aberto**.
+
 | # | Decisão | Prazo |
 |---|---|---|
-| P1 | Número de permutações K e esquema de permutação — por nódulo ou por paciente — do controle da Seção 7.2 | antes da Etapa 1 |
-| P2 | Confirmação dos parâmetros do spline da Seção 10.1 | antes da Etapa 1 |
-| P3 | Confirmação da regra para divergência na reprodução fiel (Seção 7.1, item 1) | antes da Etapa 3 |
-| P4 | Explicar a divergência entre M1 = 0,9778 (Experimento 13, Samara) e M1 = 0,9762 (baseline canônico), ambos no teste oficial. A partição do Experimento 13 já está confirmada como teste oficial (Seção 4.1) | antes da Etapa 5 |
-| P5 | Versionamento dos registros dos Experimentos 10 e 13 e do notebook de seleção de Juan, com suas saídas | antes da Etapa 4 |
+| P1 | Número de permutações K e esquema de permutação — por nódulo ou por paciente — do controle da Seção 7.2. **Decidida (Emenda 1, E11), em 31/10/2026; ratificada pelo revisor em 03/11/2026:** por paciente, em blocos; K = 100; seeds `10000 + k` | antes da Etapa 1 |
+| P2 | Confirmação dos parâmetros do spline da Seção 10.1. **Decidida (Emenda 1, E11), em 31/10/2026; ratificada pelo revisor em 03/11/2026:** manter os atuais | antes da Etapa 1 |
+| P3 | Confirmação da regra para divergência na reprodução fiel (Seção 7.1, item 1). **Decidida (Emenda 1, E11), em 31/10/2026; ratificada pelo revisor em 03/11/2026:** regra confirmada sem alteração — a lista declarada da Seção 5.1 permanece fixa e a reproduzida entra como sensibilidade. Nenhuma seção é reescrita | antes da Etapa 3 |
+| P4 | ~~Explicar a divergência entre M1 = 0,9778 e M1 = 0,9762~~ — **encerrada** pela Emenda 1 (E2): dois desvios do notebook, reproduzidos | encerrada |
+| P5 | Versionamento dos registros dos Experimentos 10 e 13 e do notebook de seleção de Juan, com suas saídas. **Decidida (Emenda 1, E11), em 31/10/2026; ratificada pelo revisor em 03/11/2026:** versionar com saídas removidas, manifesto de SHA-256 e números agregados | antes da Etapa 4 |
+| P6 | Base da evidência principal: 353 pacientes (treino + validação) ou 416. **Transferida (S6) pela Emenda 1 (E11), revisão 3:** não se aplica a este protocolo, cujas etapas permanecem como nas Seções 4 e 7; a base de 353 pacientes vale só para o benchmark da Sprint 6, que nunca usa o teste. Nenhuma validação cruzada sobre os 416 pacientes é executada | antes do benchmark S6 |
+| P7 | Regularização dos modelos M0–M4 deste protocolo. **Decidida (Emenda 1, E11), em 31/10/2026; ratificada pelo revisor em 03/11/2026:** C = 1 (L2), como na Seção 6.1, com C = 0,1 como sensibilidade. Não rege o benchmark da Sprint 6 | antes da Etapa 2 |
+| P8 | Destino dos 10 arquivos históricos com dado individual em `reports/sprint2/` (Emenda 1, E10). **Decidida em parte (Emenda 1, E11), em 31/10/2026; ratificada pelo revisor em 03/11/2026:** declarados como exceção histórica. **Em aberto:** destino final | antes da entrega final |
+| P9 | Especificação do benchmark de classificadores (regressão logística, Random Forest, XGBoost e SVM). **Transferida (S6) pela Emenda 1 (E11), revisão 3:** fora do escopo deste protocolo (Seção 14); definida em pré-registro próprio, antes de qualquer treinamento definitivo. Nenhum hiperparâmetro do benchmark é fixado neste documento | antes do benchmark S6 |
 
 Qualquer decisão tomada sobre esses pontos é registrada em revisão deste documento, com data, antes da etapa indicada.
+
+**Registros formais pendentes.** A ratificação do revisor vale para a Emenda 1. Os registros `APROVACAO-DECISAO` de P1, P2 e P3 exigidos pelas guardas da S4 (`src/incremental/guardas.py`) ainda **não existem** neste documento e seguem pendentes; sem eles as guardas continuam bloqueando as etapas que dependem dessas decisões. Esta atualização não aprova o pré-registro P9 da S6, não conclui a Etapa 3 e não libera a execução definitiva do benchmark.
 
 ## 14. Fora do escopo deste protocolo
 
 - implementação de scripts e notebooks, e execução de qualquer etapa;
 - alteração da coorte, do alvo, do split ou da lista de oito features;
 - exclusão ou reponderação dos nódulos de máscara reduzida;
-- outros algoritmos de classificação, tuning de hiperparâmetros e seleção de threshold;
+- outros algoritmos de classificação, tuning de hiperparâmetros e seleção de threshold — o benchmark de classificadores da Sprint 6 é protocolo complementar, com pré-registro próprio (Emenda 1, E11, P6 e P9), e nenhum resultado dele altera este protocolo;
 - teste de hipótese formal para AUC pareada com dados agrupados (Seção 8.3).
 
 ---
