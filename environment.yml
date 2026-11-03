@@ -21,3 +21,4 @@ dependencies:
       - PyRadiomics==3.1.0
       - greenlet==3.2.1
       - SQLAlchemy==1.4.54
+      - xgboost==2.1.4
