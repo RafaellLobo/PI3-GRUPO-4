@@ -408,7 +408,9 @@ class TestMapaDecisoes(unittest.TestCase):
     def test_prazos_iguais_a_secao_13_do_protocolo(self):
         texto = (REPO_ROOT / cfg.PROTOCOLO).read_text(encoding="utf-8")
         prazos = dict(re.findall(r"^\| (P[1-5]) \|.*\| antes da Etapa (\d) \|$", texto, flags=re.M))
-        self.assertEqual(set(prazos), {"P1", "P2", "P3", "P4", "P5"})
+        # A P4 foi ENCERRADA pela Emenda 1 (E2, aprovada em 03/11/2026): sua linha na Seção 13 não traz mais prazo.
+        self.assertRegex(texto, r"(?m)^\| P4 \|.*\| encerrada \|\r?$")
+        self.assertEqual(set(prazos), {"P1", "P2", "P3", "P5"})
         for codigo, numero in prazos.items():
             self.assertEqual(cfg.DECISOES[codigo].etapa_limite.ordem, int(numero), codigo)
 
