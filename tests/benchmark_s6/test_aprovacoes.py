@@ -972,7 +972,7 @@ class TestContrato(unittest.TestCase):
     def test_simbolos_da_s4_inalterados(self):
         """Usar outros nomes da S4 mudaria a configuração canônica já publicada."""
         self.assertEqual(cfg.sha256_configuracao(),
-                         "1cd08306786067c1e29229a93a3215e087b0db21da35bc05c595bd5c8a2117d5")
+                         "a0d096a5415244f17f40360a2a5a8901bc8af1da5cf8687b891f920e1ee122b3")
 
 
 if __name__ == "__main__":

@@ -553,7 +553,14 @@ Estados conforme a legenda da Emenda 1, E11: **decidida** (registrada pela respo
 
 Qualquer decisão tomada sobre esses pontos é registrada em revisão deste documento, com data, antes da etapa indicada.
 
-**Registros formais pendentes.** A ratificação do revisor vale para a Emenda 1. Os registros `APROVACAO-DECISAO` de P1, P2 e P3 exigidos pelas guardas da S4 (`src/incremental/guardas.py`) ainda **não existem** neste documento e seguem pendentes; sem eles as guardas continuam bloqueando as etapas que dependem dessas decisões. Esta atualização não aprova o pré-registro P9 da S6, não conclui a Etapa 3 e não libera a execução definitiva do benchmark.
+**Registros formais (03/11/2026).** A equipe confirmou P1, P2 e P3 (preservadas as ressalvas da P3) e o encerramento da P4, conforme o [Adendo 1](adendo_01_ordem_das_etapas.md), cuja confirmação foi relatada pelo revisor e não consta como documento individual dos membros. Os registros abaixo foram lavrados a pedido do revisor, em commit próprio, e são os exigidos pelas guardas da S4 (`src/incremental/guardas.py`). Não equivalem a aprovação formal do grupo, não aprovam o pré-registro P9 da S6, não concluem a Etapa 3 e não liberam por si a execução definitiva do benchmark. P5 e `REVISAO_PROTOCOLO` seguem pendentes (exigidas a partir da Etapa 4).
+
+APROVACAO-DECISAO codigo=P1 status=aprovada data=2026-11-03 valor_sha256=74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b
+APROVACAO-DECISAO codigo=P2 status=aprovada data=2026-11-03 valor_sha256=99afebabfa1d0edb66e83ff553eeaa7fdfbd1fceb98ed971067287d25f5ebfc3
+APROVACAO-DECISAO codigo=P3 status=aprovada data=2026-11-03 valor_sha256=2241b2632297445bcb93d3db43e708318d8fefe229bb5b0194a7ecf35d759ae8
+APROVACAO-DECISAO codigo=P4 status=aprovada data=2026-11-03 valor_sha256=f5181182508e1384af24800d175ed039b7d89a9e29aa24a25ca6a42bfb93601c
+
+Valores aprovados: P1 — nenhum (esquema, K = 100 e seeds conforme a linha P1 da tabela acima; o detalhamento dos blocos da permutação é exigido apenas pela Etapa 1 oficial); P2 — os parâmetros atuais do spline (Seção 10.1); P3 — a lista declarada da Seção 5.1, nessa ordem; P4 — encerrada pela Emenda 1 (E2), com o valor canônico M1 = 0,9762 do baseline.
 
 ## 14. Fora do escopo deste protocolo
 

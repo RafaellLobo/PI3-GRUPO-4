@@ -43,7 +43,7 @@ from src.incremental import guardas, rastreabilidade  # noqa: E402
 
 #: SHA-256 da configuração canônica. Qualquer mudança de parâmetro muda este
 #: valor e exige revisão do pré-registro (P9, Seções 14.4 e 15).
-SHA256_ESPERADO = "1cd08306786067c1e29229a93a3215e087b0db21da35bc05c595bd5c8a2117d5"
+SHA256_ESPERADO = "a0d096a5415244f17f40360a2a5a8901bc8af1da5cf8687b891f920e1ee122b3"
 
 C = cfg.CONFIGURACAO
 PACOTE = REPO_ROOT / "src" / "benchmark_s6"

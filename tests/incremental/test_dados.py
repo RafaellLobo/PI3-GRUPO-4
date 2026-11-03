@@ -39,7 +39,8 @@ from src.incremental import config as cfg  # noqa: E402
 from src.incremental import dados  # noqa: E402
 from src.incremental import guardas as g  # noqa: E402
 from test_guardas import (  # noqa: E402
-    HASH_CONFIG_INCREMENTO_1, VALOR_P2, VALOR_P3, RepoTemporario, aprovar, protocolo, registro,
+    DECISOES_PENDENTES, HASH_CONFIG_INCREMENTO_1, VALOR_P2, VALOR_P3, RepoTemporario, aprovar,
+    com_decisoes_pendentes, protocolo, registro,
 )
 
 E0, E1, E2, E3, E4, E5 = (e.value for e in cfg.Etapa)
@@ -313,6 +314,7 @@ class TestFonteOficial(unittest.TestCase):
 # --------------------------------------------------------------------------- #
 
 
+@com_decisoes_pendentes
 class TestAcessoSemAprovacoes(ComSintetico):
     def test_etapa0_le_somente_treino(self):
         carga = self.carregar_e0(self.sint.escrever())
@@ -502,8 +504,8 @@ class TestAcessoComAprovacoesFicticias(ComSintetico):
         for fonte in (None, oficial):
             for atividade, particoes, decisoes in ((E5, ["train", "test"], self.dec_e5),
                                                    (E3, ["validation"], self.dec_e3),
-                                                   (E0, ["train"], cfg.DECISOES),
-                                                   (PILOTO, ["train"], cfg.DECISOES)):
+                                                   (E0, ["train"], DECISOES_PENDENTES),
+                                                   (PILOTO, ["train"], DECISOES_PENDENTES)):
                 with self.subTest(fonte=fonte is None, atividade=atividade), \
                         mock.patch.object(dados, "_ler_bytes", leituras_proibidas), \
                         mock.patch.object(g, "_git", leituras_proibidas):
@@ -919,7 +921,7 @@ class TestModulo(unittest.TestCase):
 
     def test_configuracao_e_decisoes_inalteradas(self):
         self.assertEqual(cfg.hash_configuracao(), HASH_CONFIG_INCREMENTO_1)
-        self.assertTrue(all(not d.aprovada for d in cfg.DECISOES.values()))
+        self.assertEqual({c for c, d in cfg.DECISOES.items() if not d.aprovada}, {"P5", "REVISAO_PROTOCOLO"})
 
     def test_mapa_de_atividades_para_etapas(self):
         self.assertEqual(set(dados.ETAPA_DE_LEITURA) | {cfg.ATIVIDADE_VERIFICACOES_ESTRUTURAIS},

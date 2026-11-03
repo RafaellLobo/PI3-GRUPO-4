@@ -101,7 +101,7 @@ class TestPontaAPonta(unittest.TestCase):
         self.assertEqual(r["repeticoes"], list(range(10)))
         self.assertEqual(r["modelos"], ["M0", "M1", "M2v", "M3v", "M4v"])
         self.assertEqual(r["contrastes"], ["M3v-M0", "M4v-M1"])
-        self.assertEqual(r["decisoes_pendentes"], list(cfg.DECISOES))
+        self.assertEqual(r["decisoes_pendentes"], [c for c, d in cfg.DECISOES.items() if not d.aprovada])
         self.assertEqual(r["hash_configuracao"], cfg.hash_configuracao())
         self.assertEqual(r["amostra"]["n_nodulos"], self.amb.fonte.particoes["train"]["nodulos"])
         self.assertEqual(r["amostra"]["n_pacientes"], self.amb.fonte.particoes["train"]["pacientes"])
@@ -432,7 +432,7 @@ class TestModulo(unittest.TestCase):
     def test_configuracao_inalterada(self):
         from test_guardas import HASH_CONFIG_INCREMENTO_1
         self.assertEqual(cfg.hash_configuracao(), HASH_CONFIG_INCREMENTO_1)
-        self.assertTrue(all(not d.aprovada for d in cfg.DECISOES.values()))
+        self.assertEqual({c for c, d in cfg.DECISOES.items() if not d.aprovada}, {"P5", "REVISAO_PROTOCOLO"})
 
 
 if __name__ == "__main__":

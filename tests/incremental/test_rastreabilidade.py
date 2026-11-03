@@ -887,7 +887,7 @@ class TestModulo(unittest.TestCase):
 
     def test_configuracao_e_decisoes_inalteradas(self):
         self.assertEqual(cfg.hash_configuracao(), HASH_CONFIG_INCREMENTO_1)
-        self.assertTrue(all(not d.aprovada for d in cfg.DECISOES.values()))
+        self.assertEqual({c for c, d in cfg.DECISOES.items() if not d.aprovada}, {"P5", "REVISAO_PROTOCOLO"})
 
 
 if __name__ == "__main__":
