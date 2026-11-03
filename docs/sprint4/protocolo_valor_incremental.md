@@ -6,9 +6,9 @@
 **Política de alvo:** definida em [`docs/protocolo_coorte_target_sprint2.md`](../protocolo_coorte_target_sprint2.md) — este documento **não** redefine a regra
 **Baseline de referência:** [`docs/sprint3/baseline_regressao_logistica.md`](../sprint3/baseline_regressao_logistica.md)
 **Identificação de nódulos:** [`docs/sprint3/convencao_identificacao_nodulos.md`](../sprint3/convencao_identificacao_nodulos.md)
-**Status:** proposta — aguardando revisão do grupo e do professor; **não é protocolo congelado**; nenhum modelo deste protocolo foi treinado
+**Status:** protocolo **congelado nos termos da seção *Congelamento* da Emenda 1** (revisão 3, aprovada pelo revisor em 03/11/2026); **sem aprovação formal do grupo** — a ausência de resposta está registrada na Emenda (E11) — e sem registro de revisão do professor neste documento. Este congelamento documental **não** é a Etapa 4 (Seção 7.4), **não** registra P1–P3 nas guardas de execução da S4 e **não** libera nenhuma etapa. Nenhuma etapa oficial (1 a 5) foi executada, e M2, M3 e M4 com a lista fixa não foram ajustados
 **Data:** 10/10/2026
-**Emenda em revisão:** [Emenda 1 — auditoria do teste](emenda_01_auditoria_teste.md), revisão 3 de 02/11/2026 — proposta, **não aprovada**; as anotações "Emenda 1" neste documento registram decisões com o estado definido na Seção E11 da emenda
+**Emenda 1 (aprovada pelo revisor):** [Emenda 1 — auditoria do teste](emenda_01_auditoria_teste.md), revisão 3 de 02/11/2026, aprovada pelo revisor em 03/11/2026 sobre o conteúdo do commit `573bc1729f7dec33c73675ccc9c48c97d5e50c5a` ([comentário do PR #10](https://github.com/RafaellLobo/PI3-GRUPO-4/pull/10#issuecomment-6603471577)); aprovação formal do grupo **não** existe. As anotações "Emenda 1" neste documento registram decisões com o estado definido na Seção E11 da emenda
 
 ---
 
@@ -140,7 +140,7 @@ As oito existem em `data/modeling_table_sprint3.csv`, são `float64` e têm **41
 
 **Esta lista é congelada.** Nenhum resultado obtido sob este protocolo — de CV, validação ou teste — pode adicionar, remover ou substituir uma feature.
 
-**Decisão P3 (Emenda 1, E11) — decidida pela responsável em 31/10/2026; pendente de aprovação do revisor.** A reprodução fiel no ambiente oficial devolveu 6 destas 8 características, trocando `original_firstorder_Skewness` e `original_ngtdm_Coarseness` por `original_glcm_Imc1` e `original_glcm_ClusterShade`. A decisão é **manter esta lista** como conjunto fixo, pela regra da Seção 7.1, item 1, e avaliar a lista reproduzida **apenas como sensibilidade**, com os mesmos contrastes. Esta tabela permanece inalterada. Limitação declarada: a execução que produziu esta lista não tem saída, log nem versão registrada.
+**Decisão P3 (Emenda 1, E11) — decidida pela responsável em 31/10/2026 e ratificada pelo revisor em 03/11/2026 para fins da Emenda 1; o registro formal `APROVACAO-DECISAO` exigido pelas guardas da S4 permanece pendente.** A reprodução fiel no ambiente oficial devolveu 6 destas 8 características, trocando `original_firstorder_Skewness` e `original_ngtdm_Coarseness` por `original_glcm_Imc1` e `original_glcm_ClusterShade`. A decisão é **manter esta lista** como conjunto fixo, pela regra da Seção 7.1, item 1, e avaliar a lista reproduzida **apenas como sensibilidade**, com os mesmos contrastes. Esta tabela permanece inalterada. Limitação declarada: a execução que produziu esta lista não tem saída, log nem versão registrada.
 
 ### 5.2 Declaração × reprodução independente
 
@@ -151,7 +151,7 @@ O estado de evidência das oito features precisa ser lido com precisão:
 | **Declarada** | As oito aparecem na conclusão em markdown do notebook de seleção de Juan (`S4 — Revisão e execução da seleção de features radiômicas`), como as features selecionadas pelo LASSO em ≥ 3 de 5 folds. |
 | **Procedimento legível** | O código do notebook descreve o procedimento por completo (Seção 5.3) e restringe a seleção ao treino oficial — há `assert` exigindo 291 pacientes e disjunção com validação e teste. |
 | **Não comprovado por saída** | O notebook disponível **não contém saídas de execução** (nenhuma célula tem `execution_count`; origem Colab). Os números citados na conclusão — 35–39 features após o filtro de correlação, 7–13 selecionadas pelo LASSO por fold, 16 estáveis no Random Forest, Jaccard 0,263 — **não têm saída nem CSV exportado** que os comprove. O notebook e seus CSVs de saída **não estão versionados** no repositório. |
-| **Reprodução independente** | **Ainda não documentada.** A reprodução fiel do procedimento original (Seção 5.3) é pré-requisito da Etapa 3 (Seção 7.1). |
+| **Reprodução independente** | **Documentada e divergente.** A reprodução fiel do procedimento original (Seção 5.3), no ambiente oficial, devolveu 6 das 8 características declaradas (`reports/sprint4/feature_selection/`; Emenda 1, E8). Pela decisão P3, a lista declarada permanece fixa e a reproduzida entra como sensibilidade. A reprodução continua sendo pré-requisito da Etapa 3 (Seção 7.1). |
 
 ### 5.3 Procedimento original de seleção, como lido no notebook
 
@@ -275,7 +275,7 @@ As etapas são sequenciais. Cada uma só começa depois que a anterior tiver sid
 
 1. **Reprodução fiel do procedimento original.** O procedimento da Seção 5.3 é reexecutado **sem alteração** sobre os 417 nódulos de treino, no ambiente do projeto, com versões registradas e warnings capturados, e a lista obtida é comparada à da Seção 5.1. Essa reprodução é **pré-requisito para avaliar M2, M3 e M4 na validação** (Etapa 3).
    - **Lista idêntica:** a declaração passa a ter reprodução documentada.
-   - **Lista diferente:** a lista da Seção 5.1 **permanece** como conjunto fixo — ela foi definida antes de qualquer resultado de desempenho, e trocá-la depois exigiria justificar a troca. A divergência é registrada como limitação, e a lista reproduzida é avaliada **apenas como sensibilidade**. A decisão de seguir adiante é registrada pelo grupo antes da Etapa 3. **Decisão P3 (Emenda 1, E11) — decidida pela responsável em 31/10/2026; pendente de aprovação do revisor:** a reprodução divergiu em 2 das 8 características, e esta regra foi **confirmada sem alteração** — a lista declarada permanece fixa e a reproduzida é avaliada como sensibilidade. A recomendação em contrário do autor da seleção original fica registrada e não foi seguida; o motivo é que esta regra foi pré-especificada justamente para o caso de divergência. Como o grupo, consultado, não respondeu, o registro previsto acima é feito pela responsável e pelo revisor, e a ausência de resposta fica registrada (Emenda 1, E11).
+   - **Lista diferente:** a lista da Seção 5.1 **permanece** como conjunto fixo — ela foi definida antes de qualquer resultado de desempenho, e trocá-la depois exigiria justificar a troca. A divergência é registrada como limitação, e a lista reproduzida é avaliada **apenas como sensibilidade**. A decisão de seguir adiante é registrada pelo grupo antes da Etapa 3. **Decisão P3 (Emenda 1, E11) — decidida pela responsável em 31/10/2026; ratificada pelo revisor em 03/11/2026:** a reprodução divergiu em 2 das 8 características, e esta regra foi **confirmada sem alteração** — a lista declarada permanece fixa e a reproduzida é avaliada como sensibilidade. A recomendação em contrário do autor da seleção original fica registrada e não foi seguida; o motivo é que esta regra foi pré-especificada justamente para o caso de divergência. Como o grupo, consultado, não respondeu, o registro previsto acima é feito pela responsável e pelo revisor, e a ausência de resposta fica registrada (Emenda 1, E11).
 2. **Procedimento ajustado no treino completo.** O procedimento da Seção 5.4 é aplicado aos mesmos 417 nódulos, e a lista resultante é registrada **apenas de forma descritiva**, junto com sua diferença em relação à lista fixa. Ela não substitui a lista fixa e não é avaliada na validação nem no teste.
 3. **Invariantes estruturais:** 607 nódulos / 416 pacientes; composição das partições igual à Seção 4; zero pacientes compartilhados entre partições; listas de features da Seção 5.5; invariante do M1 (Seção 6.2).
 4. **Isolamento:** o código das Etapas 0 a 2 lê apenas linhas de treino. O código da Etapa 3 lê treino e validação. **Só o código da Etapa 5 lê linhas de teste.**
@@ -537,21 +537,23 @@ Subgrupos com poucos nódulos ou uma única classe não têm AUC calculada.
 
 ## 13. Decisões pendentes antes da execução
 
-Estados conforme a legenda da Emenda 1, E11: **decidida** (registrada pela responsável, com data; pendente de aprovação do revisor), **encerrada**, **transferida (S6)** e **em aberto**.
+Estados conforme a legenda da Emenda 1, E11: **decidida** (registrada pela responsável, com data, e ratificada pelo revisor em 03/11/2026 para fins da Emenda 1; ainda exige os registros formais `APROVACAO-DECISAO` quando previstos pelas guardas da S4; não equivale a aprovação do grupo), **encerrada**, **transferida (S6)** e **em aberto**.
 
 | # | Decisão | Prazo |
 |---|---|---|
-| P1 | Número de permutações K e esquema de permutação — por nódulo ou por paciente — do controle da Seção 7.2. **Decidida (Emenda 1, E11), em 31/10/2026; pendente de aprovação do revisor:** por paciente, em blocos; K = 100; seeds `10000 + k` | antes da Etapa 1 |
-| P2 | Confirmação dos parâmetros do spline da Seção 10.1. **Decidida (Emenda 1, E11), em 31/10/2026; pendente de aprovação do revisor:** manter os atuais | antes da Etapa 1 |
-| P3 | Confirmação da regra para divergência na reprodução fiel (Seção 7.1, item 1). **Decidida (Emenda 1, E11), em 31/10/2026; pendente de aprovação do revisor:** regra confirmada sem alteração — a lista declarada da Seção 5.1 permanece fixa e a reproduzida entra como sensibilidade. Nenhuma seção é reescrita | antes da Etapa 3 |
+| P1 | Número de permutações K e esquema de permutação — por nódulo ou por paciente — do controle da Seção 7.2. **Decidida (Emenda 1, E11), em 31/10/2026; ratificada pelo revisor em 03/11/2026:** por paciente, em blocos; K = 100; seeds `10000 + k` | antes da Etapa 1 |
+| P2 | Confirmação dos parâmetros do spline da Seção 10.1. **Decidida (Emenda 1, E11), em 31/10/2026; ratificada pelo revisor em 03/11/2026:** manter os atuais | antes da Etapa 1 |
+| P3 | Confirmação da regra para divergência na reprodução fiel (Seção 7.1, item 1). **Decidida (Emenda 1, E11), em 31/10/2026; ratificada pelo revisor em 03/11/2026:** regra confirmada sem alteração — a lista declarada da Seção 5.1 permanece fixa e a reproduzida entra como sensibilidade. Nenhuma seção é reescrita | antes da Etapa 3 |
 | P4 | ~~Explicar a divergência entre M1 = 0,9778 e M1 = 0,9762~~ — **encerrada** pela Emenda 1 (E2): dois desvios do notebook, reproduzidos | encerrada |
-| P5 | Versionamento dos registros dos Experimentos 10 e 13 e do notebook de seleção de Juan, com suas saídas. **Decidida (Emenda 1, E11), em 31/10/2026; pendente de aprovação do revisor:** versionar com saídas removidas, manifesto de SHA-256 e números agregados | antes da Etapa 4 |
+| P5 | Versionamento dos registros dos Experimentos 10 e 13 e do notebook de seleção de Juan, com suas saídas. **Decidida (Emenda 1, E11), em 31/10/2026; ratificada pelo revisor em 03/11/2026:** versionar com saídas removidas, manifesto de SHA-256 e números agregados | antes da Etapa 4 |
 | P6 | Base da evidência principal: 353 pacientes (treino + validação) ou 416. **Transferida (S6) pela Emenda 1 (E11), revisão 3:** não se aplica a este protocolo, cujas etapas permanecem como nas Seções 4 e 7; a base de 353 pacientes vale só para o benchmark da Sprint 6, que nunca usa o teste. Nenhuma validação cruzada sobre os 416 pacientes é executada | antes do benchmark S6 |
-| P7 | Regularização dos modelos M0–M4 deste protocolo. **Decidida (Emenda 1, E11), em 31/10/2026; pendente de aprovação do revisor:** C = 1 (L2), como na Seção 6.1, com C = 0,1 como sensibilidade. Não rege o benchmark da Sprint 6 | antes da Etapa 2 |
-| P8 | Destino dos 10 arquivos históricos com dado individual em `reports/sprint2/` (Emenda 1, E10). **Decidida em parte (Emenda 1, E11), em 31/10/2026; pendente de aprovação do revisor:** declarados como exceção histórica. **Em aberto:** destino final | antes da entrega final |
+| P7 | Regularização dos modelos M0–M4 deste protocolo. **Decidida (Emenda 1, E11), em 31/10/2026; ratificada pelo revisor em 03/11/2026:** C = 1 (L2), como na Seção 6.1, com C = 0,1 como sensibilidade. Não rege o benchmark da Sprint 6 | antes da Etapa 2 |
+| P8 | Destino dos 10 arquivos históricos com dado individual em `reports/sprint2/` (Emenda 1, E10). **Decidida em parte (Emenda 1, E11), em 31/10/2026; ratificada pelo revisor em 03/11/2026:** declarados como exceção histórica. **Em aberto:** destino final | antes da entrega final |
 | P9 | Especificação do benchmark de classificadores (regressão logística, Random Forest, XGBoost e SVM). **Transferida (S6) pela Emenda 1 (E11), revisão 3:** fora do escopo deste protocolo (Seção 14); definida em pré-registro próprio, antes de qualquer treinamento definitivo. Nenhum hiperparâmetro do benchmark é fixado neste documento | antes do benchmark S6 |
 
 Qualquer decisão tomada sobre esses pontos é registrada em revisão deste documento, com data, antes da etapa indicada.
+
+**Registros formais pendentes.** A ratificação do revisor vale para a Emenda 1. Os registros `APROVACAO-DECISAO` de P1, P2 e P3 exigidos pelas guardas da S4 (`src/incremental/guardas.py`) ainda **não existem** neste documento e seguem pendentes; sem eles as guardas continuam bloqueando as etapas que dependem dessas decisões. Esta atualização não aprova o pré-registro P9 da S6, não conclui a Etapa 3 e não libera a execução definitiva do benchmark.
 
 ## 14. Fora do escopo deste protocolo
 
