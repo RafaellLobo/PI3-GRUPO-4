@@ -473,6 +473,10 @@ APROVACAO-DECISAO codigo=S4_E3_REGISTRADA status=aprovada data=AAAA-MM-DD valor_
 
 **Registros de aprovação:** somente as linhas `APROVACAO-DECISAO` na coluna 0 deste documento valem; o texto acima não é registro.
 
+**Registro P9 (03/11/2026)**, lavrado a pedido do revisor, sobre o SHA-256 da configuração canônica anotado acima:
+
+APROVACAO-DECISAO codigo=P9 status=aprovada data=2026-11-03 valor_sha256=a0d096a5415244f17f40360a2a5a8901bc8af1da5cf8687b891f920e1ee122b3
+
 **Adendos:** nenhum.
 
 ## Referências
