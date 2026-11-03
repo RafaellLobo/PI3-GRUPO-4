@@ -66,7 +66,7 @@ class TestFoldsDoTreinoCompleto(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.amostra, _, _ = amostra_de_treino()
-        cls.folds = fl.folds_estabilidade_treino_completo(cls.amostra)
+        cls.folds = sel.folds_estabilidade_treino_completo(cls.amostra)
 
     def test_cinco_folds_cobrindo_cada_linha_uma_vez_sem_paciente_nos_dois_lados(self):
         n = self.amostra.n
@@ -77,7 +77,7 @@ class TestFoldsDoTreinoCompleto(unittest.TestCase):
             self.assertEqual(len(d.treino) + len(d.avaliacao), n)
             self.assertFalse(set(self.amostra.grupos[d.treino].tolist()) & set(self.amostra.grupos[d.avaliacao].tolist()))
             self.assertEqual((d.repeticao, d.fold_externo, d.nivel, d.seed),
-                             (fl.TREINO_COMPLETO, fl.TREINO_COMPLETO, fl.NIVEL_ESTABILIDADE,
+                             (sel.TREINO_COMPLETO, sel.TREINO_COMPLETO, fl.NIVEL_ESTABILIDADE,
                               cfg.ESPEC_SELECAO.seed_estabilidade))
 
     def test_mesmas_particoes_que_o_splitter_direto(self):
@@ -97,7 +97,7 @@ class TestFoldsDoTreinoCompleto(unittest.TestCase):
 
     def test_recusa_entrada_que_nao_e_amostra(self):
         with self.assertRaises(TypeError):
-            fl.folds_estabilidade_treino_completo(object())
+            sel.folds_estabilidade_treino_completo(object())
 
 
 class TestSelecaoDoTreinoCompleto(unittest.TestCase):
@@ -116,11 +116,11 @@ class TestSelecaoDoTreinoCompleto(unittest.TestCase):
         self.assertEqual([(f.C, f.selecionadas) for f in self.res.folds], self.ref_por_fold)
 
     def test_marcas_do_treino_completo_e_sem_identificadores(self):
-        self.assertEqual((self.res.repeticao, self.res.fold_externo), (fl.TREINO_COMPLETO, fl.TREINO_COMPLETO))
+        self.assertEqual((self.res.repeticao, self.res.fold_externo), (sel.TREINO_COMPLETO, sel.TREINO_COMPLETO))
         self.assertEqual(self.res.sha256_amostra, self.amostra.sha256)
         self.assertEqual(self.res.hash_configuracao, cfg.hash_configuracao())
         self.assertNotIn("LIDC", json.dumps(self.res.como_dict()))
-        self.assertEqual([f.n_nodulos for f in self.res.folds], [len(fl.folds_estabilidade_treino_completo(self.amostra)[j].treino)
+        self.assertEqual([f.n_nodulos for f in self.res.folds], [len(sel.folds_estabilidade_treino_completo(self.amostra)[j].treino)
                                                                   for j in range(5)])
 
     def test_determinismo(self):

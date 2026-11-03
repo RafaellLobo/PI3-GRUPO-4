@@ -325,6 +325,30 @@ def selecionar_fold_externo(amostra: fl.Amostra, X: Any, features: Sequence[str]
     )
 
 
+#: Marca de "treino oficial completo" em ``repeticao`` e ``fold_externo`` (Etapa 0, item 2; Seção 7.1):
+#: não há fold externo, só a estabilidade sobre todas as linhas.
+TREINO_COMPLETO = -1
+
+
+def folds_estabilidade_treino_completo(amostra: fl.Amostra) -> Tuple[fl.Divisao, ...]:
+    """Folds de estabilidade sobre TODAS as linhas da amostra (Etapa 0, item 2; Seção 7.1).
+
+    Mesma seed e mesmo número de folds de ``folds.folds_estabilidade`` (``ESPEC_SELECAO``), mas a base é
+    o treino oficial inteiro, sem fold externo. Fica aqui, e não em ``folds.py``, porque a S6 fixa o
+    SHA-256 de ``folds.py``. Os folds internos saem de ``folds.folds_internos`` sem alteração.
+    """
+    if not isinstance(amostra, fl.Amostra):
+        raise TypeError("amostra deve ser folds.Amostra")
+    espec = cfg.ESPEC_SELECAO
+    base = fl._somente_leitura(np.arange(amostra.n, dtype=np.int64))
+    contexto = "estabilidade do treino completo"
+    partes = fl._dividir(amostra, base, espec.n_folds_estabilidade, espec.seed_estabilidade, contexto)
+    fl._validar_nivel(amostra, base, partes, espec.n_folds_estabilidade, contexto)
+    return tuple(fl.Divisao(fl.NIVEL_ESTABILIDADE, TREINO_COMPLETO, TREINO_COMPLETO, j, None,
+                            espec.seed_estabilidade, tr, te, amostra.sha256)
+                 for j, (tr, te) in enumerate(partes))
+
+
 def selecionar_treino_completo(amostra: fl.Amostra, X: Any, features: Sequence[str]) -> SelecaoFold:
     """Lista do procedimento ajustado aplicado UMA vez ao treino oficial inteiro (Etapa 0, item 2).
 
@@ -332,7 +356,7 @@ def selecionar_treino_completo(amostra: fl.Amostra, X: Any, features: Sequence[s
     filtros e scaler ajustados em cada treino interno, regra de pelo menos 3 de 5), com o treino
     completo no lugar do treino externo. O resultado é DESCRITIVO: não substitui a lista fixa da
     Seção 5.1 e não é avaliado em validação nem em teste. ``repeticao`` e ``fold_externo`` do
-    resultado valem ``folds.TREINO_COMPLETO``.
+    resultado valem ``TREINO_COMPLETO``.
     """
     if not isinstance(amostra, fl.Amostra):
         raise TypeError("amostra deve ser folds.Amostra")
@@ -340,7 +364,7 @@ def selecionar_treino_completo(amostra: fl.Amostra, X: Any, features: Sequence[s
     matriz = _matriz(X, features, amostra.n)
     if not np.isfinite(matriz).all():
         raise SelecaoInvalida("valores não finitos no treino")
-    estabilidade = fl.folds_estabilidade_treino_completo(amostra)
+    estabilidade = folds_estabilidade_treino_completo(amostra)
     composicao = {}
     resultados = []
     for est in estabilidade:
@@ -358,7 +382,7 @@ def selecionar_treino_completo(amostra: fl.Amostra, X: Any, features: Sequence[s
             features, est, seeds.pop()))
     frequencia, s = consolidar(features, (r.selecionadas for r in resultados))
     return SelecaoFold(
-        repeticao=fl.TREINO_COMPLETO, fold_externo=fl.TREINO_COMPLETO, sha256_amostra=amostra.sha256,
+        repeticao=TREINO_COMPLETO, fold_externo=TREINO_COMPLETO, sha256_amostra=amostra.sha256,
         fingerprint_folds=fl.fingerprint_folds(composicao), hash_configuracao=cfg.hash_configuracao(),
         features=features, folds=tuple(resultados), frequencia=frequencia, s_k=s,
     )
