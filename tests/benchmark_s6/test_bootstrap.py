@@ -219,11 +219,11 @@ class TestIntervalos(BaseBootstrap):
         for i in self.r.intervalos_theta:
             valores = self.r.theta_replicas[(i.modelo, i.desfecho)]
             valores = valores[~np.isnan(valores)]
-            self.assertEqual((i.inferior, i.superior), (float(np.percentile(valores, 2.5)),
+            self.assertEqual((i.limite_baixo, i.limite_alto), (float(np.percentile(valores, 2.5)),
                                                         float(np.percentile(valores, 97.5))))
             self.assertTrue(i.relatado)
-            self.assertLess(i.inferior, i.theta)
-            self.assertLess(i.theta, i.superior)
+            self.assertLess(i.limite_baixo, i.theta)
+            self.assertLess(i.theta, i.limite_alto)
 
     def test_contrastes_da_familia_tem_bonferroni_e_ic95_e_os_descritivos_so_ic95(self):
         inf, sup = self.r.percentis_familia
@@ -233,19 +233,19 @@ class TestIntervalos(BaseBootstrap):
         for i in self.r.intervalos_contraste:
             validos = self.r.delta_replicas[(i.a, i.b, i.desfecho)]
             validos = validos[~np.isnan(validos)]
-            self.assertEqual((i.ic95_inferior, i.ic95_superior), (float(np.percentile(validos, 2.5)),
+            self.assertEqual((i.ic95_baixo, i.ic95_alto), (float(np.percentile(validos, 2.5)),
                                                                   float(np.percentile(validos, 97.5))))
             if i.grupo == co.GRUPO_FAMILIA:
-                self.assertEqual((i.bonferroni_inferior, i.bonferroni_superior),
+                self.assertEqual((i.bonferroni_baixo, i.bonferroni_alto),
                                  (float(np.percentile(validos, inf)), float(np.percentile(validos, sup))))
-                self.assertLessEqual(i.bonferroni_inferior, i.ic95_inferior)  # Bonferroni é mais largo
-                self.assertGreaterEqual(i.bonferroni_superior, i.ic95_superior)
+                self.assertLessEqual(i.bonferroni_baixo, i.ic95_baixo)  # Bonferroni é mais largo
+                self.assertGreaterEqual(i.bonferroni_alto, i.ic95_alto)
             else:
-                self.assertEqual((i.bonferroni_inferior, i.bonferroni_superior), (None, None))
+                self.assertEqual((i.bonferroni_baixo, i.bonferroni_alto), (None, None))
         self.assertEqual(sum(1 for i in self.r.intervalos_contraste if i.grupo == co.GRUPO_FAMILIA), 6)
 
     def test_bonferroni_so_nos_seis_contrastes_e_nunca_em_auc_individual(self):
-        self.assertFalse(hasattr(self.r.intervalos_theta[0], "bonferroni_inferior"))
+        self.assertFalse(hasattr(self.r.intervalos_theta[0], "bonferroni_baixo"))
         self.assertEqual(co.pares_de_contraste()[:3], (("rf", "lr_tuning", co.GRUPO_FAMILIA),
                                                        ("xgb", "lr_tuning", co.GRUPO_FAMILIA),
                                                        ("svm", "lr_tuning", co.GRUPO_FAMILIA)))
@@ -256,7 +256,7 @@ class TestIntervalos(BaseBootstrap):
 
     def test_intervalo_cobre_a_estimativa_e_tem_largura_plausivel(self):
         for i in self.r.intervalos_theta:
-            self.assertTrue(0.0 < i.superior - i.inferior < 0.05)
+            self.assertTrue(0.0 < i.limite_alto - i.limite_baixo < 0.05)
         centro = np.nanmean(self.r.theta_replicas[("lr_tuning", "G")])
         self.assertAlmostEqual(centro, self.c.estimativa("lr_tuning", "G").theta, delta=0.003)
 
@@ -276,10 +276,10 @@ class TestDescarteEIQ(BaseBootstrap):
         self.assertTrue(d.iq)
         self.assertEqual(d.fracao, d.descartadas / 400)
         for i in (x for x in r.intervalos_theta if x.desfecho == "F"):
-            self.assertEqual((i.relatado, i.motivo, i.inferior, i.superior), (False, "IQ", None, None))
+            self.assertEqual((i.relatado, i.motivo, i.limite_baixo, i.limite_alto), (False, "IQ", None, None))
             self.assertIsNotNone(i.theta)  # a estimativa pontual continua relatada
         for i in (x for x in r.intervalos_contraste if x.desfecho == "F"):
-            self.assertEqual((i.relatado, i.motivo, i.ic95_inferior, i.bonferroni_inferior), (False, "IQ", None, None))
+            self.assertEqual((i.relatado, i.motivo, i.ic95_baixo, i.bonferroni_baixo), (False, "IQ", None, None))
             self.assertIsNotNone(i.delta)
         self.assertFalse(r.descarte("G").iq)  # o outro desfecho não é afetado
         self.assertTrue(all(x.relatado for x in r.intervalos_theta if x.desfecho == "G"))
@@ -308,7 +308,7 @@ class TestDescarteEIQ(BaseBootstrap):
         base, p, c = self.com_faixa(np.zeros(self.base.amostra.n, dtype=bool))
         r = bs.bootstrap(p, c, n_replicas=50)
         for i in (x for x in r.intervalos_theta if x.desfecho == "F"):
-            self.assertEqual((i.relatado, i.motivo, i.theta, i.inferior), (False, "NE", None, None))
+            self.assertEqual((i.relatado, i.motivo, i.theta, i.limite_baixo), (False, "NE", None, None))
         for i in (x for x in r.intervalos_contraste if x.desfecho == "F"):
             self.assertEqual((i.relatado, i.motivo, i.delta), (False, "NE", None))
         self.assertTrue(r.descarte("F").iq)  # todas as réplicas descartadas

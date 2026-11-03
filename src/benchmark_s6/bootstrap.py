@@ -113,8 +113,8 @@ class IntervaloTheta(NamedTuple):
     relatado: bool
     motivo: str
     theta: Optional[float]
-    inferior: Optional[float]
-    superior: Optional[float]
+    limite_baixo: Optional[float]
+    limite_alto: Optional[float]
 
 
 class IntervaloContraste(NamedTuple):
@@ -127,10 +127,10 @@ class IntervaloContraste(NamedTuple):
     relatado: bool
     motivo: str
     delta: Optional[float]
-    ic95_inferior: Optional[float]
-    ic95_superior: Optional[float]
-    bonferroni_inferior: Optional[float]
-    bonferroni_superior: Optional[float]
+    ic95_baixo: Optional[float]
+    ic95_alto: Optional[float]
+    bonferroni_baixo: Optional[float]
+    bonferroni_alto: Optional[float]
 
 
 @dataclass(frozen=True, eq=False)
@@ -234,8 +234,8 @@ def _replicas_de_desfecho(p: co.Pareados, desfecho: str, pesos: np.ndarray) -> T
 
 
 def _percentis(valores: np.ndarray, percentis: Tuple[float, float]) -> Tuple[float, float]:
-    inferior, superior = np.percentile(valores, percentis)
-    return float(inferior), float(superior)
+    baixo, alto = np.percentile(valores, percentis)
+    return float(baixo), float(alto)
 
 
 def bootstrap(p: co.Pareados, c: co.Consolidacao, n_replicas: Optional[int] = None) -> ResultadoBootstrap:
@@ -283,8 +283,8 @@ def bootstrap(p: co.Pareados, c: co.Consolidacao, n_replicas: Optional[int] = No
             if motivo:
                 intervalos_theta.append(IntervaloTheta(m, desfecho, False, motivo, est.theta, None, None))
             else:
-                inf, sup = _percentis(theta_replicas[(m, desfecho)][definidas[desfecho]], descritivo)
-                intervalos_theta.append(IntervaloTheta(m, desfecho, True, "", est.theta, inf, sup))
+                baixo, alto = _percentis(theta_replicas[(m, desfecho)][definidas[desfecho]], descritivo)
+                intervalos_theta.append(IntervaloTheta(m, desfecho, True, "", est.theta, baixo, alto))
 
     intervalos_contraste: List[IntervaloContraste] = []
     for a, b, grupo in co.pares_de_contraste():
