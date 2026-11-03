@@ -337,12 +337,17 @@ DECISOES: Mapping[str, Decisao] = MappingProxyType({
         "Número de permutações K, esquema (por nódulo ou por paciente) e tratamento dos "
         "folds de estabilidade e internos sob rótulos permutados (Seção 7.2)",
         "antes da Etapa 1",
+        status=StatusDecisao.APROVADA,
+        commit_revisao_protocolo="d04198702d57f8b6088235a62f32ce8616a0f677",
         etapa_limite=Etapa.E1,
     ),
     "P2": Decisao(
         "P2",
         "Confirmação dos parâmetros do spline (Seção 10.1)",
         "antes da Etapa 1",
+        status=StatusDecisao.APROVADA,
+        commit_revisao_protocolo="d04198702d57f8b6088235a62f32ce8616a0f677",
+        valor=SPLINE_PROPOSTO,
         etapa_limite=Etapa.E1,
     ),
     "P3": Decisao(
@@ -350,12 +355,19 @@ DECISOES: Mapping[str, Decisao] = MappingProxyType({
         "Regra para divergência na reprodução fiel e lista fixa de M2, M3 e M4 "
         "(Seção 7.1, item 1); bloqueia também a CV descritiva com lista fixa da Etapa 2",
         "antes da Etapa 3",
+        status=StatusDecisao.APROVADA,
+        commit_revisao_protocolo="d04198702d57f8b6088235a62f32ce8616a0f677",
+        valor=PAINEL_DECLARADO,
         etapa_limite=Etapa.E3,
     ),
     "P4": Decisao(
         "P4",
         "Explicação da divergência entre M1 = 0,9778 (Experimento 13) e 0,9762 (baseline)",
         "antes da Etapa 5",
+        status=StatusDecisao.APROVADA,
+        commit_revisao_protocolo="d04198702d57f8b6088235a62f32ce8616a0f677",
+        # Encerrada pela Emenda 1 (E2): valor canônico do M1 do baseline.
+        valor=0.9762,
         etapa_limite=Etapa.E5,
     ),
     "P5": Decisao(
