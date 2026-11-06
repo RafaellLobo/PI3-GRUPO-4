@@ -1,0 +1,43 @@
+verificacao,item,resultado
+AUC recalculada = theta do bootstrap,LR fixa G,OK
+AUC recalculada = theta do bootstrap,LR com ajuste G,OK
+AUC recalculada = theta do bootstrap,SVM G,OK
+AUC recalculada = theta do bootstrap,RF G,OK
+AUC recalculada = theta do bootstrap,XGBoost G,OK
+AUC recalculada = theta do bootstrap,LR fixa F,OK
+AUC recalculada = theta do bootstrap,LR com ajuste F,OK
+AUC recalculada = theta do bootstrap,SVM F,OK
+AUC recalculada = theta do bootstrap,RF F,OK
+AUC recalculada = theta do bootstrap,XGBoost F,OK
+denominadores identicos em todas as repeticoes,G,OK
+denominadores identicos em todas as repeticoes,F,OK
+"quadro de AUC = resumo, Secao 4",LR fixa G,OK
+"quadro de AUC = resumo, Secao 4",LR com ajuste G,OK
+"quadro de AUC = resumo, Secao 4",SVM G,OK
+"quadro de AUC = resumo, Secao 4",RF G,OK
+"quadro de AUC = resumo, Secao 4",XGBoost G,OK
+"quadro de AUC = resumo, Secao 4",LR fixa F,OK
+"quadro de AUC = resumo, Secao 4",LR com ajuste F,OK
+"quadro de AUC = resumo, Secao 4",SVM F,OK
+"quadro de AUC = resumo, Secao 4",RF F,OK
+"quadro de AUC = resumo, Secao 4",XGBoost F,OK
+"contrastes da familia = resumo, Secao 5",RF − LR com ajuste G,OK
+"contrastes da familia = resumo, Secao 5",RF − LR com ajuste F,OK
+"contrastes da familia = resumo, Secao 5",XGBoost − LR com ajuste G,OK
+"contrastes da familia = resumo, Secao 5",XGBoost − LR com ajuste F,OK
+"contrastes da familia = resumo, Secao 5",SVM − LR com ajuste G,OK
+"contrastes da familia = resumo, Secao 5",SVM − LR com ajuste F,OK
+"sensibilidade = resumo, Secao 6",RF − LR com ajuste G,OK
+"sensibilidade = resumo, Secao 6",RF − LR com ajuste F,OK
+"sensibilidade = resumo, Secao 6",XGBoost − LR com ajuste G,OK
+"sensibilidade = resumo, Secao 6",XGBoost − LR com ajuste F,OK
+"sensibilidade = resumo, Secao 6",SVM − LR com ajuste G,OK
+"sensibilidade = resumo, Secao 6",SVM − LR com ajuste F,OK
+"sensibilidade = resumo, Secao 6",LR com ajuste − LR fixa G,OK
+"sensibilidade = resumo, Secao 6",LR com ajuste − LR fixa F,OK
+"sensibilidade = resumo, Secao 6",RF − XGBoost G,OK
+"sensibilidade = resumo, Secao 6",RF − XGBoost F,OK
+"sensibilidade = resumo, Secao 6",RF − SVM G,OK
+"sensibilidade = resumo, Secao 6",RF − SVM F,OK
+"sensibilidade = resumo, Secao 6",XGBoost − SVM G,OK
+"sensibilidade = resumo, Secao 6",XGBoost − SVM F,OK

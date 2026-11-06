@@ -1,0 +1,23 @@
+{
+  "script": "consolidar_s6_p0_parte_a.py",
+  "executado_em_utc": "2026-11-06T12:55:21+00:00",
+  "protocolo": "PR #23",
+  "commit_dos_dados": "1530be5",
+  "python": "3.13.16",
+  "entradas_sha256": {
+    "auc_por_repeticao.csv": "b53c35f60410514871e42767d1c7ff50134a13c2e24c9a3c3af402d8946744f1",
+    "contrastes.csv": "18eafac731e1e5998730fde2df1885d1e167ee14f721badcc605786a4075fd42",
+    "bootstrap_resumo.json": "f54c0176b3786e1eb65362d1f19d0ec912ed323858ddd87ac47d4eec2b85a4b1",
+    "denominadores.csv": "4ccbb6ed71196c83b375bc72ce366f2b4a616fe0f36997f508295efd24d4f4eb",
+    "selecao_algoritmo.json": "b45603f09be118719ade7ac71fa42e682e5ab411610ed3f3f339d6ce71896f31",
+    "config_benchmark.json": "f6176d2ac29eb1958ca73de7b394483b75541d269fc30b5828581fb211883c8a",
+    "resumo_benchmark.md": "f6896c10e2fbe2b2b9b570edf785fb9a2d27ceb7723ccf45f55e4b7f484354c9"
+  },
+  "conferencias": {
+    "total": 42,
+    "ok": 42,
+    "falhas": 0
+  },
+  "le_teste": false,
+  "ajusta_modelos": false
+}
