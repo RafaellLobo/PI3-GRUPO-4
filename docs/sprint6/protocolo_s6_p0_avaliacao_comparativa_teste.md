@@ -69,7 +69,7 @@ Fonte: reports/sprint6/benchmark/resumo_benchmark.md, Seções 5 e 6.
 
 **3.3 Regras de leitura**
 
-Os seis intervalos com Bonferroni contêm o zero, e nenhuma diferença estimada se aproxima de δ = 0,02 (critério C1 do pré-registro). Nenhum desafiante cumpriu C1 a C4, e a regra de seleção recomenda a regressão logística com ajuste. A leitura permitida é descritiva e condicional: “diferença estimada”, “compatível com”, “não detectada nesta base”. Ficam vetados “significativo”, “superior”, “comprovado”, “demonstrado”, “estatisticamente” e “p-valor”, conforme o P9, Seção 8.3. O bootstrap não reajusta os modelos nem captura a variabilidade da escolha de hiperparâmetros; os intervalos tendem a ser estreitos demais, e o Bonferroni é convenção de largura, não garantia de controle do erro de família, pois os contrastes compartilham o comparador. Intervalos largos não provam equivalência entre algoritmos.
+Os seis intervalos com Bonferroni contêm o zero, e nenhuma diferença estimada se aproxima de δ = 0,02 (critério C1 do pré-registro). Nenhum desafiante cumpriu C1 a C4, e a regra de seleção recomenda a regressão logística com ajuste. A leitura permitida é descritiva e condicional: “diferença estimada”, “compatível com”, “não detectada nesta base”. Ficam vetados “significativo”, “superior”, “comprovado”, “demonstrado”, “estatisticamente” e “p-valor”, conforme o P9, Seção 8.3. O bootstrap não reajusta os modelos nem captura a variabilidade da escolha de hiperparâmetros; os intervalos tendem a ser estreitos demais, e o limite de Bonferroni vale para qualquer dependência entre os contrastes, desde que cada intervalo marginal tenha a cobertura nominal; como o bootstrap é aproximado e condicional aos modelos ajustados, essa cobertura é apenas aproximada. Intervalos largos não provam equivalência entre algoritmos.
 
 **4 O QUE ESTE PROTOCOLO NÃO CONSOLIDA**
 
@@ -87,7 +87,7 @@ Quadro 3 — Pré-condições para a avaliação descritiva do teste.
 
 | **\#** | **Pré-condição**                                                                                                      | **Fonte**                 | **Situação verificada**                                                                                                                                    |
 |--------|-----------------------------------------------------------------------------------------------------------------------|---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1      | Registros formais de P1, P2 e P3 nas guardas da S4                                                                    | Adendo 1, Seção 4         | Não verificado neste levantamento                                                                                                                          |
+| 1      | Registros formais de P1, P2 e P3 nas guardas da S4                                                                    | Adendo 1, Seção 4         | Estado informado pelo revisor em 06/11/2026: P1 a P4 com registros formais na main; P5 decidida, mas ainda exige versionamento e regularização; P6 transferida para o P9; P7 decidida na Emenda E11. Não reverificado por mim |
 | 2      | Etapa 3 da S4 concluída e registrada                                                                                  | Protocolo 7.3; Emenda E7  | Relatório existe em reports/sprint4/etapa3_validacao; o benchmark em modo definitivo só roda com o registro S4_E3_REGISTRADA (P9), e rodou                 |
 | 3      | Etapas 0 (item 2), 1 e 2 oficiais concluídas                                                                          | Adendo 1, Seção 3, item 2 | Declaradas concluídas pela responsável em 05/11/2026. Não localizei seus relatórios no main em 05/11/2026. \[A INFORMAR: caminho e commit dos relatórios\] |
 | 4      | Etapa 4: congelamento em commit identificado (protocolo, código das Etapas 0 a 5, relatórios das Etapas 0 a 3)        | Protocolo 7.4             | Declarada concluída pela responsável em 05/11/2026. Não localizei o commit no repositório. \[A INFORMAR: hash do commit de congelamento\]                  |
@@ -161,7 +161,7 @@ Quadro 6 — Correspondência entre o DoD e este protocolo.
 | Revisão de outro integrante            | Revisor registrado (Rafael); revisão em paralelo à Parte A; aprovação obrigatória antes da Parte B e do fechamento definitivo | Comentário no PR ou cartão            |
 | Evidências no GitHub e no Drive        | Script, logs e relatório versionados; DoD no Drive                                                                            | Links no cartão                       |
 
-Fonte: elaborado pela autora (2026), com base no cartão P0 da Sprint 7.
+Fonte: elaborado pela autora (2026), com base no cartão S6 [P0].
 
 **9 CRONOGRAMA E RISCOS**
 
@@ -186,3 +186,6 @@ PI3-GRUPO-4. Resumo do benchmark de classificadores da Sprint 6. Repositório Ra
 PI3-GRUPO-4. Adendo 1 ao protocolo de valor incremental: ordem das Etapas 1 a 3. Repositório RafaellLobo/PI3-GRUPO-4, docs/sprint4/adendo_01_ordem_das_etapas.md, 2026.
 
 *“Todos os modelos estão errados, mas alguns são úteis.” (George E. P. Box)*
+
+**Adendo de 06/11/2026 (pedido do revisor).** (1) Estados das decisões P1 a P7 atualizados no Quadro 3, item 1. (2) Seção 3.3: a justificativa sobre o Bonferroni foi corrigida, porque o limite de Bonferroni vale para qualquer dependência entre os contrastes, desde que cada intervalo tenha a cobertura nominal; a limitação real é a cobertura aproximada do bootstrap. A redação anterior, que atribuía o problema ao comparador compartilhado, estava incorreta (apontamento da revisão automática do PR). (3) A referência “cartão P0 da Sprint 7” foi corrigida para “cartão S6 [P0]”. A opção 1 (M0 a M4 da S4) para a futura análise descritiva do teste foi aceita pelo revisor. A Parte B continua pendente: as Etapas 1 e 2 oficiais, o congelamento da Etapa 4 e a implementação da Etapa 5 ainda precisam de evidências, e o teste histórico não foi executado.
+
