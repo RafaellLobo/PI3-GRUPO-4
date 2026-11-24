@@ -4,6 +4,8 @@ Status: Aceito
 
 Data: 2026-11-23
 
+Revisado em: 2026-11-24
+
 Registro retrospectivo das regras implementadas e pré-registradas. Não modifica aprovações, coorte, split, sementes ou decisões científicas.
 
 ## Contexto
@@ -15,6 +17,10 @@ Um paciente pode ter vários nódulos. Misturar nódulos do mesmo paciente entre
 Preservar o split oficial por paciente e, no P9, a validação cruzada aninhada com `StratifiedGroupKFold`: dez repetições de cinco dobras externas e cinco internas, usando as mesmas divisões por paciente para todos os modelos. Manter as três características do baseline, ordenação canônica, sementes externas `42 + r`, internas `1000 + 10*r + k` e fingerprints das divisões. Ajuste interno usa somente o treino externo; o P9 utiliza treino+validação e exclui o teste histórico de suas avaliações.
 
 Aplicar C1–C4 do pré-registro para seleção, com LR ajustada como padrão. Apresentar G e F como conjunto geral e subconjunto de tamanho; intervalos descritivos não demonstram equivalência ou superioridade clínica. A pergunta de valor incremental da S4 permanece separada deste benchmark.
+
+## Alternativa descartada
+
+Dividir aleatoriamente os nódulos, sem agrupar por paciente, simplificaria o particionamento e a estratificação. Essa alternativa é incompatível com o problema: nódulos de um mesmo paciente poderiam aparecer simultaneamente em treino e avaliação. O agrupamento por paciente foi mantido para preservar a separação entre grupos, mesmo com maior complexidade e custo na validação aninhada.
 
 ## Consequências
 

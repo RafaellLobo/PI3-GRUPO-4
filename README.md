@@ -2,7 +2,9 @@
 
 ## 1. Nome e descrição
 
-Projeto Integrador III do Grupo 4: pipeline científico em Python para estudar características de nódulos pulmonares em tomografias do LIDC-IDRI. O problema é investigar a discriminação da **suspeição atribuída pelos radiologistas** e a influência do tamanho e do pré-processamento nas análises. O público é a equipe de pesquisa, professores e estudantes que precisam inspecionar métodos, executar rotinas e rastrear resultados.
+Este projeto estuda medidas extraídas de tomografias de nódulos pulmonares para investigar a suspeição atribuída por radiologistas. O código ajuda pesquisadores, professores e estudantes a organizar as análises, comparar métodos e conferir de onde vêm os resultados.
+
+O Projeto Integrador III do Grupo 4 utiliza a base pública LIDC-IDRI e um pipeline científico em Python. As análises também investigam a influência do tamanho dos nódulos e das escolhas de pré-processamento.
 
 O alvo binário deriva da mediana dos escores de 1 a 5: mediana ≤ 2 recebe classe 0; mediana ≥ 4 recebe classe 1; medianas intermediárias ficam fora da modelagem binária. **Não é diagnóstico de câncer confirmado por histopatologia nem ferramenta clínica.** O LIDC-IDRI não fornece categorias Lung-RADS nativas.
 
@@ -39,7 +41,7 @@ Os resultados existentes do P9 estão em [resumo_benchmark.md](reports/sprint6/b
 
 | Tecnologia | Uso e versão declarada |
 |---|---|
-| Python | `3.9` no ambiente declarativo; P9 histórico exige `3.9.13` |
+| Python | `3.9.13` no ambiente declarativo, alinhado à guarda do P9 |
 | NumPy / pandas / SciPy | Dados e estatística; `1.23.5` / `1.5.3` / `1.10.1` |
 | scikit-learn / XGBoost | Modelagem e validação; `1.3.2` / `2.1.4` |
 | PyRadiomics / SimpleITK | Características de imagem; `3.1.0` / `2.5.5` no YAML |
@@ -47,11 +49,14 @@ Os resultados existentes do P9 estão em [resumo_benchmark.md](reports/sprint6/b
 | SQLAlchemy | Dependência do acesso às anotações pelo pylidc; `1.4.54` |
 | Matplotlib | Figuras; `3.7.3` |
 | Jupyter/IPython | Notebooks; `ipykernel` declarado sem versão fixada |
+| Setuptools | `setuptools<81`, para manter o `pkg_resources` exigido pelo pylidc 0.2.3 |
 | Git e Conda/pip | Versionamento e preparação do ambiente |
 
 O arquivo [environment.yml](environment.yml) é a referência de instalação. Não há lockfile completo de dependências transitivas. O Colab histórico usou outras versões, inclusive PyRadiomics de desenvolvimento: o YAML não reproduz automaticamente todos os experimentos históricos. Consulte o [guia de reprodução](docs/guia_reproducao.md) e o [pré-registro P9](docs/sprint6/preregistro_p9_benchmark.md) antes de reexecutá-los.
 
 ## 4. Como instalar e executar
+
+**Sem os dados externos, execute somente os passos 4.2–4.4:** instalação, conferência da configuração e testes sintéticos. A seção 4.5 envolve as etapas científicas e exige entradas autorizadas, ambiente compatível e aprovações do protocolo.
 
 ### 4.1 Pré-requisitos
 
@@ -70,6 +75,10 @@ conda env create -f environment.yml
 conda activate pi3-radiomics
 python scripts/validate_environment.py
 ```
+
+O YAML fixa Python 3.9.13 para atender à guarda do P9 e seleciona OpenBLAS para evitar carregar Intel OpenMP e LLVM OpenMP no mesmo processo, conforme a [orientação do threadpoolctl](https://github.com/joblib/threadpoolctl/blob/master/multiple_openmp.md).
+
+O YAML inclui `setuptools<81` porque o pylidc 0.2.3 importa `pkg_resources`. Essa dependência legada ainda pode emitir aviso de depreciação; o limite de versão mantém o import disponível. A [documentação do Setuptools](https://setuptools.pypa.io/en/stable/deprecated/pkg_resources.html) descreve a descontinuação dessa API.
 
 A saída esperada do último comando termina em `Ambiente validado com sucesso.`. Ele verifica imports e mostra versões; não certifica equivalência com o ambiente de cada experimento. Se o ambiente `pi3-radiomics` já existir, ative-o e confira as versões antes de decidir sobre qualquer atualização.
 
@@ -108,7 +117,7 @@ Um clone contém código e resultados agregados, mas **não contém todas as ent
 1. Obtenha o LIDC-IDRI e as anotações conforme a [documentação dos dados](data/README.md). Para a Sprint 3, a entrada documentada é `data/base_radiomica_oficial_422.csv`; a tabela derivada é `data/modeling_table_sprint3.csv`. A extração completa histórica não tem produtor integralmente versionado neste checkout.
 2. Confira origem, hashes e partições contra o protocolo da etapa. A tabela de modelagem completa tem 607 nódulos/416 pacientes; o P9 restringe a carga a treino+validação, com 509/353. Não substituir a tabela oficial por uma seleção manual de linhas.
 3. Preserve `reports/sprint3/baseline/patient_split.csv`; não refaça o split para melhorar resultados. DICOMs exigem configuração local do pylidc, conforme [validação inicial](docs/lidc_initial_validation.md).
-4. Para o P9 definitivo, confira todas as versões exigidas, inclusive Python 3.9.13, os registros de aprovação `P9` e `S4_E3_REGISTRADA`, o manifesto definitivo da S4 e a árvore Git limpa. `python=3.9` no YAML não garante o patch histórico. Dados indisponíveis ou divergências de ambiente são bloqueios reais, não autorizações para alterar o protocolo.
+4. Para o P9 definitivo, confira todas as versões exigidas, inclusive Python 3.9.13, os registros de aprovação `P9` e `S4_E3_REGISTRADA`, o manifesto definitivo da S4 e a árvore Git limpa. O YAML fixa o patch 3.9.13; confira também as demais dependências e os registros da execução histórica. Dados indisponíveis ou divergências de ambiente são bloqueios reais, não autorizações para alterar o protocolo.
 5. Use diretório novo para os artefatos e checkpoints fora do repositório. O destino padrão já tem resultados congelados; não o apague nem use o baseline apenas para testar a instalação, pois ele treina e sobrescreve relatórios.
 
 Após essas condições e autorização da equipe, a interface existente é:
@@ -119,7 +128,7 @@ python -m src.benchmark_s6 --modo definitivo --checkpoints CAMINHO_LOCAL_FORA_DO
 
 `CAMINHO_LOCAL_FORA_DO_REPOSITORIO` e `NOVA_EXECUCAO` são marcadores que precisam ser substituídos por destinos novos apropriados. Esse comando ajusta modelos e pode ser demorado; não integra a verificação rápida. Os modos `implementacao` e `verificar` também exigem dados/checkpoints e controles próprios; `verificar` não é uma simples leitura de CSVs. Procedimentos e pré-condições completos: [pré-registro P9](docs/sprint6/preregistro_p9_benchmark.md) e [guia de revisão](docs/sprint6/GUIA_REVISAO_BENCHMARK_S6.md).
 
-**Validação desta documentação em 23/11/2026:** validador de ambiente, ajuda da CLI, conferência de configuração e os 22 testes sintéticos passaram na `.venv` local Python 3.9.13. Não foi criado um ambiente Conda novo, nem refeita a extração ou o treinamento. A execução integral a partir de um clone depende das entradas e condições acima; não está certificada por esta entrega documental.
+**Validação em 24/11/2026:** um ambiente Conda novo foi criado de `environment.yml`, em diretório separado, com Python 3.9.13 e setuptools 80.9.0. Passaram o validador de ambiente, a ajuda da CLI, a conferência da configuração canônica, os 22 testes de seleção e a suíte de 613 testes de `benchmark_s6` (`OK`, com 1 teste ignorado). O aviso de depreciação de `pkg_resources` permanece, mas o import do pylidc funciona. Não foram executadas extração nem a reprodução científica do benchmark; os testes usam dados sintéticos. O patch de Python está alinhado ao P9; a reprodução científica integral continua condicionada às entradas e aprovações da seção 4.5.
 
 ## 5. Equipe e papéis
 

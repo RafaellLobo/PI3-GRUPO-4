@@ -4,6 +4,8 @@ Status: Aceito
 
 Data: 2026-11-23
 
+Revisado em: 2026-11-24
+
 Registro retrospectivo de uma decisão já implementada. A data indica sua documentação neste ADR, não a adoção original nem a aprovação de uma arquitetura nova.
 
 ## Contexto
@@ -14,7 +16,11 @@ O projeto combina seleção/máscaras, processamento de imagem, estatística e a
 
 Manter a arquitetura de pipeline local em Python, separando `src/radiomics/`, `src/incremental/` e `src/benchmark_s6/`. Usar a CLI `python -m src.benchmark_s6` como ponto de entrada do P9 e preservar notebooks para as análises históricas. Usar Conda/pip com `environment.yml`; para o P9 definitivo, prevalecem as versões exatas do pré-registro/configuração, inclusive Python 3.9.13 e scikit-learn 1.3.2.
 
-A opção reaproveita o ecossistema de imagem e modelagem já utilizado e permite testes sintéticos dos componentes. Não introduzir FastAPI, frontend ou hospedagem apenas para cumprir exemplos de ADR da disciplina.
+A opção reaproveita o ecossistema de imagem e modelagem já utilizado e permite testes sintéticos dos componentes. A arquitetura permanece voltada à execução científica local, sem acrescentar uma camada de aplicação que o fluxo atual não utiliza.
+
+## Alternativa descartada
+
+Concentrar toda a execução em um único notebook facilitaria a exploração inicial, mas misturaria estado de sessão, parâmetros e etapas de produção. A alternativa foi descartada nesta análise arquitetural porque módulos e CLI permitem testes isolados, retomada e conferência de artefatos sem depender da ordem manual de células. Os notebooks históricos permanecem como evidência de suas etapas.
 
 ## Consequências
 

@@ -5,8 +5,12 @@ channels:
   - nodefaults
 
 dependencies:
-  - python=3.9
+  - python=3.9.13
   - pip
+  # pylidc 0.2.3 importa pkg_resources, fornecido por setuptools legado.
+  - setuptools<81
+  # Evita misturar Intel OpenMP (MKL) e LLVM OpenMP no Windows.
+  - libblas=*=*openblas
   - numpy=1.23.5
   - scipy=1.10.1
   - pandas=1.5.3

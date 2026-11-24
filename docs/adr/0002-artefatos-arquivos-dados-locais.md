@@ -4,6 +4,8 @@ Status: Aceito
 
 Data: 2026-11-23
 
+Revisado em: 2026-11-24
+
 Registro retrospectivo do armazenamento já adotado. Não aprova migração, remoção de históricos ou nova divulgação de dados.
 
 ## Contexto
@@ -15,6 +17,10 @@ A equipe precisa relacionar código, configuração, partições e resultados ex
 Manter tabelas agregadas em CSV, configurações/relatórios/manifestos em JSON e figuras nos formatos previstos no protocolo. Versionar código, documentação e artefatos agregados permitidos em Git; manter entradas em `data/` e checkpoints/predições individuais em armazenamento local autorizado, fora do Git. Usar hashes SHA-256 e manifestos para rastreabilidade e recusar sobrescrita de destinos congelados no coordenador.
 
 Não introduzir servidor PostgreSQL ou outro banco de aplicação: esse componente não existe na arquitetura atual. O uso de SQLAlchemy pelo pylidc para anotações é uma dependência distinta do armazenamento dos resultados. Preservar as exceções históricas de arquivos individuais descritas na emenda E10/E11; este ADR não autoriza excluir esses arquivos nem generalizar a exceção.
+
+## Alternativa descartada
+
+Centralizar os resultados experimentais em PostgreSQL permitiria consultas relacionais e transações, mas acrescentaria instalação, administração, migrações e controle de acesso de um serviço. Para o fluxo atual de análises em lote e revisão de artefatos, esse custo não se justifica. A alternativa foi descartada nesta análise em favor dos arquivos já usados pelo pipeline; o acesso às anotações pelo pylidc continua sendo uma dependência separada.
 
 ## Consequências
 
